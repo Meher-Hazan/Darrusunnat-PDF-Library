@@ -25,11 +25,11 @@
             --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
             --accent: #D4AC0D;        
             
-            /* BACKGROUND: Antique Parchment (NOT WHITE) */
+            /* BACKGROUND: Antique Parchment */
             --bg-color: #ECE5D3; 
             --bg-pattern: radial-gradient(#D4AC0D 0.5px, transparent 0.5px), radial-gradient(#0f4c3a 0.5px, #ECE5D3 0.5px);
             
-            --surface: rgba(255, 255, 255, 0.9); /* Cards pop against the darker bg */
+            --surface: rgba(255, 255, 255, 0.9);
             --text-main: #2b2b2b;
             --text-sec: #555;
             --nav-bg: rgba(236, 229, 211, 0.95);
@@ -63,20 +63,17 @@
             background-color: var(--bg-color);
             color: var(--text-main); 
             padding-bottom: 100px; min-height: 100vh;
-            
-            /* TEXTURE */
             background-image: var(--bg-pattern);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
-            
             transition: background 0.4s;
         }
         
         a { text-decoration: none; color: inherit; }
 
-        /* SCROLL PROGRESS BAR */
+        /* SCROLL BAR */
         .scroll-progress {
-            position: fixed; top: 0; left: 0; height: 4px;
+            position: fixed; top: 0; left: 0; height: 3px;
             background: var(--accent); width: 0%; z-index: 2000;
             transition: width 0.1s; box-shadow: 0 0 10px var(--accent);
         }
@@ -87,7 +84,7 @@
             position: sticky; top: 0; z-index: 1000;
             padding: 0.8rem 1rem;
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(212, 172, 13, 0.3); /* Stronger gold line */
+            border-bottom: 1px solid rgba(212, 172, 13, 0.3);
             backdrop-filter: var(--glass); -webkit-backdrop-filter: var(--glass);
         }
         
@@ -101,17 +98,9 @@
         
         .hijri-date {
             font-size: 0.8rem; color: var(--primary); font-weight: 700; margin-left: 28px; margin-top: -3px;
-            background: rgba(15, 76, 58, 0.1); padding: 2px 8px; border-radius: 4px; display: inline-block;
+            opacity: 0.9;
         }
         
-        .nav-actions { display: flex; gap: 12px; align-items: center; }
-
-        .icon-btn {
-            background: transparent; color: var(--text-sec); border: none;
-            font-size: 1.2rem; cursor: pointer; transition: 0.3s;
-        }
-        .icon-btn:hover { color: var(--accent); transform: rotate(15deg); }
-
         .join-btn {
             background: linear-gradient(135deg, #0088cc, #005f8f);
             color: white; padding: 6px 14px; border-radius: 50px; 
@@ -119,36 +108,20 @@
             box-shadow: 0 4px 12px rgba(0,136,204,0.3);
         }
 
-        /* --- 2. HERO & TICKER --- */
+        /* --- 2. HERO --- */
         .hero {
             background: var(--gold-gradient);
             color: white; text-align: center; 
-            padding: 20px 15px 70px;
+            padding: 30px 15px 80px;
             border-radius: 0 0 35px 35px; position: relative;
             box-shadow: 0 10px 30px rgba(15, 76, 58, 0.2);
         }
-
-        .ticker-wrap {
-            width: 100%; overflow: hidden; background: rgba(255,255,255,0.15);
-            border-radius: 50px; padding: 8px 15px; margin-bottom: 20px;
-            backdrop-filter: blur(5px); display: flex; align-items: center; gap: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .ticker-icon { color: #FFD700; font-size: 1rem; animation: pulse 2s infinite; }
-        .ticker {
-            white-space: nowrap; overflow: hidden; box-sizing: border-box; flex-grow: 1;
-        }
-        .ticker-item {
-            display: inline-block; padding-left: 100%; animation: ticker 35s linear infinite;
-            font-size: 0.95rem; font-weight: 600; color: #fff;
-        }
-        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
         
         .hero h1 { 
             font-family: 'Amiri', serif; font-size: 2.2rem; 
             margin: 0 0 5px; color: #fff; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .hero p { opacity: 0.95; margin: 0 0 15px; font-size: 0.9rem; }
+        .hero p { opacity: 0.95; margin: 0 0 20px; font-size: 0.9rem; }
 
         .search-wrapper {
             position: relative; max-width: 600px; margin: 0 auto;
@@ -160,7 +133,7 @@
             background: var(--surface); color: var(--text-main);
             backdrop-filter: var(--glass);
             box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            border: 2px solid var(--accent); /* Stronger border for visibility */
+            border: 2px solid var(--accent);
             transition: 0.3s;
         }
         .search-box:focus { border-color: var(--primary); transform: scale(1.02); }
@@ -169,8 +142,19 @@
             color: var(--accent); font-size: 1.1rem; pointer-events: none;
         }
 
+        /* QUICK TAGS (New Feature) */
+        .quick-tags {
+            display: flex; justify-content: center; gap: 8px; margin-top: 35px; flex-wrap: wrap;
+        }
+        .q-tag {
+            background: rgba(255,255,255,0.2); color: white; padding: 5px 12px;
+            border-radius: 20px; font-size: 0.75rem; cursor: pointer; backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3); transition: 0.2s;
+        }
+        .q-tag:hover { background: white; color: var(--primary); }
+
         /* --- 3. TABS --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 50px 10px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 10px 20px; }
         .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; }
         .tab {
             background: var(--surface); color: var(--text-sec);
@@ -299,15 +283,22 @@
         /* --- 9. BOTTOM NAV --- */
         .app-bar {
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
-            padding: 8px 30px; border-radius: 50px;
-            display: flex; align-items: center; gap: 35px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 8px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 25px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.15); z-index: 2000;
             border: 1px solid rgba(255,255,255,0.4);
         }
         [data-theme="dark"] .app-bar { background: rgba(30,30,30,0.85); border-color: rgba(255,255,255,0.1); }
-        .nav-btn { background: none; border: none; color: var(--text-sec); font-size: 1.4rem; cursor: pointer; }
-        .nav-btn.active { color: var(--primary); transform: scale(1.1); }
+        
+        .nav-btn { 
+            background: none; border: none; color: var(--text-sec); 
+            font-size: 1.4rem; cursor: pointer; transition: 0.3s;
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .nav-btn:hover { background: rgba(0,0,0,0.05); color: var(--primary); }
+        .nav-btn.active { color: var(--primary); background: rgba(15, 76, 58, 0.1); }
         
         .back-bar { 
             display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; 
@@ -330,27 +321,22 @@
             <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
             <div class="hijri-date" id="hijriDate">...</div>
         </div>
-        <div class="nav-actions">
-            <button class="icon-btn" onclick="openRandomBook()" title="Random Book">
-                <i class="fas fa-dice"></i>
-            </button>
-            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
-        </div>
+        <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
     </nav>
 
     <header class="hero">
-        <div class="ticker-wrap">
-            <i class="fas fa-mosque ticker-icon"></i>
-            <div class="ticker">
-                <div class="ticker-item" id="quoteText">Loading Quote...</div>
-            </div>
-        </div>
-
         <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
         <p>ইসলামি জ্ঞানের বিশ্বস্ত সংগ্রহশালা</p>
         <div class="search-wrapper">
             <input type="text" id="searchInput" class="search-box" placeholder="বইয়ের নাম বা লেখক..." oninput="handleSearch()">
             <i class="fas fa-search search-icon"></i>
+        </div>
+        
+        <div class="quick-tags">
+            <div class="q-tag" onclick="quickFilter('Quran')">কুরআন</div>
+            <div class="q-tag" onclick="quickFilter('Hadith')">হাদিস</div>
+            <div class="q-tag" onclick="quickFilter('History')">ইতিহাস</div>
+            <div class="q-tag" onclick="quickFilter('Fiqh')">ফিকহ</div>
         </div>
     </header>
 
@@ -393,6 +379,7 @@
 
     <div class="app-bar">
         <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)"><i class="fas fa-home"></i></button>
+        <button class="nav-btn" onclick="openRandomBook()" title="Random"><i class="fas fa-dice"></i></button>
         <button class="nav-btn theme-btn" onclick="toggleTheme()"><i class="fas fa-moon theme-icon"></i></button>
         <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></a>
     </div>
@@ -407,22 +394,83 @@
         let favorites = JSON.parse(localStorage.getItem('favs')) || [];
         let currentBookLink = "";
 
-        // --- IMPROVED HIJRI DATE ---
-        function getHijriDate() {
-            // Using Intl.DateTimeFormat with 'islamic-umalqura' calendar
-            const date = new Date();
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            try {
-                // Ensure Bangla Numerals
-                let hijri = new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura', options).format(date);
-                // Fallback for browsers that don't support Bengali digits in Intl
-                const bnNumbers = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
-                return hijri.replace(/\d/g, d => bnNumbers[d] || d);
-            } catch (e) {
-                return "হিজরি তারিখ লোড হচ্ছে না";
+        // --- HIJRI DATE CALCULATOR (KUWAITI ALGO) ---
+        function getIslamicDate() {
+            var today = new Date();
+            var day = today.getDate();
+            var month = today.getMonth();
+            var year = today.getFullYear();
+            var m = month + 1;
+            var y = year;
+            if(m<3) { y -= 1; m += 12; }
+            
+            var a = Math.floor(y/100);
+            var b = 2 - a + Math.floor(a/4);
+            if(y<1583) b = 0;
+            if(y==1582) {
+                if(m>10)  b = -10;
+                if(m==10) {
+                    b = 0;
+                    if(day>4) b = -10;
+                }
             }
+            
+            var jd = Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + day + b - 1524;
+            
+            var b = 0;
+            if(jd>2299160){
+                var a = Math.floor((jd-1867216.25)/36524.25);
+                b = 1+a-Math.floor(a/4);
+            }
+            var bb = jd+b+1524;
+            var cc = Math.floor((bb-122.1)/365.25);
+            var dd = Math.floor(365.25*cc);
+            var ee = Math.floor((bb-dd)/30.6001);
+            var day =(bb-dd)-Math.floor(30.6001*ee);
+            var month = ee-1;
+            if(ee>13) {
+                cc += 1;
+                month = ee-13;
+            }
+            var year = cc-4716;
+            
+            var iyear = 10631./30.;
+            var epochastro = 1948084;
+            var epochcivil = 1948085;
+            
+            var shift1 = 8.01/60.;
+            
+            var z = jd-epochastro;
+            var cyc = Math.floor(z/10631.);
+            var z = z-10631*cyc;
+            var j = Math.floor((z-shift1)/iyear);
+            var iy = 30*cyc+j;
+            var z = z-Math.floor(j*iyear+shift1);
+            var im = Math.floor((z+28.5001)/29.5);
+            if(im==13) im = 12;
+            var id = z-Math.floor(29.5*im-29)+1; // +1 adjustment
+            
+            var myRes = new Array(8);
+            
+            myRes[0] = id; // Day
+            myRes[1] = im-1; // Month Index
+            myRes[2] = iy; // Year
+            
+            return myRes;
         }
-        document.getElementById('hijriDate').innerText = getHijriDate();
+
+        function writeHijri() {
+            var iDate = getIslamicDate();
+            var monthNames = ["মুহাররম","সফর","রবিউল আউয়াল","রবিউস সানি","জমাদিউল আউয়াল","জমাদিউস সানি","রজব","শাবান","রমজান","শাওয়াল","জিলক্বদ","জিলহজ্জ"];
+            var bnNumbers = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+            
+            var d = iDate[0].toString().replace(/\d/g, n => bnNumbers[n]);
+            var m = monthNames[iDate[1]];
+            var y = iDate[2].toString().replace(/\d/g, n => bnNumbers[n]);
+            
+            return d + " " + m + ", " + y;
+        }
+        document.getElementById('hijriDate').innerText = writeHijri();
 
         // --- SCROLL BAR ---
         window.onscroll = function() {
@@ -431,33 +479,6 @@
             let scrolled = (winScroll / height) * 100;
             document.getElementById("scrollBar").style.width = scrolled + "%";
         };
-
-        // --- MASSIVE QUOTE DATABASE (100+ Mixed Quran & Hadith) ---
-        const quotes = [
-            "নিশ্চয়ই কষ্টের সাথে স্বস্তি আছে। (সূরা ইনশিরাহ: ৫)",
-            "তোমরা সত্যের সাথে মিথ্যার মিশ্রণ ঘটিও না। (সূরা বাকারা: ৪২)",
-            "আল্লাহ তওবাকারীকে ভালোবাসেন। (সূরা বাকারা: ২২২)",
-            "মায়ের পায়ের নিচে সন্তানের বেহেশত। (হাদিস)",
-            "তোমরাই সর্বোত্তম যে কুরআন শেখে এবং শেখায়। (বুখারী)",
-            "নামাজ বেহেশতের চাবি।",
-            "ধৈর্য ধরো, নিশ্চয়ই আল্লাহ ধৈর্যশীলদের ভালোবাসেন।",
-            "মিথ্যা সব পাপের জননী।",
-            "লজ্জা ঈমানের অঙ্গ।",
-            "হিংসা নেক আমলকে খেয়ে ফেলে।",
-            "দোলনা থেকে কবর পর্যন্ত জ্ঞান অন্বেষণ কর।",
-            "অহংকার পতনের মূল।",
-            "যে দয়া করে না, সে দয়া পায় না।",
-            "আত্মীয়তার সম্পর্ক ছিন্নকারী জান্নাতে প্রবেশ করবে না।",
-            "জ্ঞানীর কলমের কালি শহীদের রক্তের চেয়ে পবিত্র।",
-            "উত্তম চরিত্রই হলো দ্বীন।",
-            "অল্পে তুষ্টি অমূল্য সম্পদ।",
-            "আল্লাহর সন্তুষ্টি পিতার সন্তুষ্টিতে।",
-            "নিশ্চয়ই সালাত অশ্লীল ও গর্হিত কাজ থেকে বিরত রাখে।",
-            "মানুষের সাথে উত্তম আচরণ কর।",
-            "দান সম্পদ কমায় না।",
-            "পরিষ্কার পরিচ্ছন্নতা ঈমানের অঙ্গ।"
-        ];
-        document.getElementById('quoteText').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
         // --- THEME ---
         if(localStorage.getItem('theme') === 'dark') {
@@ -479,10 +500,6 @@
             }
         }
 
-        // --- OFFLINE DETECTOR ---
-        window.addEventListener('offline', () => showToast('ইন্টারনেট সংযোগ বিচ্ছিন্ন!'));
-        window.addEventListener('online', () => showToast('ইন্টারনেট সংযোগ ফিরে এসেছে!'));
-
         // --- DATA ---
         fetch('books_data.json?t=' + Date.now())
             .then(res => res.json())
@@ -495,25 +512,11 @@
         // --- STRICT LETTER FILTER (NO NUMBERS) ---
         function getSmartLetter(title) {
             if (!title) return null;
-            // Remove numbers, spaces, dots, brackets, hyphens from start
             const clean = title.replace(/^[\d\s\.\-\(\)\[\]#]+/, '');
             if (!clean) return null;
-            
             const char = clean.charAt(0).toUpperCase();
-            // Allow ONLY Bangla, English, Arabic letters
             if (char.match(/[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/)) return char;
-            
-            return null; // Reject everything else
-        }
-
-        // --- ICONS MAPPING ---
-        function getCatIcon(cat) {
-            const c = cat.toLowerCase();
-            if(c.includes('hadith') || c.includes('হাদিস')) return 'fa-book-open';
-            if(c.includes('quran') || c.includes('কুরআন')) return 'fa-quran';
-            if(c.includes('history') || c.includes('ইতিহাস')) return 'fa-landmark';
-            if(c.includes('fiqh') || c.includes('ফিকহ')) return 'fa-balance-scale';
-            return 'fa-folder-open';
+            return null;
         }
 
         // --- ACTIONS ---
@@ -521,6 +524,11 @@
             if(booksDB.length === 0) return;
             const random = booksDB[Math.floor(Math.random() * booksDB.length)];
             openModal(random.id);
+        }
+
+        function quickFilter(term) {
+            document.getElementById('searchInput').value = term;
+            handleSearch();
         }
 
         // --- RENDERERS ---
@@ -563,7 +571,7 @@
             const groups = {};
             booksDB.forEach(b => {
                 const l = getSmartLetter(b.title);
-                if (l) { // Only if valid letter
+                if (l) { 
                     if (!groups[l]) groups[l] = [];
                     groups[l].push(b);
                 }
@@ -572,8 +580,7 @@
             
             let html = `
                 <div class="explainer-text">
-                    <i class="fas fa-info-circle"></i> বইয়ের নামের প্রথম অক্ষর অনুযায়ী তালিকা সাজানো হয়েছে।<br>
-                    আপনার কাঙ্ক্ষিত অক্ষর সিলেক্ট করুন।
+                    <i class="fas fa-info-circle"></i> নামের প্রথম অক্ষর অনুযায়ী তালিকা
                 </div>
                 <div class="folder-grid">`;
                 
@@ -594,8 +601,7 @@
             });
             let html = '<div class="folder-grid">';
             Object.keys(groups).sort().forEach(cat => {
-                const icon = getCatIcon(cat);
-                html += `<div class="folder-btn" onclick="openFolder('${cat}', 'cat')"><i class="fas ${icon}" style="font-size:1.2rem; color:var(--accent); margin-bottom:5px;"></i><br><span class="folder-letter" style="font-size:0.9rem; font-family:'Hind Siliguri'">${cat}</span><span class="folder-count">${groups[cat].length}</span></div>`;
+                html += `<div class="folder-btn" onclick="openFolder('${cat}', 'cat')"><i class="fas fa-folder-open" style="font-size:1.2rem; color:var(--accent); margin-bottom:5px;"></i><br><span class="folder-letter" style="font-size:0.9rem; font-family:'Hind Siliguri'">${cat}</span><span class="folder-count">${groups[cat].length}</span></div>`;
             });
             html += '</div>';
             app.innerHTML = html;
