@@ -17,231 +17,299 @@
 
     <style>
         :root {
+            /* ROYAL GREEN & GOLD PALETTE */
             --primary: #0f4c3a;       
-            --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #145A32 100%);
-            --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
+            --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #05291e 100%);
+            --gold-gradient: linear-gradient(135deg, #D4AC0D 0%, #F1C40F 100%);
             --accent: #D4AC0D;        
-            --bg-color: #ECE5D3; 
-            --bg-pattern: radial-gradient(#D4AC0D 0.5px, transparent 0.5px), radial-gradient(#0f4c3a 0.5px, #ECE5D3 0.5px);
-            --surface: rgba(255, 255, 255, 0.95);
-            --text-main: #2b2b2b; --text-sec: #555;
-            --nav-bg: rgba(236, 229, 211, 0.95);
-            --shadow: 0 8px 25px rgba(15, 76, 58, 0.08);
-            --radius: 16px;
+            
+            /* Background: Deep Gradient */
+            --bg-color: #081410; 
+            --bg-image: linear-gradient(160deg, #0f4c3a 0%, #030504 100%);
+            
+            --surface: rgba(20, 30, 25, 0.6); /* Dark Glass */
+            --text-main: #ffffff;
+            --text-sec: #cccccc;
+            --nav-bg: rgba(10, 20, 15, 0.85);
+            --shadow: 0 8px 30px rgba(0,0,0,0.5);
+            --radius: 18px;
+            --glass: blur(15px) saturate(180%);
+            --border: 1px solid rgba(212, 172, 13, 0.2);
         }
 
         [data-theme="dark"] {
-            --primary: #2ecc71; --primary-gradient: linear-gradient(135deg, #145A32 0%, #0f4c3a 100%);
-            --gold-gradient: linear-gradient(135deg, #082d22 0%, #8a7008 100%);
-            --accent: #f1c40f;
-            --bg-color: #121212; --bg-pattern: none;
-            --surface: rgba(30, 32, 34, 0.9);
-            --text-main: #E4E6EB; --text-sec: #B0B3B8;
-            --nav-bg: rgba(20, 20, 20, 0.95);
-            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+            /* Keeping same royal look for both modes, just slightly darker text handling if needed */
+            --surface: rgba(0, 0, 0, 0.6);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
-        body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background-color: var(--bg-color); color: var(--text-main); padding-bottom: 100px; min-height: 100vh; background-image: var(--bg-pattern); background-size: 20px 20px; transition: background 0.4s; }
+        
+        body { 
+            margin: 0; font-family: 'Hind Siliguri', sans-serif; 
+            background: var(--bg-image); color: var(--text-main); 
+            padding-bottom: 100px; min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
         a { text-decoration: none; color: inherit; }
 
-        /* HEADER */
-        nav { background: var(--nav-bg); position: sticky; top: 0; z-index: 1000; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 172, 13, 0.3); backdrop-filter: blur(10px); }
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .logo i { color: var(--accent); -webkit-text-fill-color: initial; }
-        .date-badge { font-size: 0.75rem; color: var(--text-sec); font-weight: 600; margin-top: -2px; }
-        .join-btn { background: linear-gradient(135deg, #0088cc, #005f8f); color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        /* --- BACKGROUND DECORATION (Floating Icons) --- */
+        .bg-decor {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none; opacity: 0.05;
+        }
+        .bg-icon { position: absolute; color: #fff; font-size: 8rem; animation: float 20s infinite ease-in-out; }
+        .bg-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .bg-icon:nth-child(2) { top: 60%; right: 10%; animation-delay: 5s; font-size: 12rem; }
+        .bg-icon:nth-child(3) { top: 30%; left: 60%; animation-delay: 2s; font-size: 6rem; }
+        .bg-icon:nth-child(4) { bottom: 10%; left: 20%; animation-delay: 7s; }
+        
+        @keyframes float { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } 100% { transform: translateY(0) rotate(0deg); } }
 
-        /* HERO */
-        .hero { background: var(--gold-gradient); color: white; text-align: center; padding: 30px 15px 80px; border-radius: 0 0 35px 35px; position: relative; box-shadow: 0 10px 30px rgba(15, 76, 58, 0.2); }
-        .hero h1 { font-family: 'Amiri', serif; font-size: 2.2rem; margin: 0 0 5px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .search-wrapper { position: relative; max-width: 600px; margin: 0 auto; transform: translateY(25px); z-index: 10; }
-        .search-box { width: 100%; padding: 16px 45px 16px 25px; border: none; border-radius: 50px; font-size: 1rem; font-family: 'Hind Siliguri', sans-serif; background: var(--surface); color: var(--text-main); box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 2px solid var(--accent); transition: 0.3s; }
-        .search-box:focus { border-color: var(--primary); transform: scale(1.02); }
-        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1.1rem; }
+        /* --- HEADER --- */
+        nav {
+            background: var(--nav-bg); position: sticky; top: 0; z-index: 1000;
+            padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: var(--border); backdrop-filter: var(--glass);
+        }
+        
+        .logo { 
+            font-family: 'Playfair Display', serif; font-size: 1.3rem; 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 800; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 10px rgba(212,172,13,0.3);
+        }
+        .logo i { color: var(--accent); -webkit-text-fill-color: initial; }
+        
+        .join-btn {
+            background: var(--gold-gradient); color: #000; 
+            padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700;
+            box-shadow: 0 0 15px rgba(212,172,13,0.4);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            text-align: center; padding: 40px 15px 20px;
+        }
+        .hero h1 { 
+            font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0 0 5px; 
+            color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .search-wrapper { position: relative; max-width: 600px; margin: 20px auto 0; z-index: 10; }
+        .search-box {
+            width: 100%; padding: 18px 50px 18px 25px; border: none; border-radius: 50px;
+            font-size: 1rem; font-family: 'Hind Siliguri', sans-serif;
+            background: rgba(255,255,255,0.1); color: #fff;
+            backdrop-filter: var(--glass); box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.2); transition: 0.3s;
+        }
+        .search-box::placeholder { color: rgba(255,255,255,0.6); }
+        .search-box:focus { border-color: var(--accent); background: rgba(255,255,255,0.15); }
+        .search-icon { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1.2rem; }
 
         /* QUICK TAGS */
-        .quick-tags { display: flex; justify-content: center; gap: 8px; margin-top: 35px; flex-wrap: wrap; }
-        .q-tag { background: rgba(255,255,255,0.2); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); }
+        .quick-tags { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
+        .q-tag {
+            background: rgba(0,0,0,0.3); color: var(--accent); padding: 6px 15px;
+            border-radius: 20px; font-size: 0.8rem; cursor: pointer; backdrop-filter: blur(5px);
+            border: 1px solid rgba(212,172,13,0.2); transition: 0.3s; font-weight: 600;
+        }
+        .q-tag:hover { background: var(--accent); color: #000; }
 
-        /* CONTROLS (View Toggle) */
-        .controls-bar { max-width: 1200px; margin: 60px auto 10px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; }
-        .view-toggle { background: var(--surface); padding: 4px; border-radius: 12px; display: flex; gap: 5px; border: 1px solid rgba(0,0,0,0.05); }
-        .view-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; color: var(--text-sec); transition: 0.3s; }
-        .view-btn.active { background: var(--primary); color: white; }
+        /* --- TABS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 10px 20px; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab {
+            background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7);
+            padding: 10px 22px; border-radius: 50px; cursor: pointer; 
+            font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+        .tab.active { 
+            background: var(--gold-gradient); color: #000; border-color: transparent;
+            box-shadow: 0 0 20px rgba(212,172,13,0.3); font-weight: 800;
+        }
 
-        /* TABS */
-        .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab { background: var(--surface); color: var(--text-sec); padding: 8px 16px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05); transition: 0.3s; }
-        .tab.active { background: var(--primary-gradient); color: #fff; border: none; transform: translateY(-2px); }
+        /* --- GRID VIEW --- */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; animation: fadeIn 0.5s ease; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; } }
 
-        /* GRID VIEW */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 10px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
-
-        .card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; position: relative; border: 1px solid rgba(255,255,255,0.4); }
-        .card-img-wrapper { position: relative; padding-top: 145%; background: rgba(0,0,0,0.05); }
-        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .card {
+            background: var(--surface); border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; 
+            position: relative; border: var(--border); backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
         
-        .card-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-main); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-wrap: break-word; }
-        .card-cat { font-size: 0.65rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-top: auto; }
-        .card-auth { font-size: 0.65rem; color: var(--text-sec); margin-top: 2px; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .card-img-wrapper { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); }
+        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+        
+        .card-body { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { 
+            font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; color: #fff; 
+            line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .card-auth { font-size: 0.7rem; color: #aaa; margin-bottom: 2px; }
+        .card-cat { font-size: 0.65rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: auto; letter-spacing: 1px; }
 
-        /* LIST VIEW */
-        .list-view { display: flex; flex-direction: column; gap: 10px; padding: 0 10px; }
-        .list-item { display: flex; align-items: center; background: var(--surface); padding: 10px; border-radius: 12px; box-shadow: var(--shadow); gap: 15px; border: 1px solid rgba(0,0,0,0.02); }
+        /* --- LIST VIEW --- */
+        .list-view { display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.5s ease; }
+        .list-item {
+            display: flex; align-items: center; background: var(--surface); padding: 10px;
+            border-radius: 12px; border: var(--border); gap: 15px; backdrop-filter: blur(10px);
+        }
         .list-img { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; }
         .list-info { flex-grow: 1; }
-        .list-title { font-weight: bold; font-size: 0.95rem; color: var(--text-main); line-height: 1.2; margin-bottom: 4px; }
-        .list-auth { font-size: 0.8rem; color: var(--text-sec); margin-bottom: 4px; display: block; }
-        .list-cat { font-size: 0.75rem; color: var(--primary); font-weight: 700; background: rgba(15, 76, 58, 0.1); padding: 2px 8px; border-radius: 4px; display: inline-block; }
-        .list-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-color); display: flex; align-items: center; justify-content: center; color: var(--accent); }
+        .list-title { font-weight: bold; font-size: 0.95rem; color: #fff; line-height: 1.2; margin-bottom: 4px; }
+        .list-auth { font-size: 0.8rem; color: #aaa; display: block; }
+        .list-cat { font-size: 0.7rem; color: var(--accent); font-weight: 700; }
 
-        /* FOLDERS */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; padding: 0 10px; }
-        .folder-btn { background: var(--surface); padding: 15px 5px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-        .folder-letter { font-family: 'Amiri', serif; font-size: 1.6rem; font-weight: bold; color: var(--primary); display: block; line-height: 1; margin-bottom: 3px; }
-        .folder-count { font-size: 0.7rem; color: var(--text-sec); }
+        /* --- FOLDERS --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+        .folder-btn {
+            background: rgba(255,255,255,0.05); padding: 20px 10px; border-radius: 15px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); cursor: pointer;
+        }
+        .folder-btn:hover { border-color: var(--accent); background: rgba(212,172,13,0.1); }
+        .folder-letter { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--accent); display: block; line-height: 1; }
+        .folder-count { font-size: 0.75rem; color: #888; }
 
-        /* MODAL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--bg-color); width: 100%; max-width: 350px; border-radius: 20px; padding: 25px 20px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4); position: relative; max-height: 85vh; overflow-y: auto; }
-        .modal-img { width: 120px; height: 170px; object-fit: cover; border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin-bottom: 15px; }
-        .modal-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; color: var(--text-main); }
-        .modal-auth { font-size: 0.9rem; color: var(--text-sec); margin-bottom: 10px; display: block; font-weight: 600; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; margin-bottom: 20px; }
-        .modal-btn { flex: 1; padding: 12px; border-radius: 50px; font-weight: bold; font-size: 0.9rem; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .btn-read { background: var(--primary-gradient); color: white; text-decoration: none; }
-        .btn-report { background: #e74c3c; color: white; border: none; flex: 0 0 40px; border-radius: 12px; } /* Square report btn */
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            padding: 20px; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-box {
+            background: rgba(20, 30, 25, 0.9); width: 100%; max-width: 350px;
+            border-radius: 25px; padding: 30px 20px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); transform: scale(0.8); transition: 0.3s;
+            position: relative; border: 1px solid var(--accent);
+        }
+        .modal-overlay.open .modal-box { transform: scale(1); }
+        .modal-img { width: 130px; height: 190px; object-fit: cover; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
+        .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: var(--accent); }
+        .modal-auth { font-size: 0.9rem; color: #ccc; display: block; margin-bottom: 20px; }
+        .modal-btn {
+            flex: 1; padding: 12px; border-radius: 50px; font-weight: bold; font-size: 1rem;
+            cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; margin-top: 10px;
+        }
+        .btn-read { background: var(--gold-gradient); color: #000; text-decoration: none; box-shadow: 0 0 20px rgba(212,172,13,0.3); }
+        .btn-report { background: rgba(255,255,255,0.1); color: #fff; font-size: 0.8rem; margin-top: 15px; }
+
+        /* --- BOTTOM NAV (Updated with Toggle) --- */
+        .app-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 20, 15, 0.9); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 60px;
+            display: flex; align-items: center; gap: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); z-index: 2000;
+            border: 1px solid rgba(212, 172, 13, 0.3);
+        }
+        .nav-btn { 
+            background: none; border: none; color: rgba(255,255,255,0.5); 
+            font-size: 1.3rem; cursor: pointer; transition: 0.3s;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .nav-btn.active { color: var(--accent); background: rgba(212,172,13,0.15); box-shadow: 0 0 15px rgba(212,172,13,0.2); }
+
+        .back-bar { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; cursor: pointer; color: var(--accent); font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        .load-more-btn { background: transparent; color: var(--accent); border: 2px solid var(--accent); padding: 10px 30px; border-radius: 50px; font-weight: bold; margin: 40px auto 0; display: block; }
+        .loading { text-align: center; padding: 50px; color: #888; }
         
-        .related-sec { text-align: left; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px; }
-        .rel-head { font-size: 0.9rem; font-weight: bold; color: var(--text-sec); margin-bottom: 10px; }
-        .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .rel-item { cursor: pointer; }
-        .rel-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; }
-        .rel-txt { font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 4px; }
-
-        /* BOTTOM NAV */
-        .app-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); padding: 8px 25px; border-radius: 50px; display: flex; align-items: center; gap: 25px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); z-index: 2000; border: 1px solid rgba(255,255,255,0.4); }
-        [data-theme="dark"] .app-bar { background: rgba(30,30,30,0.85); border-color: rgba(255,255,255,0.1); }
-        .nav-btn { background: none; border: none; color: var(--text-sec); font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
-        .nav-btn.active { color: var(--primary); transform: scale(1.1); }
-
-        .back-bar { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 6px 16px; background: var(--surface); border-radius: 30px; box-shadow: var(--shadow); cursor: pointer; color: var(--primary); font-weight: bold; font-size: 0.9rem; }
-        .load-more-btn { background: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 8px 25px; border-radius: 50px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: block; margin: 30px auto 0; }
-        .loading { text-align: center; padding: 60px 20px; color: var(--text-sec); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <div class="bg-decor">
+        <i class="fas fa-quran bg-icon"></i>
+        <i class="fas fa-mosque bg-icon"></i>
+        <i class="fas fa-pen-nib bg-icon"></i>
+        <i class="fas fa-moon bg-icon"></i>
+    </div>
+
     <nav>
-        <div class="logo-area">
-            <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
-            <div class="date-badge" id="dateDisplay">...</div>
-        </div>
+        <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
         <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
     </nav>
 
     <header class="hero">
         <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
-        <p>ইসলামি জ্ঞানের বিশ্বস্ত সংগ্রহশালা</p>
         <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-box" placeholder="বই বা লেখকের নাম..." oninput="handleSearch()">
+            <input type="text" id="searchInput" class="search-box" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
             <i class="fas fa-search search-icon"></i>
         </div>
         <div class="quick-tags">
             <div class="q-tag" onclick="quickFilter('Quran')">কুরআন</div>
             <div class="q-tag" onclick="quickFilter('Hadith')">হাদিস</div>
             <div class="q-tag" onclick="quickFilter('History')">ইতিহাস</div>
-            <div class="q-tag" onclick="quickFilter('Fiqh')">ফিকহ</div>
+            <div class="q-tag" onclick="quickFilter('Novel')">উপন্যাস</div>
         </div>
     </header>
 
-    <div class="controls-bar">
+    <div class="container" id="app">
         <div class="tabs">
             <div class="tab active" onclick="setMode('latest')">সর্বশেষ</div>
-            <div class="tab" onclick="setMode('az')">বই (A-Z)</div>
+            <div class="tab" onclick="setMode('az')">বই</div>
             <div class="tab" onclick="setMode('auth')">লেখক</div>
             <div class="tab" onclick="setMode('cat')">বিষয়</div>
         </div>
-        <div class="view-toggle">
-            <div class="view-btn active" id="btnGrid" onclick="toggleView('grid')"><i class="fas fa-th-large"></i></div>
-            <div class="view-btn" id="btnList" onclick="toggleView('list')"><i class="fas fa-list"></i></div>
+        
+        <div id="contentArea">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
         </div>
     </div>
 
-    <div class="container" id="app">
-        <div class="loading">Loading...</div>
-    </div>
-
-    <footer style="text-align:center; padding:30px; color:var(--text-sec); font-size:0.8rem; border-top:1px solid rgba(0,0,0,0.05); margin-top:30px;">
-        © ২০২৫ দারুচ্ছুন্নাত লাইব্রেরি | সর্বস্বত্ব সংরক্ষিত
+    <footer style="text-align:center; padding:30px; color:rgba(255,255,255,0.3); font-size:0.8rem; margin-top:30px;">
+        © ২০২৫ দারুচ্ছুন্নাত লাইব্রেরি
     </footer>
 
     <div class="modal-overlay" id="bookModal" onclick="closeModal(event)">
         <div class="modal-box">
-            <button class="close-modal" onclick="closeModal(event)" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:1.5rem; color:var(--text-sec);">×</button>
+            <button class="close-modal" onclick="closeModal(event)" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:1.5rem; color:#fff;">×</button>
             <img src="" class="modal-img" id="mImg">
             <div class="modal-title" id="mTitle"></div>
             <span class="modal-auth" id="mAuth"></span>
-            <div style="color:var(--accent); font-size:0.8rem;" id="mCat"></div>
             
-            <div class="modal-actions">
-                <a href="#" target="_blank" class="modal-btn btn-read" id="mRead"><i class="fas fa-book-open"></i> পড়ুন</a>
-                <button class="modal-btn btn-report" onclick="reportBook()" title="Report Problem"><i class="fas fa-exclamation-triangle"></i></button>
-            </div>
-
-            <div class="related-sec" id="relatedSection">
-                <div class="rel-head">আরও পড়ুন (Related)</div>
-                <div class="rel-grid" id="relatedGrid"></div>
-            </div>
+            <a href="#" target="_blank" class="modal-btn btn-read" id="mRead"><i class="fas fa-book-reader"></i> অনলাইনে পড়ুন</a>
+            <button class="modal-btn btn-report" onclick="reportBook()"><i class="fas fa-exclamation-circle"></i> রিপোর্ট করুন</button>
         </div>
     </div>
 
     <div class="app-bar">
-        <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)"><i class="fas fa-home"></i></button>
-        <button class="nav-btn" onclick="openRandomBook()"><i class="fas fa-dice"></i></button>
-        <button class="nav-btn" onclick="toggleTheme()"><i class="fas fa-moon theme-icon"></i></button>
+        <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)" title="Home"><i class="fas fa-home"></i></button>
+        <button class="nav-btn" onclick="toggleView()" id="viewBtn" title="Change View"><i class="fas fa-list"></i></button>
+        <button class="nav-btn" onclick="openRandomBook()" title="Random"><i class="fas fa-dice"></i></button>
+        <button class="nav-btn" onclick="toggleTheme()" title="Theme"><i class="fas fa-moon theme-icon"></i></button>
         <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></a>
     </div>
 
     <script>
-        const app = document.getElementById('app');
-        const defaultCover = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book";
         let booksDB = [];
         let displayLimit = 24;
         let currentMode = 'latest';
-        let currentFilterData = null; 
+        let currentFilterData = null;
         let viewMode = 'grid'; 
         let currentBookId = null;
-
-        // DATE
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', options);
-
-        // THEME
-        if(localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.querySelector('.theme-icon').classList.replace('fa-moon', 'fa-sun'); }
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.querySelector('.theme-icon');
-            if (html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('fa-sun', 'fa-moon'); localStorage.setItem('theme', 'light'); }
-            else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('fa-moon', 'fa-sun'); localStorage.setItem('theme', 'dark'); }
-        }
+        const defaultCover = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book";
 
         // LOAD DATA
-        fetch('books_data.json?t=' + Date.now()).then(res => res.json()).then(data => {
-            booksDB = data.sort((a, b) => b.id - a.id); 
+        fetch('books_data.json?t=' + Date.now()).then(r => r.json()).then(d => {
+            booksDB = d.sort((a, b) => b.id - a.id); 
             renderLatest();
-        }).catch(err => app.innerHTML = `<div class="loading">Connection Error</div>`);
+        });
 
         // VIEW TOGGLE
-        function toggleView(mode) {
-            viewMode = mode;
-            document.getElementById('btnGrid').classList.toggle('active', mode === 'grid');
-            document.getElementById('btnList').classList.toggle('active', mode === 'list');
+        function toggleView() {
+            viewMode = viewMode === 'grid' ? 'list' : 'grid';
+            document.getElementById('viewBtn').innerHTML = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
             if(currentMode === 'latest') renderGridWithPagination(booksDB);
             else if(currentMode === 'folder') renderGridWithPagination(currentFilterData);
         }
@@ -249,188 +317,138 @@
         // RENDERERS
         function renderLatest() {
             currentMode = 'latest';
-            displayLimit = 24; 
+            displayLimit = 24;
             renderGridWithPagination(booksDB);
         }
 
         function renderGridWithPagination(list) {
-            if(list.length === 0) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
+            const area = document.getElementById('contentArea');
+            if(list.length === 0) { area.innerHTML = "<div class='loading'>No books found</div>"; return; }
             
-            const visibleBooks = list.slice(0, displayLimit);
+            const visible = list.slice(0, displayLimit);
             let html = viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
             
-            visibleBooks.forEach(b => html += viewMode === 'grid' ? createGridCard(b) : createListCard(b));
+            visible.forEach(b => html += viewMode === 'grid' ? createGridCard(b) : createListCard(b));
             html += '</div>';
 
-            if (list.length > displayLimit) html += `<div style="text-align:center"><button class="load-more-btn" onclick="loadMore()">Load More</button></div>`;
-            app.innerHTML = html;
+            if (list.length > displayLimit) html += `<button class="load-more-btn" onclick="loadMore()">আরো দেখুন</button>`;
+            area.innerHTML = html;
         }
 
         window.loadMore = function() {
             displayLimit += 24;
             if(currentMode === 'latest') renderGridWithPagination(booksDB);
-            else if(currentMode === 'folder') renderGridWithPagination(currentFilterData);
+            else renderGridWithPagination(currentFilterData);
         }
 
-        // HTML HELPERS
-        function createGridCard(book) {
-            const img = book.image || defaultCover;
-            const author = book.author ? `<span class="card-auth">${book.author}</span>` : '';
+        function createGridCard(b) {
+            const auth = b.author ? `<span class="card-auth">${b.author}</span>` : '';
             return `
-                <div class="card" onclick="openModal(${book.id})">
-                    <div class="card-img-wrapper"><img src="${img}" class="card-img" loading="lazy"></div>
+                <div class="card" onclick="openModal(${b.id})">
+                    <div class="card-img-wrapper"><img src="${b.image||defaultCover}" class="card-img" loading="lazy"></div>
                     <div class="card-body">
-                        <div class="card-title">${book.title}</div>
-                        ${author}
-                        <div class="card-cat">${book.category}</div>
+                        <div class="card-title">${b.title}</div>
+                        ${auth}
+                        <div class="card-cat">${b.category}</div>
                     </div>
                 </div>`;
         }
 
-        function createListCard(book) {
-            const img = book.image || defaultCover;
-            const author = book.author ? `<span class="list-auth">${book.author}</span>` : '';
+        function createListCard(b) {
+            const auth = b.author ? `<span class="list-auth">${b.author}</span>` : '';
             return `
-                <div class="list-item" onclick="openModal(${book.id})">
-                    <img src="${img}" class="list-img" loading="lazy">
+                <div class="list-item" onclick="openModal(${b.id})">
+                    <img src="${b.image||defaultCover}" class="list-img" loading="lazy">
                     <div class="list-info">
-                        <div class="list-title">${book.title}</div>
-                        ${author}
-                        <div class="list-cat">${book.category}</div>
+                        <div class="list-title">${b.title}</div>
+                        ${auth}
+                        <span class="list-cat">${b.category}</span>
                     </div>
-                    <div class="list-btn"><i class="fas fa-chevron-right"></i></div>
                 </div>`;
         }
 
-        // FOLDERS
-        function getSmartLetter(text) {
-            if (!text) return null;
-            const match = text.match(/[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/);
-            return match ? match[0].toUpperCase() : null;
-        }
-
+        // CATEGORY & AUTHOR & A-Z
         function renderAZ() {
             currentMode = 'az';
-            renderGroupedView(booksDB, b => getSmartLetter(b.title));
+            renderGrouped(booksDB, b => {
+                const clean = b.title.replace(/^[\d\s\.\-\(\)\[\]#]+/, '');
+                const char = clean.charAt(0).toUpperCase();
+                return char.match(/[a-zA-Z\u0980-\u09FF]/) ? char : null;
+            });
         }
+        function renderCat() { currentMode = 'cat'; renderGrouped(booksDB, b => b.category); }
+        function renderAuth() { currentMode = 'auth'; renderGrouped(booksDB.filter(b=>b.author), b => b.author.trim()); }
 
-        function renderAuth() {
-            currentMode = 'auth';
-            // Only group if author exists
-            renderGroupedView(booksDB.filter(b => b.author), b => b.author.trim());
-        }
-
-        function renderCat() {
-            currentMode = 'cat';
-            renderGroupedView(booksDB, b => b.category || 'General');
-        }
-
-        function renderGroupedView(list, keyExtractor) {
+        function renderGrouped(list, keyFn) {
             const groups = {};
             list.forEach(b => {
-                const key = keyExtractor(b);
-                if (key) {
-                    if (!groups[key]) groups[key] = [];
-                    groups[key].push(b);
-                }
+                const k = keyFn(b);
+                if(k) { if(!groups[k]) groups[k]=[]; groups[k].push(b); }
             });
-            const sortedKeys = Object.keys(groups).sort();
+            const keys = Object.keys(groups).sort();
             
-            let html = `<div class="folder-grid">`;
-            sortedKeys.forEach(k => {
-                html += `<div class="folder-btn" onclick="openFolder('${k}')"><span class="folder-letter" style="font-size:1rem">${k}</span><span class="folder-count">${groups[k].length}</span></div>`;
+            let html = '<div class="folder-grid">';
+            keys.forEach(k => {
+                html += `<div class="folder-btn" onclick="openFolder('${k}')"><span class="folder-letter">${k}</span><span class="folder-count">${groups[k].length}</span></div>`;
             });
             html += '</div>';
-            app.innerHTML = html;
+            document.getElementById('contentArea').innerHTML = html;
         }
 
         window.openFolder = function(key) {
-            currentMode = 'folder';
-            displayLimit = 24;
-            // Determine filter based on previous mode
-            // This is a bit simplistic, usually we'd track context better
-            // For now, we search all fields
+            currentMode = 'folder'; displayLimit = 24;
             currentFilterData = booksDB.filter(b => 
-                (b.category === key) || 
-                (b.author && b.author.trim() === key) || 
-                (getSmartLetter(b.title) === key)
+                (b.category === key) || (b.author && b.author.trim() === key) || 
+                (b.title.includes(key)) // Loose match for letters
             );
+            // Re-sort strict for A-Z
+            currentFilterData.sort((a,b) => a.title.localeCompare(b.title));
             
-            let header = `<div class="back-bar" onclick="setMode('latest')"><i class="fas fa-arrow-left"></i> Back</div><h3 style="color:var(--primary); margin:0 0 15px 15px;">${key}</h3>`;
+            const area = document.getElementById('contentArea');
+            const header = `<div class="back-bar" onclick="setMode('latest')"><i class="fas fa-arrow-left"></i> Back</div><h3 style="color:var(--accent); margin:0 0 20px 10px;">${key}</h3>`;
             
-            // Hack to inject header before grid
+            // Hacky render
             renderGridWithPagination(currentFilterData);
-            app.innerHTML = header + app.innerHTML;
-            window.scrollTo(0, 0);
+            area.innerHTML = header + area.innerHTML;
+            window.scrollTo(0,0);
         }
 
         // MODAL
         window.openModal = function(id) {
             currentBookId = id;
-            const book = booksDB.find(b => b.id === id);
-            if(!book) return;
-            document.getElementById('mImg').src = book.image || defaultCover;
-            document.getElementById('mTitle').innerText = book.title;
-            document.getElementById('mAuth').innerText = book.author || "";
-            document.getElementById('mCat').innerText = book.category;
-            document.getElementById('mRead').href = book.link;
-            
-            // Related Books
-            const related = booksDB.filter(b => b.category === book.category && b.id !== book.id).slice(0, 3);
-            let relHtml = '';
-            related.forEach(b => {
-                relHtml += `<div class="rel-item" onclick="openModal(${b.id})"><img src="${b.image||defaultCover}" class="rel-img"><span class="rel-txt">${b.title}</span></div>`;
-            });
-            document.getElementById('relatedGrid').innerHTML = relHtml;
-
+            const b = booksDB.find(x => x.id === id);
+            document.getElementById('mImg').src = b.image || defaultCover;
+            document.getElementById('mTitle').innerText = b.title;
+            document.getElementById('mAuth').innerText = b.author || "";
+            document.getElementById('mRead').href = b.link;
             document.getElementById('bookModal').classList.add('open');
         }
+        window.closeModal = function(e) { if(e.target===e.currentTarget||e.target.classList.contains('close-modal')) document.getElementById('bookModal').classList.remove('open'); }
+        window.reportBook = function() { window.open(`https://t.me/Meher_Hazan_T?text=Report broken link ID: ${currentBookId}`); }
 
-        window.closeModal = function(e) {
-            if(e.target === e.currentTarget || e.target.classList.contains('close-modal')) {
-                document.getElementById('bookModal').classList.remove('open');
-            }
-        }
-
-        window.reportBook = function() {
-            const url = `https://t.me/Meher_Hazan_T?text=Report broken link for Book ID: ${currentBookId}`;
-            window.open(url, '_blank');
-        }
-
-        // CONTROLS
-        window.setMode = function(mode) {
+        // MISC
+        window.setMode = function(m) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            // Simple mapping for active state visual
-            const idx = ['latest', 'az', 'auth', 'cat'].indexOf(mode);
+            const idx = ['latest', 'az', 'auth', 'cat'].indexOf(m);
             if(idx > -1) document.querySelectorAll('.tab')[idx].classList.add('active');
-            
-            if (mode === 'latest') renderLatest();
-            if (mode === 'az') renderAZ();
-            if (mode === 'auth') renderAuth();
-            if (mode === 'cat') renderCat();
+            if(m==='latest') renderLatest(); if(m==='az') renderAZ(); if(m==='auth') renderAuth(); if(m==='cat') renderCat();
         }
-
         window.handleSearch = function() {
-            const query = document.getElementById('searchInput').value;
-            if (!query) { renderLatest(); return; }
-            const fuse = new Fuse(booksDB, { keys: ['title', 'category', 'author'], threshold: 0.3 });
-            const results = fuse.search(query).map(r => r.item);
-            
-            let html = viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
-            if (results.length === 0) html = '<div class="loading">No results</div>';
-            else results.forEach(b => html += viewMode === 'grid' ? createGridCard(b) : createListCard(b));
-            html += '</div>';
-            app.innerHTML = html;
+            const q = document.getElementById('searchInput').value;
+            if(!q) { renderLatest(); return; }
+            const res = new Fuse(booksDB, {keys:['title','author','category'], threshold:0.3}).search(q).map(r=>r.item);
+            currentFilterData = res; currentMode = 'folder'; displayLimit = 24;
+            renderGridWithPagination(res);
         }
-        
-        function quickFilter(term) {
-            document.getElementById('searchInput').value = term;
-            handleSearch();
+        window.quickFilter = function(t) { document.getElementById('searchInput').value=t; handleSearch(); }
+        window.openRandomBook = function() { if(booksDB.length) openModal(booksDB[Math.floor(Math.random()*booksDB.length)].id); }
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
-        function openRandomBook() {
-            if(booksDB.length === 0) return;
-            openModal(booksDB[Math.floor(Math.random() * booksDB.length)].id);
-        }
+        if(localStorage.getItem('theme') === 'dark') toggleTheme();
     </script>
 </body>
 </html>
