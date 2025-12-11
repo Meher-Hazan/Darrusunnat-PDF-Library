@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি - পিডিএফ বইয়ের বিশাল সংগ্রহ">
+    <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+
+    <style>
+        :root {
+            --primary: #0f4c3a;       /* Emerald */
+            --primary-light: #156b52;
+            --accent: #D4AC0D;        /* Gold */
+            --bg: #F0F2F5;
+            --surface: #ffffff;
+            --text-main: #1C1E21;
+            --text-sec: #65676B;
+            --radius: 16px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* DARK MODE VARIABLES */
+        [data-theme="dark"] {
+            --primary: #1aa276;
+            --primary-light: #2ecc71;
+            --bg: #18191A;
+            --surface: #242526;
+            --text-main: #E4E6EB;
+            --text-sec: #B0B3B8;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        
+        body { 
+            margin: 0; font-family: 'Hind Siliguri', sans-serif; 
+            background: var(--bg); color: var(--text-main); 
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 1. GLASS HEADER --- */
+        nav {
+            background: var(--surface);
+            position: sticky;
+            top: 0; z-index: 1000;
+            padding: 0.8rem 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .logo { 
+            font-family: 'Playfair Display', serif; font-size: 1.3rem; 
+            color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; 
+        }
+        
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+        .theme-toggle {
+            background: var(--bg); color: var(--text-main); border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: var(--transition);
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            color: white; padding: 8px 16px; border-radius: 50px; 
+            font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,136,204,0.3);
+        }
+
+        /* --- 2. HERO --- */
+        .hero {
+            background: linear-gradient(160deg, #0f4c3a 0%, #05221a 100%);
+            color: white; text-align: center; padding: 70px 20px 90px;
+            border-radius: 0 0 50px 50px; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .hero h1 { font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0 0 10px; color: var(--accent); }
+        .hero p { opacity: 0.9; margin: 0 0 30px; font-size: 1.1rem; }
+
+        .search-box {
+            position: relative; max-width: 550px; margin: 0 auto;
+            transform: translateY(20px);
+        }
+        .search-box input {
+            width: 100%; padding: 18px 50px 18px 25px; border: none; border-radius: 50px;
+            font-size: 1rem; font-family: 'Hind Siliguri', sans-serif;
+            background: var(--surface); color: var(--text-main);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .search-box i {
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 1.2rem;
+        }
+
+        /* --- 3. CONTAINER & TABS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px 80px; }
+
+        .tabs { 
+            display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; 
+            flex-wrap: wrap; margin-top: 20px;
+        }
+        .tab {
+            background: var(--surface); color: var(--text-sec);
+            border: 1px solid transparent; padding: 12px 24px; border-radius: 30px;
+            cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .tab.active { 
+            background: var(--primary); color: #fff; 
+            box-shadow: 0 8px 20px rgba(15, 76, 58, 0.3); 
+        }
+
+        /* --- 4. CARDS & GRID --- */
+        .grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 20px; animation: fadeIn 0.5s ease; 
+        }
+
+        .card {
+            background: var(--surface); border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow); transition: var(--transition);
+            display: flex; flex-direction: column; height: 100%; position: relative;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+
+        .card-img-wrapper { position: relative; padding-top: 140%; background: #e0e0e0; overflow: hidden; }
+        .card-img { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; transition: 0.5s; 
+        }
+        
+        .card-body { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { 
+            font-weight: 700; font-size: 1rem; margin-bottom: 8px; 
+            color: var(--text-main); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .card-cat { 
+            font-size: 0.75rem; color: var(--primary-light); font-weight: 700; 
+            text-transform: uppercase; margin-top: auto; letter-spacing: 0.5px;
+        }
+
+        /* --- 5. FOLDERS (ARABIC/ENGLISH/BANGLA) --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; }
+        .folder-btn {
+            background: var(--surface); padding: 20px; border-radius: 16px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; border: 2px solid transparent; 
+            transition: var(--transition);
+        }
+        .folder-btn:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .folder-letter { font-family: 'Amiri', serif; font-size: 2rem; font-weight: bold; color: var(--primary); display: block; line-height: 1; margin-bottom: 5px; }
+        .folder-count { font-size: 0.8rem; color: var(--text-sec); }
+
+        /* --- 6. SKELETON LOADER (Speed Trick) --- */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        [data-theme="dark"] .skeleton {
+             background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Scroll Top Button */
+        .scroll-top {
+            position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white;
+            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 900;
+        }
+        .scroll-top.visible { opacity: 1; pointer-events: all; }
+
+        .back-bar { 
+            display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; 
+            padding: 8px 16px; background: var(--surface); border-radius: 30px;
+            box-shadow: var(--shadow); cursor: pointer; color: var(--primary); font-weight: bold;
+        }
+        
+        .hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <i class="fas fa-book-quran"></i> Darrusunnat
+        </div>
+        <div class="nav-actions">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
+                <i class="fab fa-telegram-plane"></i> <span>Join</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
+        <p>জ্ঞান অর্জনের এক বিশাল সংগ্রহশালা</p>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="tabs">
+            <button class="tab active" onclick="setMode('latest')">সর্বশেষ (Latest)</button>
+            <button class="tab" onclick="setMode('az')">বইয়ের তালিকা (A-Z)</button>
+            <button class="tab" onclick="setMode('cat')">বিষয়ভিত্তিক (Subject)</button>
+        </div>
+
+        <div id="app">
+            <div class="grid">
+                ${generateSkeleton(8)}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="scroll-top" onclick="window.scrollTo(0,0)">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        const app = document.getElementById('app');
+        const defaultCover = "https://via.placeholder.com/300x420/0f4c3a/ffffff?text=Book+PDF";
+        let booksDB = [];
+
+        // --- THEME LOGIC ---
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.querySelector('.theme-toggle i');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+            }
+        }
+
+        // --- SKELETON GENERATOR ---
+        function generateSkeleton(count) {
+            let html = '';
+            for(let i=0; i<count; i++) {
+                html += `
+                <div class="card">
+                    <div class="card-img-wrapper skeleton"></div>
+                    <div class="card-body">
+                        <div class="skeleton" style="height:20px; width:80%; margin-bottom:10px; border-radius:4px;"></div>
+                        <div class="skeleton" style="height:15px; width:40%; margin-top:auto; border-radius:4px;"></div>
+                    </div>
+                </div>`;
+            }
+            return html;
+        }
+        
+        // Show skeletons initially
+        app.innerHTML = `<div class="grid">${generateSkeleton(8)}</div>`;
+
+        // --- DATA LOADER ---
+        fetch('books_data.json?t=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                booksDB = data.sort((a, b) => b.id - a.id);
+                renderLatest();
+            })
+            .catch(err => {
+                app.innerHTML = `<div style="text-align:center; padding:50px;">ডাটাবেস লোড হয়নি। Telegram চেক করুন।</div>`;
+            });
+
+        // --- SMART LETTER EXTRACTOR (Includes Arabic) ---
+        function getCleanLetter(title) {
+            if (!title) return '#';
+            
+            // 1. Remove numbers, dots, spaces, special chars from START
+            // Allows Bangla (\u0980-\u09FF), Arabic (\u0600-\u06FF), English (a-z)
+            const clean = title.replace(/^[^a-zA-Z\u0980-\u09FF\u0600-\u06FF]+/, '');
+            
+            if (!clean) return '#'; // If title was "12345", it goes to #
+            
+            return clean.charAt(0).toUpperCase();
+        }
+
+        // --- RENDER FUNCTIONS ---
+        
+        function renderLatest() {
+            if(booksDB.length === 0) { app.innerHTML = "No books found."; return; }
+            let html = '<div class="grid">';
+            booksDB.forEach(book => html += cardHTML(book));
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        function renderAZ() {
+            const groups = {};
+            
+            booksDB.forEach(book => {
+                const letter = getCleanLetter(book.title);
+                // Filter out numbers completely if user requested (though regex handles most)
+                // We keep '#' for purely symbolic titles, but regex puts "1. Book" into "B"
+                if (!groups[letter]) groups[letter] = [];
+                groups[letter].push(book);
+            });
+
+            // Sort logic: Arabic -> Bangla -> English
+            const sortedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'bn'));
+
+            let html = '<div class="folder-grid">';
+            sortedKeys.forEach(letter => {
+                // Skip if the folder is '#' (Usually means errors or just numbers)
+                if(letter === '#') return; 
+
+                html += `
+                    <div class="folder-btn" onclick="openFolder('${letter}', 'az')">
+                        <span class="folder-letter">${letter}</span>
+                        <span class="folder-count">${groups[letter].length} Books</span>
+                    </div>`;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        function renderCat() {
+            const groups = {};
+            booksDB.forEach(book => {
+                const cat = book.category || 'General';
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(book);
+            });
+
+            let html = '<div class="folder-grid">';
+            Object.keys(groups).sort().forEach(cat => {
+                html += `
+                    <div class="folder-btn" onclick="openFolder('${cat}', 'cat')">
+                        <span class="folder-letter" style="font-size:1.2rem; font-family:'Hind Siliguri'">${cat}</span>
+                        <span class="folder-count">${groups[cat].length} Books</span>
+                    </div>`;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        // --- ACTIONS ---
+        window.openFolder = function(key, type) {
+            let filtered = [];
+            let title = key;
+
+            if (type === 'az') {
+                filtered = booksDB.filter(b => getCleanLetter(b.title) === key);
+                title = `'${key}' দিয়ে শুরু`;
+            } else {
+                filtered = booksDB.filter(b => (b.category || 'General') === key);
+            }
+            
+            // Sort Alphabetically
+            filtered.sort((a, b) => a.title.localeCompare(b.title));
+
+            const backFunc = type === 'az' ? 'renderAZ()' : 'renderCat()';
+
+            let html = `
+                <div class="back-bar" onclick="${backFunc}">
+                    <i class="fas fa-arrow-left"></i> Back
+                </div>
+                <h2 style="color:var(--primary); margin-top:0;">${title}</h2>
+                <div class="grid">
+            `;
+            filtered.forEach(b => html += cardHTML(b));
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        function cardHTML(book) {
+            const img = book.image ? book.image : defaultCover;
+            // Native Lazy Loading for speed
+            return `
+                <a href="${book.link}" target="_blank" class="card">
+                    <div class="card-img-wrapper">
+                        <img src="${img}" class="card-img" loading="lazy" alt="Book Cover">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${book.title}</div>
+                        <div class="card-cat">${book.category}</div>
+                    </div>
+                </a>
+            `;
+        }
+
+        // --- CONTROLS ---
+        window.setMode = function(mode) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (mode === 'latest') renderLatest();
+            if (mode === 'az') renderAZ();
+            if (mode === 'cat') renderCat();
+        }
+
+        window.handleSearch = function() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) { renderLatest(); return; }
+
+            const fuse = new Fuse(booksDB, { keys: ['title', 'category', 'author'], threshold: 0.3 });
+            const results = fuse.search(query).map(r => r.item);
+
+            let html = '<div class="grid">';
+            if (results.length === 0) html = '<div style="text-align:center; width:100%; padding:20px;">কোনো বই খুঁজে পাওয়া যায়নি</div>';
+            else results.forEach(b => html += cardHTML(b));
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        // Scroll Top Logic
+        window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.scroll-top');
+            if(window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        });
+
+    </script>
+</body>
+</html>

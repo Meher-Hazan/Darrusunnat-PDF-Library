@@ -1,0 +1,24 @@
+name: Force Rebuild Site
+
+on: workflow_dispatch  # This adds a "Run" button
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Pandas
+        run: pip install pandas
+      - name: Run Repair Script
+        run: python repair_site.py
+      - name: Commit Changes
+        run: |
+          git config --global user.name "Repair Bot"
+          git config --global user.email "bot@noreply.com"
+          git add index.html
+          git commit -m "Forced index.html rebuild"
+          git push
