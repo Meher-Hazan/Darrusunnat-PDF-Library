@@ -28,56 +28,37 @@ CATEGORIES = {
     'fiqh': ['fiqh', 'salah', 'namaz', 'zakat', 'ফিকহ', 'নামাজ', 'মাসায়েল', 'ফতোয়া'],
     'history': ['history', 'seerah', 'biography', 'ইতিহাস', 'সিরাত', 'জীবনী', 'খেলাফত'],
     'quran': ['quran', 'tafsir', 'কুরআন', 'তাফসির', 'সুরা'],
-    'dua': ['dua', 'zikr', 'দোআ', 'জিকির', 'আমল']
+    'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'সমগ্র']
 }
 
-# Distinct colors for generated covers (Islamic Palette)
+# Colors for generated covers
 COVER_COLORS = [
-    (15, 76, 58),   # Emerald
-    (22, 160, 133), # Teal
-    (44, 62, 80),   # Midnight Blue
-    (142, 68, 173), # Royal Purple
-    (192, 57, 43),  # Deep Red
-    (211, 84, 0),   # Pumpkin
-    (127, 140, 141) # Grey
+    (15, 76, 58), (22, 160, 133), (44, 62, 80), 
+    (142, 68, 173), (192, 57, 43), (211, 84, 0), (127, 140, 141)
 ]
 
-def generate_cover(book_id, title, category):
-    """Creates a unique cover image for books without photos"""
+def generate_cover(book_id, title, author):
+    """Generates a placeholder cover if none exists"""
     try:
-        # 1. Setup Canvas (Portrait Aspect Ratio)
         width, height = 400, 600
         color = random.choice(COVER_COLORS)
         img = Image.new('RGB', (width, height), color=color)
         d = ImageDraw.Draw(img)
-
-        # 2. Draw Border
-        border_w = 15
-        d.rectangle([border_w, border_w, width-border_w, height-border_w], outline="white", width=3)
-
-        # 3. Add Pattern (Simple circles)
-        for i in range(0, width, 40):
-            d.ellipse([i, 0, i+20, 20], fill=(255,255,255, 30))
-            d.ellipse([i, height-20, i+20, height], fill=(255,255,255, 30))
-
-        # 4. Add Text (We use default font as custom fonts are tricky on servers)
-        # We wrap text manually since default font is small/basic
-        # Ideally, we would load a .ttf file, but default is safer for now.
         
-        # Center Title roughly
-        # Note: Default PIL font is small. This is a fallback "Artistic" representation.
-        # Ideally we place the Category in center
+        # Border
+        d.rectangle([15, 15, width-15, height-15], outline="white", width=3)
         
-        d.text((width/2, height/3), category.upper(), fill="white", anchor="mm")
-        d.text((width/2, height/2), "DARRUSUNNAT", fill="gold", anchor="mm")
+        # Text (Basic positioning)
+        # Note: PIL default font is tiny. For real production, we'd need a .ttf file.
+        # This is a fallback to ensure we have *something*.
+        d.text((width/2, height/3), "ISLAMIC LIBRARY", fill="gold", anchor="mm")
         
         # Save
         filename = f"{book_id}_gen.jpg"
         path = os.path.join(IMAGES_DIR, filename)
         img.save(path)
         return f"images/{filename}"
-    except Exception as e:
-        print(f"Could not generate cover: {e}")
+    except:
         return ""
 
 async def main():
@@ -100,51 +81,66 @@ async def main():
     messages = await client.get_messages(CHANNEL_ID, limit=100)
     
     new_count = 0
-    pending_cover_path = "" 
+    pending_cover = "" 
     
     for message in reversed(messages):
         
-        # SCENARIO A: PHOTO
+        # PHOTO
         if message.photo:
             filename = f"{message.id}.jpg"
             file_path = os.path.join(IMAGES_DIR, filename)
             if not os.path.exists(file_path):
-                print(f"Downloading cover: {filename}")
                 await message.download_media(file=file_path)
-            pending_cover_path = f"images/{filename}"
+            pending_cover = f"images/{filename}"
             continue
 
-        # SCENARIO B: PDF
+        # PDF
         if message.document and message.document.mime_type == 'application/pdf':
             
-            current_cover = pending_cover_path
-            pending_cover_path = "" # Reset immediately
+            current_cover = pending_cover
+            pending_cover = "" # Reset
 
-            # Extract Info
-            caption = message.text or ""
-            file_name = message.file.name or ""
-            title = caption.split('\n')[0] if caption else (file_name or f"Book #{message.id}")
+            # --- AUTHOR & TITLE EXTRACTION ---
+            # Priority: File Name. Fallback: Caption.
+            raw_filename = message.file.name or ""
+            clean_filename = os.path.splitext(raw_filename)[0] # Remove .pdf
             
-            # Determine Category
+            title = clean_filename
+            author = ""
+
+            # Attempt to split "Author - Title" or "Title - Author"
+            # We assume the pattern: "Author Name - Book Title"
+            if " - " in clean_filename:
+                parts = clean_filename.split(" - ")
+                if len(parts) >= 2:
+                    author = parts[0].strip()
+                    title = parts[1].strip()
+            elif " | " in clean_filename:
+                parts = clean_filename.split(" | ")
+                if len(parts) >= 2:
+                    author = parts[0].strip()
+                    title = parts[1].strip()
+            
+            # Fallback title if extraction failed or file name is weird
+            if not title and message.text:
+                title = message.text.split('\n')[0]
+
+            # Categorization
             category = "General"
-            check_text = (caption + " " + file_name).lower()
+            check_text = (title + " " + (message.text or "")).lower()
             for cat, keywords in CATEGORIES.items():
                 if any(k in check_text for k in keywords):
                     category = cat.capitalize()
                     break
 
-            # If no cover found from Telegram, GENERATE ONE!
+            # Image Generation Check
             if not current_cover:
-                print(f"Generating Art Cover for: {title}")
-                current_cover = generate_cover(message.id, title, category)
+                current_cover = generate_cover(message.id, title, author)
 
-            # Check Duplicates
+            # Check Duplicate
             if message.id in processed_ids:
-                # Update existing if it doesn't have an image
-                existing = next((b for b in books if b['id'] == message.id), None)
-                if existing and not existing.get('image'):
-                    existing['image'] = current_cover
-                    new_count += 1
+                # Update logic if we want to refresh metadata
+                # For now, we skip to save time, or update if cover was missing
                 continue
 
             clean_id = str(CHANNEL_ID).replace("-100", "")
@@ -153,7 +149,7 @@ async def main():
             new_book = {
                 "id": message.id,
                 "title": title,
-                "author": "Darrusunnat Library",
+                "author": author, # NEW FIELD
                 "category": category,
                 "link": post_link,
                 "image": current_cover
@@ -162,16 +158,16 @@ async def main():
             books.append(new_book)
             processed_ids.add(message.id)
             new_count += 1
-            print(f" + Added: {title}")
+            print(f" + Added: {title} (Author: {author})")
 
     # 3. Save
     if new_count > 0:
         books.sort(key=lambda x: x['id'], reverse=True)
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(books, f, indent=4, ensure_ascii=False)
-        print(f"--- SUCCESS: Updated {new_count} items ---")
+        print(f"--- SUCCESS: Added {new_count} books ---")
     else:
-        print("--- No new items found ---")
+        print("--- No new books ---")
 
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()
