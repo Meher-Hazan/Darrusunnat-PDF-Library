@@ -1,8 +1,41 @@
-- name: Run Scraper
+name: Update Library
+
+on:
+  schedule:
+    - cron: '0 */4 * * *' # Runs every 4 hours
+  workflow_dispatch:      # Allows manual click
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run Robot
       env:
-        # Make sure these names MATCH exactly what is in your Secrets
         API_ID: ${{ secrets.API_ID }}
         API_HASH: ${{ secrets.API_HASH }}
         SESSION_STRING: ${{ secrets.SESSION_STRING }}
         CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
       run: python scraper.py
+
+    - name: Save Changes
+      run: |
+        git config --global user.name "LibraryBot"
+        git config --global user.email "bot@library.com"
+        git add books_data.json images/
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update books" && git push)
