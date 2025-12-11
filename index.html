@@ -6,10 +6,6 @@
     
     <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
     <meta name="description" content="পিডিএফ ইসলামিক বইয়ের বিশাল সমাহার। কুরআন, হাদিস, ফিকহ এবং ইতিহাসের দুর্লভ কিতাবসমূহ।">
-    <meta property="og:title" content="দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি">
-    <meta property="og:description" content="বিনামূল্যে ইসলামিক পিডিএফ বই পড়ুন এবং ডাউনলোড করুন।">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1596627689623-644781702f30?auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:url" content="https://t.me/SobBoiErPdf">
     
     <meta name="theme-color" content="#0f4c3a">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,7 +21,7 @@
 
     <style>
         :root {
-            /* Light Theme: Royal Emerald & Gold */
+            /* Light Theme */
             --primary: #0f4c3a;       
             --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #145A32 100%);
             --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
@@ -40,7 +36,7 @@
         }
 
         [data-theme="dark"] {
-            /* Dark Theme: Midnight & Amber */
+            /* Dark Theme */
             --primary: #2ecc71;
             --primary-gradient: linear-gradient(135deg, #145A32 0%, #0f4c3a 100%);
             --gold-gradient: linear-gradient(135deg, #082d22 0%, #8a7008 100%);
@@ -83,7 +79,13 @@
         }
         .logo i { color: var(--accent); -webkit-text-fill-color: initial; }
         
-        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+
+        .icon-btn {
+            background: transparent; color: var(--text-sec); border: none;
+            font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+        }
+        .icon-btn:hover { color: var(--accent); transform: rotate(15deg); }
 
         .join-btn {
             background: linear-gradient(135deg, #0088cc, #005f8f);
@@ -196,6 +198,13 @@
         .folder-letter { font-family: 'Amiri', serif; font-size: 1.6rem; font-weight: bold; color: var(--primary); display: block; line-height: 1; margin-bottom: 3px; }
         .folder-count { font-size: 0.7rem; color: var(--text-sec); }
 
+        /* EXPLAINER TEXT STYLE */
+        .explainer-text {
+            text-align: center; color: var(--text-sec); font-size: 0.9rem;
+            background: rgba(15, 76, 58, 0.05); padding: 15px; border-radius: 15px;
+            margin-bottom: 20px; border: 1px solid rgba(15, 76, 58, 0.1);
+        }
+
         /* --- 6. MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -276,6 +285,16 @@
         </div>
     </header>
 
+    <nav>
+        <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
+        <div class="nav-actions">
+            <button class="icon-btn" onclick="openRandomBook()" title="Random Book">
+                <i class="fas fa-dice"></i>
+            </button>
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="tabs">
             <div class="tab active" onclick="setMode('latest')">সর্বশেষ</div>
@@ -344,6 +363,10 @@
             }
         }
 
+        // --- OFFLINE DETECTOR ---
+        window.addEventListener('offline', () => showToast('ইন্টারনেট সংযোগ বিচ্ছিন্ন!'));
+        window.addEventListener('online', () => showToast('ইন্টারনেট সংযোগ ফিরে এসেছে!'));
+
         // --- DATA ---
         fetch('books_data.json?t=' + Date.now())
             .then(res => res.json())
@@ -357,6 +380,13 @@
             if (!title) return '#';
             const clean = title.replace(/^[^a-zA-Z\u0980-\u09FF\u0600-\u06FF]+/, '');
             return clean ? clean.charAt(0).toUpperCase() : '#';
+        }
+
+        // --- ACTIONS ---
+        function openRandomBook() {
+            if(booksDB.length === 0) return;
+            const random = booksDB[Math.floor(Math.random() * booksDB.length)];
+            openModal(random.id);
         }
 
         // --- RENDERERS ---
@@ -403,7 +433,15 @@
                 groups[l].push(b);
             });
             const sortedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'bn'));
-            let html = '<div class="folder-grid">';
+            
+            // EXPLAINER TEXT ADDED HERE
+            let html = `
+                <div class="explainer-text">
+                    বইয়ের নামের প্রথম অক্ষর অনুযায়ী তালিকা সাজানো হয়েছে।<br>
+                    আপনার কাঙ্ক্ষিত অক্ষর সিলেক্ট করুন।
+                </div>
+                <div class="folder-grid">`;
+                
             sortedKeys.forEach(letter => {
                 if(letter === '#') return;
                 html += `<div class="folder-btn" onclick="openFolder('${letter}', 'az')"><span class="folder-letter">${letter}</span><span class="folder-count">${groups[letter].length}</span></div>`;
