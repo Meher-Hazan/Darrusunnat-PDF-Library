@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn" data-theme="dark">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,7 +18,7 @@
 
     <style>
         :root {
-            /* ROYAL ISLAMIC PALETTE (NO WHITE) */
+            /* PERMANENT ROYAL PALETTE */
             --primary: #0f4c3a;       
             --gold: #FFD700;
             --accent: #D4AC0D;
@@ -37,13 +37,6 @@
             --shadow-card: 0 10px 30px rgba(0,0,0,0.5);
             --radius: 16px;
             --blur: blur(15px);
-        }
-
-        /* Enforce Dark Theme Look even in Light Mode settings for consistency */
-        [data-theme="light"] {
-            /* Slightly lighter green, but still dark & premium */
-            --bg-body: linear-gradient(135deg, #0f4c3a 0%, #145A32 100%);
-            --glass-card: rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -152,7 +145,7 @@
         .card-img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             object-fit: cover; /* Ensures image fills box */
-            display: block; /* Removes unwanted spacing */
+            display: block; 
         }
         
         /* NEW BADGE */
@@ -169,10 +162,10 @@
 
         .card-body { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
         .card-title { 
-            font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; color: #fff; 
+            font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; color: var(--text-main); 
             line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .card-auth { font-size: 0.7rem; color: #aaa; margin-bottom: 2px; }
+        .card-auth { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 2px; }
         .card-cat { 
             font-size: 0.65rem; color: var(--gold); font-weight: 800; 
             text-transform: uppercase; margin-top: auto; letter-spacing: 1px; 
@@ -223,13 +216,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; 
             border: 2px solid rgba(255,255,255,0.2); 
         }
-        .modal-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
-        .modal-auth { font-size: 0.9rem; color: #ccc; display: block; margin-bottom: 25px; }
+        .modal-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; color: var(--text-main); }
+        .modal-auth { font-size: 0.9rem; color: var(--text-sec); display: block; margin-bottom: 25px; font-weight: 600; }
         
+        .modal-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .modal-btn {
             padding: 14px; border-radius: 50px; font-weight: bold; font-size: 1rem;
             cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
-            margin-bottom: 10px;
         }
         .btn-read { 
             background: linear-gradient(135deg, #FFD700, #F39C12); color: #000; text-decoration: none; 
@@ -333,7 +326,6 @@
         <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)" title="Home"><i class="fas fa-home"></i></button>
         <button class="nav-btn" onclick="toggleView()" id="viewBtn" title="Layout"><i class="fas fa-th-large"></i></button>
         <button class="nav-btn" onclick="openRandomBook()" title="Random"><i class="fas fa-dice"></i></button>
-        <button class="nav-btn" onclick="toggleTheme()" title="Dark Mode"><i class="fas fa-moon theme-icon"></i></button>
         <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></a>
     </div>
 
@@ -349,16 +341,6 @@
         // DATE
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', options);
-
-        // THEME (Always Start Dark/Royal)
-        localStorage.setItem('theme', 'dark'); // Force dark mode look as default
-        
-        function toggleTheme() {
-            // Since we merged the look into a single Royal Theme, this button can now toggle 
-            // minor accents if you want, but for "No White", we keep it simple.
-            // Currently it just refreshes to keep the style consistent.
-            alert("This premium theme is optimized for all lighting conditions!");
-        }
 
         // LOAD DATA
         fetch('books_data.json?t=' + Date.now()).then(r => r.json()).then(d => {
