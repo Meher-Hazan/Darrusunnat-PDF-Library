@@ -3,7 +3,7 @@ name: Update Library
 on:
   schedule:
     - cron: '0 */4 * * *' # Runs every 4 hours
-  workflow_dispatch:      # Allows manual click
+  workflow_dispatch:      # Allows you to click "Run workflow" manually
 
 permissions:
   contents: write
@@ -38,4 +38,5 @@ jobs:
         git config --global user.name "LibraryBot"
         git config --global user.email "bot@library.com"
         git add books_data.json images/
+        # The logic below ensures we ONLY commit if data changed
         git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update books" && git push)
