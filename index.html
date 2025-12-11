@@ -1,170 +1,432 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি - পিডিএফ বইয়ের বিশাল সংগ্রহ">
     <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Hind+Siliguri:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
     <style>
-        :root { --primary: #0f4c3a; --accent: #D4AC0D; --bg: #F5F7FA; --card-bg: #ffffff; }
-        body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background: var(--bg); color: #333; }
+        :root {
+            /* Light Theme */
+            --primary: #0f4c3a;       
+            --primary-light: #156b52;
+            --accent: #D4AC0D;        
+            --bg: #F2F4F8;
+            --surface: #ffffff;
+            --text-main: #1C1E21;
+            --text-sec: #65676B;
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 8px 24px rgba(0,0,0,0.06);
+            --radius: 18px;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --primary: #2ecc71;
+            --primary-light: #27ae60;
+            --accent: #f1c40f;
+            --bg: #0f1113;
+            --surface: #1e2022;
+            --text-main: #E4E6EB;
+            --text-sec: #B0B3B8;
+            --nav-bg: rgba(30, 32, 34, 0.85);
+            --shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        
+        body { 
+            margin: 0; font-family: 'Hind Siliguri', sans-serif; 
+            background: var(--bg); color: var(--text-main); 
+            transition: background 0.4s, color 0.4s;
+            padding-bottom: 80px; /* Space for mobile nav */
+        }
+        
         a { text-decoration: none; color: inherit; }
 
-        /* Nav */
-        nav { background: rgba(255,255,255,0.95); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--primary); font-weight: bold; }
-        .join-btn { background: #0088cc; color: white; padding: 8px 15px; border-radius: 50px; font-size: 0.9rem; }
+        /* --- 1. HERO SECTION (Cover) --- */
+        .hero {
+            background: linear-gradient(160deg, #0f4c3a 0%, #05221a 100%);
+            color: white; text-align: center; 
+            padding: 80px 20px 100px;
+            border-radius: 0 0 50px 50px; position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            background-image: url('https://images.unsplash.com/photo-1596627689623-644781702f30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-blend-mode: multiply;
+        }
+        
+        .hero h1 { 
+            font-family: 'Amiri', serif; font-size: 2.8rem; margin: 0 0 10px; 
+            color: var(--accent); text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero p { 
+            opacity: 0.9; margin: 0 0 30px; font-size: 1.1rem; letter-spacing: 0.5px;
+            animation: fadeInDown 1s ease;
+        }
 
-        /* Hero */
-        .hero { background: linear-gradient(135deg, var(--primary) 0%, #082d22 100%); color: white; text-align: center; padding: 60px 20px 80px; border-radius: 0 0 40px 40px; }
-        .hero h1 { font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0; color: var(--accent); }
-        .search-box { margin-top: 20px; position: relative; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .search-box input { width: 100%; padding: 15px 20px; border-radius: 50px; border: none; outline: none; }
+        /* --- 2. SEARCH BAR (Floating) --- */
+        .search-wrapper {
+            position: relative; max-width: 600px; margin: 0 auto;
+            transform: translateY(30px); z-index: 10;
+        }
+        .search-box {
+            width: 100%; padding: 20px 60px 20px 25px; border: none; border-radius: 50px;
+            font-size: 1rem; font-family: 'Hind Siliguri', sans-serif;
+            background: var(--surface); color: var(--text-main);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            transition: 0.3s;
+        }
+        .search-box:focus { transform: scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .search-icon {
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 1.3rem; pointer-events: none;
+        }
 
-        /* Content */
-        .container { max-width: 1200px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 2; }
-        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab { background: var(--card-bg); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .tab.active { background: var(--accent); color: white; }
+        /* --- 3. MAIN CONTAINER --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px 20px; }
 
-        /* Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); }
-        .card-img { width: 100%; height: 220px; object-fit: cover; background: #eee; }
-        .card-info { padding: 12px; }
-        .card-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-cat { font-size: 0.75rem; color: var(--primary); text-transform: uppercase; font-weight: bold; }
+        /* --- 4. TABS & CONTROLS --- */
+        .tabs { 
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; 
+            flex-wrap: wrap; 
+        }
+        .tab {
+            background: var(--surface); color: var(--text-sec);
+            padding: 12px 25px; border-radius: 30px; cursor: pointer; 
+            font-weight: 700; font-size: 0.95rem; transition: 0.3s;
+            box-shadow: var(--shadow); border: 1px solid transparent;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tab i { font-size: 1.1rem; }
+        .tab:hover { transform: translateY(-3px); }
+        .tab.active { 
+            background: var(--primary); color: #fff; 
+            box-shadow: 0 10px 25px rgba(15, 76, 58, 0.4); 
+        }
 
-        /* Folders */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
-        .folder { background: white; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .folder-letter { font-size: 1.5rem; color: var(--primary); font-weight: bold; display: block; }
+        /* --- 5. GRID & CARDS --- */
+        .grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 25px; animation: fadeIn 0.6s ease; 
+        }
 
-        .loading { text-align: center; padding: 50px; color: #777; }
-        .back-btn { display: inline-block; background: white; padding: 5px 15px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; font-weight: bold; color: var(--primary); }
+        .card {
+            background: var(--surface); border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; height: 100%; position: relative;
+        }
+        .card:hover { transform: translateY(-10px) scale(1.02); z-index: 5; }
+        
+        .card-img-wrapper { 
+            position: relative; padding-top: 145%; /* Portrait Ratio */ 
+            background: #e0e0e0; overflow: hidden; 
+        }
+        .card-img { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; transition: 0.5s; 
+        }
+        
+        /* Floating "PDF" Badge */
+        .card-badge {
+            position: absolute; top: 10px; right: 10px; 
+            background: rgba(0,0,0,0.6); color: white; backdrop-filter: blur(4px);
+            padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;
+        }
+
+        .card-body { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { 
+            font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; 
+            color: var(--text-main); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .card-cat { 
+            font-size: 0.75rem; color: var(--primary); font-weight: 800; 
+            text-transform: uppercase; margin-top: auto; letter-spacing: 1px;
+        }
+
+        /* --- 6. FOLDER VIEW (Modern) --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        .folder-btn {
+            background: var(--surface); padding: 25px 10px; border-radius: 20px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; border: 2px solid transparent; 
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .folder-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
+            background: var(--primary); opacity: 0; transition: 0.3s;
+        }
+        .folder-btn:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .folder-btn:hover::before { opacity: 1; }
+        
+        .folder-icon { font-size: 2rem; color: var(--accent); margin-bottom: 10px; display: block; }
+        .folder-letter { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--text-main); display: block; line-height: 1; margin-bottom: 5px; }
+        .folder-count { font-size: 0.75rem; color: var(--text-sec); font-weight: 600; }
+
+        /* --- 7. BOTTOM APP BAR (Mobile & Desktop) --- */
+        .app-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(15px);
+            padding: 10px 30px; border-radius: 50px;
+            display: flex; align-items: center; gap: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            background: none; border: none; color: var(--text-sec);
+            font-size: 1.5rem; cursor: pointer; transition: 0.3s;
+            position: relative; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+        }
+        .nav-btn:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
+        .nav-btn.active { color: var(--primary); background: rgba(15, 76, 58, 0.1); }
+        
+        /* Telegram Button Special Style */
+        .nav-btn.tg-btn { 
+            background: #0088cc; color: white; 
+            box-shadow: 0 4px 15px rgba(0,136,204,0.4); 
+        }
+        .nav-btn.tg-btn:hover { transform: translateY(-3px); background: #0099e6; }
+
+        /* --- 8. UTILITIES --- */
+        .back-bar { 
+            display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; 
+            padding: 10px 20px; background: var(--surface); border-radius: 30px;
+            box-shadow: var(--shadow); cursor: pointer; color: var(--primary); font-weight: bold;
+            transition: 0.3s;
+        }
+        .back-bar:hover { transform: translateX(-5px); }
+        
+        .loading { text-align: center; padding: 60px 20px; color: var(--text-sec); }
+        .skeleton { background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        [data-theme="dark"] .skeleton { background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%); }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
 
-<nav>
-    <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
-    <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
-</nav>
-
-<div class="hero">
-    <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
-    <p>ইসলামি জ্ঞানের বিশ্বস্ত সংগ্রহশালা</p>
-    <div class="search-box">
-        <input type="text" id="search" placeholder="বই খুঁজুন..." oninput="handleSearch()">
-    </div>
-</div>
-
-<div class="container">
-    <div class="tabs">
-        <div class="tab active" onclick="setView('latest')">Latest</div>
-        <div class="tab" onclick="setView('az')">A-Z List</div>
-        <div class="tab" onclick="setView('cat')">Subject</div>
-    </div>
-    <div id="app"><div class="loading">Loading...</div></div>
-</div>
-
-<script>
-    let books = [];
-    const app = document.getElementById('app');
-    const defImg = "https://via.placeholder.com/300x420/0f4c3a/ffffff?text=Book";
-
-    // Load Data with timestamp to prevent caching old data
-    fetch('books_data.json?t=' + Date.now())
-        .then(r => r.json())
-        .then(d => { books = d.sort((a,b) => b.id - a.id); renderLatest(); })
-        .catch(e => app.innerHTML = '<div class="loading">No data found. Upload to Telegram to start.</div>');
-
-    function getLetter(title) {
-        // Remove numbers/symbols from start to find real letter
-        let clean = title.replace(/^[^a-zA-Z\u0980-\u09FF\u0600-\u06FF]+/, '');
-        return clean ? clean.charAt(0).toUpperCase() : '#';
-    }
-
-    function renderLatest() {
-        let html = '<div class="grid">';
-        books.forEach(b => html += card(b));
-        html += '</div>';
-        app.innerHTML = html;
-    }
-
-    function renderAZ() {
-        let groups = {};
-        books.forEach(b => {
-            let l = getLetter(b.title);
-            if(!groups[l]) groups[l] = [];
-            groups[l].push(b);
-        });
-        // Sort keys: Arabic -> Bangla -> English
-        let keys = Object.keys(groups).sort((a,b) => a.localeCompare(b, 'bn'));
+    <header class="hero">
+        <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
+        <p>ইসলামি জ্ঞানের বিশ্বস্ত ডিজিটাল সংগ্রহশালা</p>
         
-        let html = '<div class="folder-grid">';
-        keys.forEach(k => {
-            if(k !== '#') html += `<div class="folder" onclick="openFolder('${k}', 'az')"><span class="folder-letter">${k}</span><small>${groups[k].length}</small></div>`;
-        });
-        html += '</div>';
-        app.innerHTML = html;
-    }
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-box" placeholder="বইয়ের নাম, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </header>
 
-    function renderCat() {
-        let groups = {};
-        books.forEach(b => {
-            let c = b.category || 'General';
-            if(!groups[c]) groups[c] = [];
-            groups[c].push(b);
-        });
-        let html = '<div class="folder-grid">';
-        Object.keys(groups).sort().forEach(k => {
-            html += `<div class="folder" onclick="openFolder('${k}', 'cat')"><span class="folder-letter" style="font-size:1rem">${k}</span><small>${groups[k].length}</small></div>`;
-        });
-        html += '</div>';
-        app.innerHTML = html;
-    }
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="setMode('latest')"><i class="fas fa-clock"></i> সর্বশেষ (Latest)</div>
+            <div class="tab" onclick="setMode('az')"><i class="fas fa-sort-alpha-down"></i> বইয়ের তালিকা (A-Z)</div>
+            <div class="tab" onclick="setMode('cat')"><i class="fas fa-layer-group"></i> বিষয়ভিত্তিক (Subject)</div>
+        </div>
 
-    window.openFolder = function(key, type) {
-        let list = type === 'az' ? books.filter(b => getLetter(b.title) === key) : books.filter(b => (b.category||'General') === key);
-        list.sort((a,b) => a.title.localeCompare(b.title));
+        <div id="app">
+            <div class="grid">${generateSkeleton(8)}</div>
+        </div>
+    </div>
+
+    <div class="app-bar">
+        <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)" title="Home">
+            <i class="fas fa-home"></i>
+        </button>
         
-        let html = `<div class="back-btn" onclick="setView('${type}')"><i class="fas fa-arrow-left"></i> Back</div><h2 style="color:var(--primary)">${key}</h2><div class="grid">`;
-        list.forEach(b => html += card(b));
-        html += '</div>';
-        app.innerHTML = html;
-    }
+        <button class="nav-btn theme-btn" onclick="toggleTheme()" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
 
-    function card(b) {
-        let img = b.image || defImg;
-        return `<a href="${b.link}" target="_blank" class="card">
-            <img src="${img}" class="card-img" loading="lazy">
-            <div class="card-info"><div class="card-title">${b.title}</div><div class="card-cat">${b.category}</div></div>
-        </a>`;
-    }
+        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn tg-btn" title="Join Telegram">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+    </div>
 
-    window.setView = function(v) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
-        if(v==='latest') renderLatest();
-        if(v==='az') renderAZ();
-        if(v==='cat') renderCat();
-    }
+    <script>
+        const app = document.getElementById('app');
+        const defaultCover = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Darrusunnat+Library";
+        let booksDB = [];
 
-    window.handleSearch = function() {
-        let q = document.getElementById('search').value;
-        if(!q) { renderLatest(); return; }
-        let res = new Fuse(books, {keys:['title','category'], threshold:0.3}).search(q).map(r=>r.item);
-        let html = '<div class="grid">';
-        res.forEach(b => html += card(b));
-        html += '</div>';
-        app.innerHTML = html;
-    }
-</script>
+        // --- 1. INITIALIZATION & THEME ---
+        // Load saved theme from local storage
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-btn i').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.querySelector('.theme-btn i');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // --- 2. DATA LOADING ---
+        function generateSkeleton(count) {
+            let html = '';
+            for(let i=0; i<count; i++) {
+                html += `<div class="card"><div class="card-img-wrapper skeleton"></div><div class="card-body"><div class="skeleton" style="height:20px; width:80%; margin-bottom:10px;"></div><div class="skeleton" style="height:15px; width:40%; margin-top:auto;"></div></div></div>`;
+            }
+            return html;
+        }
+
+        // Cache busting timestamp
+        fetch('books_data.json?t=' + Date.now())
+            .then(res => res.json())
+            .then(data => {
+                booksDB = data.sort((a, b) => b.id - a.id); // Latest first
+                renderLatest();
+            })
+            .catch(err => {
+                app.innerHTML = `<div class="loading"><i class="fas fa-wifi fa-3x"></i><br><br>ডাটাবেস লোড হয়নি। দয়া করে ইন্টারনেট চেক করুন।</div>`;
+            });
+
+        // --- 3. SORTING HELPERS ---
+        function getSmartLetter(title) {
+            if (!title) return '#';
+            const clean = title.replace(/^[^a-zA-Z\u0980-\u09FF\u0600-\u06FF]+/, '');
+            return clean ? clean.charAt(0).toUpperCase() : '#';
+        }
+
+        // --- 4. RENDERERS ---
+        function renderLatest() {
+            if(booksDB.length === 0) { app.innerHTML = "No books found."; return; }
+            let html = '<div class="grid">';
+            booksDB.forEach(book => html += cardHTML(book));
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        function renderAZ() {
+            const groups = {};
+            booksDB.forEach(b => {
+                const l = getSmartLetter(b.title);
+                if (!groups[l]) groups[l] = [];
+                groups[l].push(b);
+            });
+            const sortedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'bn'));
+
+            let html = '<div class="folder-grid">';
+            sortedKeys.forEach(letter => {
+                if(letter === '#') return;
+                html += `
+                    <div class="folder-btn" onclick="openFolder('${letter}', 'az')">
+                        <span class="folder-letter">${letter}</span>
+                        <span class="folder-count">${groups[letter].length} Books</span>
+                    </div>`;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        function renderCat() {
+            const groups = {};
+            booksDB.forEach(b => { 
+                const cat = b.category || 'General'; 
+                if (!groups[cat]) groups[cat] = []; 
+                groups[cat].push(b); 
+            });
+
+            let html = '<div class="folder-grid">';
+            Object.keys(groups).sort().forEach(cat => {
+                html += `
+                    <div class="folder-btn" onclick="openFolder('${cat}', 'cat')">
+                        <i class="fas fa-folder-open folder-icon"></i>
+                        <span class="folder-letter" style="font-size:1.1rem; font-family:'Hind Siliguri'">${cat}</span>
+                        <span class="folder-count">${groups[cat].length} Books</span>
+                    </div>`;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+        }
+
+        window.openFolder = function(key, type) {
+            let filtered = [];
+            let title = key;
+            if (type === 'az') {
+                filtered = booksDB.filter(b => getSmartLetter(b.title) === key);
+                title = `'${key}' দিয়ে শুরু`;
+            } else {
+                filtered = booksDB.filter(b => (b.category || 'General') === key);
+            }
+            
+            filtered.sort((a, b) => a.title.localeCompare(b.title));
+            const backFunc = type === 'az' ? 'renderAZ()' : 'renderCat()';
+
+            let html = `
+                <div class="back-bar" onclick="${backFunc}">
+                    <i class="fas fa-arrow-left"></i> পেছনে যান (Back)
+                </div>
+                <h2 style="color:var(--primary); margin-top:0;">${title}</h2>
+                <div class="grid">
+            `;
+            filtered.forEach(b => html += cardHTML(b));
+            html += '</div>';
+            app.innerHTML = html;
+            window.scrollTo(0, 300); // Auto scroll to content
+        }
+
+        function cardHTML(book) {
+            const img = book.image || defaultCover;
+            return `
+                <a href="${book.link}" target="_blank" class="card">
+                    <span class="card-badge">PDF</span>
+                    <div class="card-img-wrapper">
+                        <img src="${img}" class="card-img" loading="lazy" alt="Cover">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${book.title}</div>
+                        <div class="card-cat">${book.category}</div>
+                    </div>
+                </a>
+            `;
+        }
+
+        // --- 5. CONTROLLERS ---
+        window.setMode = function(mode) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            // Find tab by content logic or index (simplified here)
+            if(mode === 'latest') document.querySelectorAll('.tab')[0].classList.add('active');
+            if(mode === 'az') document.querySelectorAll('.tab')[1].classList.add('active');
+            if(mode === 'cat') document.querySelectorAll('.tab')[2].classList.add('active');
+            
+            if (mode === 'latest') renderLatest();
+            if (mode === 'az') renderAZ();
+            if (mode === 'cat') renderCat();
+        }
+
+        window.handleSearch = function() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) { renderLatest(); return; }
+
+            const fuse = new Fuse(booksDB, { keys: ['title', 'category'], threshold: 0.3 });
+            const results = fuse.search(query).map(r => r.item);
+
+            let html = '<div class="grid">';
+            if (results.length === 0) html = '<div style="text-align:center; width:100%; padding:40px; color:var(--text-sec)">কোনো ফলাফল পাওয়া যায়নি</div>';
+            else results.forEach(b => html += cardHTML(b));
+            html += '</div>';
+            app.innerHTML = html;
+        }
+    </script>
 </body>
 </html>
