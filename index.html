@@ -15,30 +15,33 @@
 
     <style>
         :root {
-            /* Light Theme */
+            /* Light Theme - Royal Green & Gold */
             --primary: #0f4c3a;       
-            --primary-light: #156b52;
+            --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #1b5e20 100%);
+            --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
             --accent: #D4AC0D;        
-            --bg: #F2F4F8;
-            --surface: #ffffff;
+            --bg: #Fdfdfd;
+            --surface: rgba(255, 255, 255, 0.85);
             --text-main: #1C1E21;
-            --text-sec: #65676B;
-            --nav-bg: rgba(255, 255, 255, 0.85);
-            --shadow: 0 8px 24px rgba(0,0,0,0.06);
-            --radius: 18px;
+            --text-sec: #555;
+            --glass: blur(12px) saturate(180%);
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 8px 32px rgba(15, 76, 58, 0.1);
+            --radius: 20px;
         }
 
         [data-theme="dark"] {
-            /* Dark Theme */
+            /* Dark Theme - Deep Jungle & Muted Gold */
             --primary: #2ecc71;
-            --primary-light: #27ae60;
+            --primary-gradient: linear-gradient(135deg, #145A32 0%, #0f4c3a 100%);
+            --gold-gradient: linear-gradient(135deg, #082d22 0%, #8a7008 100%);
             --accent: #f1c40f;
-            --bg: #0f1113;
-            --surface: #1e2022;
+            --bg: #050505;
+            --surface: rgba(30, 32, 34, 0.7);
             --text-main: #E4E6EB;
             --text-sec: #B0B3B8;
-            --nav-bg: rgba(30, 32, 34, 0.85);
-            --shadow: 0 8px 24px rgba(0,0,0,0.4);
+            --nav-bg: rgba(20, 20, 20, 0.9);
+            --shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,74 +51,120 @@
             margin: 0; font-family: 'Hind Siliguri', sans-serif; 
             background: var(--bg); color: var(--text-main); 
             transition: background 0.4s, color 0.4s;
-            padding-bottom: 80px; /* Space for mobile nav */
+            padding-bottom: 90px; /* Space for floating nav */
+            background-image: radial-gradient(circle at 10% 20%, rgba(212, 172, 13, 0.05) 0%, transparent 20%), 
+                              radial-gradient(circle at 90% 80%, rgba(15, 76, 58, 0.05) 0%, transparent 20%);
+            background-attachment: fixed;
         }
         
         a { text-decoration: none; color: inherit; }
 
-        /* --- 1. HERO SECTION (Cover) --- */
-        .hero {
-            background: linear-gradient(160deg, #0f4c3a 0%, #05221a 100%);
-            color: white; text-align: center; 
-            padding: 80px 20px 100px;
-            border-radius: 0 0 50px 50px; position: relative;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            background-image: url('https://images.unsplash.com/photo-1596627689623-644781702f30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-            background-size: cover;
-            background-blend-mode: multiply;
+        /* --- 1. GLASS HEADER --- */
+        nav {
+            background: var(--nav-bg);
+            backdrop-filter: var(--glass);
+            -webkit-backdrop-filter: var(--glass);
+            position: sticky; top: 0; z-index: 1000;
+            padding: 0.8rem 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(212, 172, 13, 0.15); /* Subtle Gold Line */
         }
         
+        .logo { 
+            font-family: 'Playfair Display', serif; font-size: 1.4rem; 
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 800; display: flex; align-items: center; gap: 8px; 
+        }
+        .logo i { color: var(--accent); -webkit-text-fill-color: initial; }
+        
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+        .theme-toggle {
+            background: transparent; color: var(--accent); border: 1px solid var(--accent);
+            width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: 0.3s;
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, #0088cc, #005f8f);
+            color: white; padding: 8px 18px; border-radius: 50px; 
+            font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 4px 15px rgba(0,136,204,0.3); transition: 0.3s;
+        }
+        .join-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,136,204,0.5); }
+
+        /* --- 2. GOLDEN HERO --- */
+        .hero {
+            background: var(--gold-gradient);
+            color: white; text-align: center; 
+            padding: 90px 20px 110px;
+            border-radius: 0 0 50px 50px; position: relative;
+            box-shadow: 0 15px 40px rgba(15, 76, 58, 0.3);
+            overflow: hidden;
+        }
+        
+        /* Decorative circle behind hero text */
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -20%; width: 140%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
         .hero h1 { 
-            font-family: 'Amiri', serif; font-size: 2.8rem; margin: 0 0 10px; 
-            color: var(--accent); text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-family: 'Amiri', serif; font-size: 3rem; margin: 0 0 10px; 
+            color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(to bottom, #fff, #e0e0e0); -webkit-background-clip: text;
             animation: fadeInDown 0.8s ease;
         }
         .hero p { 
-            opacity: 0.9; margin: 0 0 30px; font-size: 1.1rem; letter-spacing: 0.5px;
+            opacity: 0.95; margin: 0 0 30px; font-size: 1.1rem; letter-spacing: 0.5px; color: #f0fdf4;
             animation: fadeInDown 1s ease;
         }
 
-        /* --- 2. SEARCH BAR (Floating) --- */
         .search-wrapper {
             position: relative; max-width: 600px; margin: 0 auto;
-            transform: translateY(30px); z-index: 10;
+            transform: translateY(40px); z-index: 10;
         }
         .search-box {
-            width: 100%; padding: 20px 60px 20px 25px; border: none; border-radius: 50px;
-            font-size: 1rem; font-family: 'Hind Siliguri', sans-serif;
+            width: 100%; padding: 22px 60px 22px 30px; border: none; border-radius: 50px;
+            font-size: 1.1rem; font-family: 'Hind Siliguri', sans-serif;
             background: var(--surface); color: var(--text-main);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.5);
             transition: 0.3s;
         }
-        .search-box:focus { transform: scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .search-box:focus { transform: scale(1.02); border-color: var(--accent); }
         .search-icon {
-            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
-            color: var(--primary); font-size: 1.3rem; pointer-events: none;
+            position: absolute; right: 30px; top: 50%; transform: translateY(-50%);
+            color: var(--accent); font-size: 1.4rem; pointer-events: none;
         }
 
-        /* --- 3. MAIN CONTAINER --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px 20px; }
+        /* --- 3. CONTAINER --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 70px 20px 20px; }
 
-        /* --- 4. TABS & CONTROLS --- */
+        /* --- 4. PREMIUM TABS --- */
         .tabs { 
             display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; 
             flex-wrap: wrap; 
         }
         .tab {
             background: var(--surface); color: var(--text-sec);
-            padding: 12px 25px; border-radius: 30px; cursor: pointer; 
+            padding: 12px 28px; border-radius: 50px; cursor: pointer; 
             font-weight: 700; font-size: 0.95rem; transition: 0.3s;
-            box-shadow: var(--shadow); border: 1px solid transparent;
+            box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);
             display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(5px);
         }
-        .tab i { font-size: 1.1rem; }
-        .tab:hover { transform: translateY(-3px); }
+        .tab:hover { transform: translateY(-3px); color: var(--primary); }
         .tab.active { 
-            background: var(--primary); color: #fff; 
+            background: var(--primary-gradient); color: #fff; 
             box-shadow: 0 10px 25px rgba(15, 76, 58, 0.4); 
+            border: none;
         }
 
-        /* --- 5. GRID & CARDS --- */
+        /* --- 5. GLASS CARDS --- */
         .grid { 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
             gap: 25px; animation: fadeIn 0.6s ease; 
@@ -125,8 +174,10 @@
             background: var(--surface); border-radius: var(--radius); overflow: hidden;
             box-shadow: var(--shadow); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex; flex-direction: column; height: 100%; position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
         }
-        .card:hover { transform: translateY(-10px) scale(1.02); z-index: 5; }
+        .card:hover { transform: translateY(-10px) scale(1.02); z-index: 5; border-color: var(--accent); }
         
         .card-img-wrapper { 
             position: relative; padding-top: 145%; /* Portrait Ratio */ 
@@ -136,12 +187,13 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             object-fit: cover; transition: 0.5s; 
         }
+        .card:hover .card-img { transform: scale(1.05); }
         
-        /* Floating "PDF" Badge */
         .card-badge {
             position: absolute; top: 10px; right: 10px; 
-            background: rgba(0,0,0,0.6); color: white; backdrop-filter: blur(4px);
-            padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;
+            background: rgba(15, 76, 58, 0.8); color: #FFD700; backdrop-filter: blur(4px);
+            padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 800;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .card-body { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -151,67 +203,70 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         .card-cat { 
-            font-size: 0.75rem; color: var(--primary); font-weight: 800; 
+            font-size: 0.75rem; color: var(--accent); font-weight: 800; 
             text-transform: uppercase; margin-top: auto; letter-spacing: 1px;
         }
 
-        /* --- 6. FOLDER VIEW (Modern) --- */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        /* --- 6. GOLDEN FOLDERS --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
         .folder-btn {
-            background: var(--surface); padding: 25px 10px; border-radius: 20px; text-align: center;
-            box-shadow: var(--shadow); cursor: pointer; border: 2px solid transparent; 
+            background: var(--surface); padding: 25px 15px; border-radius: 20px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; border: 1px solid rgba(212, 172, 13, 0.1); 
             transition: 0.3s; position: relative; overflow: hidden;
+            backdrop-filter: blur(10px);
         }
         .folder-btn::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
-            background: var(--primary); opacity: 0; transition: 0.3s;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; 
+            background: var(--gold-gradient); opacity: 0; transition: 0.3s;
         }
-        .folder-btn:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .folder-btn:hover { border-color: var(--accent); transform: translateY(-5px); }
         .folder-btn:hover::before { opacity: 1; }
         
-        .folder-icon { font-size: 2rem; color: var(--accent); margin-bottom: 10px; display: block; }
-        .folder-letter { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--text-main); display: block; line-height: 1; margin-bottom: 5px; }
-        .folder-count { font-size: 0.75rem; color: var(--text-sec); font-weight: 600; }
-
-        /* --- 7. BOTTOM APP BAR (Mobile & Desktop) --- */
-        .app-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--nav-bg); backdrop-filter: blur(15px);
-            padding: 10px 30px; border-radius: 50px;
-            display: flex; align-items: center; gap: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000;
-            border: 1px solid rgba(255,255,255,0.1);
+        .folder-letter { 
+            font-family: 'Amiri', serif; font-size: 2rem; font-weight: bold; 
+            background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: block; line-height: 1; margin-bottom: 5px; 
         }
+        .folder-count { font-size: 0.8rem; color: var(--text-sec); font-weight: 600; }
+
+        /* --- 7. FLOATING GLASS BAR --- */
+        .app-bar {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 10px 35px; border-radius: 50px;
+            display: flex; align-items: center; gap: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25); z-index: 2000;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        [data-theme="dark"] .app-bar { background: rgba(30,30,30,0.8); border-color: rgba(255,255,255,0.1); }
 
         .nav-btn {
             background: none; border: none; color: var(--text-sec);
-            font-size: 1.5rem; cursor: pointer; transition: 0.3s;
-            position: relative; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+            font-size: 1.6rem; cursor: pointer; transition: 0.3s;
+            position: relative; display: flex; align-items: center; justify-content: center;
         }
-        .nav-btn:hover { color: var(--primary); background: rgba(0,0,0,0.05); }
-        .nav-btn.active { color: var(--primary); background: rgba(15, 76, 58, 0.1); }
+        .nav-btn:hover { color: var(--accent); transform: translateY(-3px); }
+        .nav-btn.active { color: var(--primary); }
+        .nav-btn.active::after {
+            content: ''; position: absolute; bottom: -8px; width: 6px; height: 6px; 
+            background: var(--accent); border-radius: 50%;
+        }
         
-        /* Telegram Button Special Style */
-        .nav-btn.tg-btn { 
-            background: #0088cc; color: white; 
-            box-shadow: 0 4px 15px rgba(0,136,204,0.4); 
-        }
-        .nav-btn.tg-btn:hover { transform: translateY(-3px); background: #0099e6; }
-
         /* --- 8. UTILITIES --- */
         .back-bar { 
             display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; 
-            padding: 10px 20px; background: var(--surface); border-radius: 30px;
+            padding: 10px 25px; background: var(--surface); border-radius: 30px;
             box-shadow: var(--shadow); cursor: pointer; color: var(--primary); font-weight: bold;
-            transition: 0.3s;
+            transition: 0.3s; border: 1px solid rgba(0,0,0,0.05);
         }
-        .back-bar:hover { transform: translateX(-5px); }
+        .back-bar:hover { transform: translateX(-5px); border-color: var(--accent); }
         
         .loading { text-align: center; padding: 60px 20px; color: var(--text-sec); }
-        .skeleton { background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .skeleton { background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         [data-theme="dark"] .skeleton { background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%); }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
@@ -245,11 +300,11 @@
             <i class="fas fa-home"></i>
         </button>
         
-        <button class="nav-btn theme-btn" onclick="toggleTheme()" title="Toggle Dark Mode">
-            <i class="fas fa-moon"></i>
+        <button class="nav-btn" onclick="toggleTheme()" title="Toggle Dark Mode">
+            <i class="fas fa-moon theme-icon"></i>
         </button>
 
-        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn tg-btn" title="Join Telegram">
+        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:#0088cc" title="Join Telegram">
             <i class="fab fa-telegram-plane"></i>
         </a>
     </div>
@@ -260,15 +315,14 @@
         let booksDB = [];
 
         // --- 1. INITIALIZATION & THEME ---
-        // Load saved theme from local storage
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
-            document.querySelector('.theme-btn i').classList.replace('fa-moon', 'fa-sun');
+            document.querySelector('.theme-icon').classList.replace('fa-moon', 'fa-sun');
         }
 
         function toggleTheme() {
             const html = document.documentElement;
-            const icon = document.querySelector('.theme-btn i');
+            const icon = document.querySelector('.theme-icon');
             if (html.getAttribute('data-theme') === 'dark') {
                 html.setAttribute('data-theme', 'light');
                 icon.classList.replace('fa-sun', 'fa-moon');
@@ -293,7 +347,7 @@
         fetch('books_data.json?t=' + Date.now())
             .then(res => res.json())
             .then(data => {
-                booksDB = data.sort((a, b) => b.id - a.id); // Latest first
+                booksDB = data.sort((a, b) => b.id - a.id); 
                 renderLatest();
             })
             .catch(err => {
@@ -350,7 +404,7 @@
             Object.keys(groups).sort().forEach(cat => {
                 html += `
                     <div class="folder-btn" onclick="openFolder('${cat}', 'cat')">
-                        <i class="fas fa-folder-open folder-icon"></i>
+                        <i class="fas fa-folder-open" style="font-size:1.5rem; color:var(--accent); margin-bottom:10px;"></i><br>
                         <span class="folder-letter" style="font-size:1.1rem; font-family:'Hind Siliguri'">${cat}</span>
                         <span class="folder-count">${groups[cat].length} Books</span>
                     </div>`;
@@ -382,7 +436,7 @@
             filtered.forEach(b => html += cardHTML(b));
             html += '</div>';
             app.innerHTML = html;
-            window.scrollTo(0, 300); // Auto scroll to content
+            window.scrollTo(0, 300);
         }
 
         function cardHTML(book) {
@@ -404,7 +458,6 @@
         // --- 5. CONTROLLERS ---
         window.setMode = function(mode) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            // Find tab by content logic or index (simplified here)
             if(mode === 'latest') document.querySelectorAll('.tab')[0].classList.add('active');
             if(mode === 'az') document.querySelectorAll('.tab')[1].classList.add('active');
             if(mode === 'cat') document.querySelectorAll('.tab')[2].classList.add('active');
