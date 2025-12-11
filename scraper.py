@@ -5,6 +5,11 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 
 # --- CONFIGURATION ---
+# Stop immediately if secrets are missing
+if 'API_ID' not in os.environ or 'SESSION_STRING' not in os.environ:
+    print("Error: Secrets missing.")
+    exit(1)
+
 API_ID = int(os.environ['API_ID'])
 API_HASH = os.environ['API_HASH']
 SESSION_STRING = os.environ['SESSION_STRING']
@@ -25,7 +30,7 @@ CATEGORIES = {
 }
 
 async def main():
-    print("--- Connecting to Telegram (User Mode) ---")
+    print("--- Connecting to Telegram ---")
     client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
     await client.start()
 
@@ -39,41 +44,40 @@ async def main():
                 processed_ids = {b['id'] for b in books}
         except: pass
     
-    # 2. Scan Channel (Last 200 messages)
-    print("Scanning last 200 messages for new books...")
-    messages = await client.get_messages(CHANNEL_ID, limit=200)
+    # 2. Scan Last 100 Messages
+    print("Scanning history...")
+    messages = await client.get_messages(CHANNEL_ID, limit=100)
     
-    new_items = 0
+    new_count = 0
     active_cover = ""
 
     # Process Oldest -> Newest
     for message in reversed(messages):
         
-        # Capture Cover
+        # Photo (Cover)
         if message.photo:
             filename = f"{message.id}.jpg"
             file_path = os.path.join(IMAGES_DIR, filename)
-            # Only download if missing
             if not os.path.exists(file_path):
                 print(f"Downloading cover: {filename}")
                 await message.download_media(file=file_path)
             active_cover = f"images/{filename}"
             continue
 
-        # Capture PDF
+        # PDF (Book)
         if message.document and message.document.mime_type == 'application/pdf':
-            # Skip if we already have this exact message ID
             if message.id in processed_ids:
-                # Still update active_cover logic based on what we have in DB
+                # Update cover logic for continuity
                 existing = next((b for b in books if b['id'] == message.id), None)
-                if existing and existing['image']: active_cover = existing['image']
+                if existing and existing.get('image'): active_cover = existing['image']
                 continue
 
-            # New Book Found
+            # New Book
             caption = message.text or ""
             file_name = message.file.name or ""
             title = caption.split('\n')[0] if caption else (file_name or f"Book #{message.id}")
             
+            # Category
             category = "General"
             check_text = (caption + " " + file_name).lower()
             for cat, keywords in CATEGORIES.items():
@@ -94,18 +98,17 @@ async def main():
             }
             
             books.append(new_book)
-            new_items += 1
+            new_count += 1
             print(f" + Added: {title}")
 
-    # 3. Save Data
-    if new_items > 0:
-        # Sort by ID descending (Latest first)
+    # 3. Save
+    if new_count > 0:
         books.sort(key=lambda x: x['id'], reverse=True)
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(books, f, indent=4, ensure_ascii=False)
-        print(f"--- SUCCESS: Added {new_items} new books ---")
+        print(f"--- SUCCESS: Added {new_count} books ---")
     else:
-        print("--- No new books found. Database up to date. ---")
+        print("--- No new books found ---")
 
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()
