@@ -19,32 +19,40 @@
 
     <style>
         :root {
-            /* Light Theme: Soft Gold & Mint Gradient (No more harsh white) */
+            /* Light Theme: Warm Cream & Royal Green (No more white!) */
             --primary: #0f4c3a;       
             --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #145A32 100%);
             --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
             --accent: #D4AC0D;        
-            --bg-gradient: linear-gradient(160deg, #F3F9F6 0%, #FCF9EE 100%); /* Soft Mint to Cream */
-            --surface: rgba(255, 255, 255, 0.7); /* More transparent for glass effect */
+            
+            /* BACKGROUND: Soft Cream instead of White */
+            --bg-color: #F9F7F2; 
+            --bg-pattern: radial-gradient(#D4AC0D 0.5px, transparent 0.5px), radial-gradient(#0f4c3a 0.5px, #F9F7F2 0.5px);
+            
+            --surface: rgba(255, 255, 255, 0.85); /* Slightly transparent cards */
             --text-main: #1C1E21;
             --text-sec: #444;
-            --nav-bg: rgba(255, 255, 255, 0.85);
-            --shadow: 0 8px 30px rgba(15, 76, 58, 0.08);
+            --nav-bg: rgba(249, 247, 242, 0.95);
+            --shadow: 0 8px 20px rgba(15, 76, 58, 0.08);
             --radius: 16px;
             --glass: blur(12px) saturate(180%);
         }
 
         [data-theme="dark"] {
-            /* Dark Theme: Deep Jungle */
+            /* Dark Theme: Deep Midnight Green */
             --primary: #2ecc71;
             --primary-gradient: linear-gradient(135deg, #145A32 0%, #0f4c3a 100%);
             --gold-gradient: linear-gradient(135deg, #082d22 0%, #8a7008 100%);
             --accent: #f1c40f;
-            --bg-gradient: linear-gradient(160deg, #0a0f0d 0%, #1a1a10 100%);
-            --surface: rgba(30, 32, 34, 0.6);
+            
+            /* BACKGROUND: Dark Jungle */
+            --bg-color: #050806;
+            --bg-pattern: none;
+            
+            --surface: rgba(30, 32, 34, 0.8);
             --text-main: #E4E6EB;
             --text-sec: #B0B3B8;
-            --nav-bg: rgba(20, 20, 20, 0.85);
+            --nav-bg: rgba(10, 15, 12, 0.95);
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
@@ -53,12 +61,26 @@
         
         body { 
             margin: 0; font-family: 'Hind Siliguri', sans-serif; 
-            background: var(--bg-gradient); color: var(--text-main); 
+            background-color: var(--bg-color);
+            color: var(--text-main); 
             padding-bottom: 100px; min-height: 100vh;
+            
+            /* TEXTURE: Subtle dot pattern for premium feel */
+            background-image: var(--bg-pattern);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            
             transition: background 0.4s;
         }
         
         a { text-decoration: none; color: inherit; }
+
+        /* SCROLL PROGRESS BAR */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 4px;
+            background: var(--accent); width: 0%; z-index: 2000;
+            transition: width 0.1s; box-shadow: 0 0 10px var(--accent);
+        }
 
         /* --- 1. HEADER --- */
         nav {
@@ -234,7 +256,7 @@
         }
         .modal-overlay.open { display: flex; opacity: 1; }
         .modal-box {
-            background: var(--bg-gradient); width: 100%; max-width: 320px;
+            background: var(--bg-color); width: 100%; max-width: 320px;
             border-radius: 20px; padding: 25px 20px; text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: scale(0.8); transition: 0.3s;
             position: relative; border: 1px solid rgba(212, 172, 13, 0.2);
@@ -251,7 +273,7 @@
         .btn-share { background: var(--surface); color: var(--text-main); border: 1px solid rgba(0,0,0,0.1); }
         .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; color: var(--text-sec); cursor: pointer; }
 
-        /* --- 7. TOAST --- */
+        /* --- 7. TOAST & LOAD MORE --- */
         .toast {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
             background: rgba(30,30,30,0.9); color: white; padding: 10px 25px; border-radius: 30px;
@@ -267,10 +289,17 @@
             cursor: pointer; display: block; margin: 30px auto 0;
         }
 
-        /* --- 8. BOTTOM NAV --- */
+        /* --- 8. FOOTER --- */
+        footer {
+            text-align: center; padding: 20px; color: var(--text-sec); font-size: 0.8rem;
+            background: var(--surface); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 40px;
+        }
+        footer p { margin: 5px 0; }
+
+        /* --- 9. BOTTOM NAV --- */
         .app-bar {
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
             padding: 8px 30px; border-radius: 50px;
             display: flex; align-items: center; gap: 35px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.15); z-index: 2000;
@@ -287,12 +316,27 @@
         }
         
         .loading { text-align: center; padding: 60px 20px; color: var(--text-sec); grid-column: 1 / -1; }
-        .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; background-color: rgba(0,0,0,0.05); }
+        .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     </style>
 </head>
 <body>
+
+    <div class="scroll-progress" id="scrollBar"></div>
+
+    <nav>
+        <div class="logo-area">
+            <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
+            <div class="hijri-date" id="hijriDate">...</div>
+        </div>
+        <div class="nav-actions">
+            <button class="icon-btn" onclick="openRandomBook()" title="Random Book">
+                <i class="fas fa-dice"></i>
+            </button>
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
+        </div>
+    </nav>
 
     <header class="hero">
         <div class="ticker-wrap">
@@ -310,19 +354,6 @@
         </div>
     </header>
 
-    <nav>
-        <div class="logo-area">
-            <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
-            <div class="hijri-date" id="hijriDate">...</div>
-        </div>
-        <div class="nav-actions">
-            <button class="icon-btn" onclick="openRandomBook()" title="Random Book">
-                <i class="fas fa-dice"></i>
-            </button>
-            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
-        </div>
-    </nav>
-
     <div class="container">
         <div class="tabs">
             <div class="tab active" onclick="setMode('latest')">সর্বশেষ</div>
@@ -339,6 +370,11 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>© ২০২৫ দারুচ্ছুন্নাত লাইব্রেরি | সর্বস্বত্ব সংরক্ষিত</p>
+        <p>জ্ঞান অর্জনের পথে আমাদের সাথে থাকুন</p>
+    </footer>
 
     <div class="modal-overlay" id="bookModal" onclick="closeModal(event)">
         <div class="modal-box">
@@ -375,6 +411,14 @@
         const hijri = new Intl.DateTimeFormat('bn-BD-u-ca-islamic', {day: 'numeric', month: 'long', year: 'numeric'}).format(Date.now());
         document.getElementById('hijriDate').innerText = hijri;
 
+        // --- SCROLL BAR ---
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollBar").style.width = scrolled + "%";
+        };
+
         // --- MASSIVE QUOTE DATABASE ---
         const quotes = [
             "তোমরাই সর্বোত্তম যে কুরআন শেখে এবং শেখায়। (বুখারী)",
@@ -404,7 +448,6 @@
             "ধৈর্য ধরো, নিশ্চয়ই আল্লাহ ধৈর্যশীলদের ভালোবাসেন।",
             "মিথ্যা সব পাপের জননী।"
         ];
-        // Randomly pick a quote
         document.getElementById('quoteText').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
         // --- THEME ---
@@ -443,16 +486,11 @@
         // --- STRICT LETTER FILTER (NO NUMBERS) ---
         function getSmartLetter(title) {
             if (!title) return null;
-            // Remove numbers, spaces, dots, brackets, hyphens from start
             const clean = title.replace(/^[\d\s\.\-\(\)\[\]#]+/, '');
             if (!clean) return null;
-            
             const char = clean.charAt(0).toUpperCase();
-            // Allow ONLY Bangla, English, Arabic letters
-            // Unicode ranges: Bangla (0980-09FF), Arabic (0600-06FF), English (a-z)
             if (char.match(/[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/)) return char;
-            
-            return null; // Reject everything else
+            return null;
         }
 
         // --- ICONS MAPPING ---
