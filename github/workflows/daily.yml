@@ -1,4 +1,4 @@
-name: Update Library
+name: scraper.py
 
 on:
   schedule:
@@ -24,9 +24,9 @@ jobs:
         
       - name: Run Update Script
         env:
-          TG_API_ID: ${{ secrets.TG_API_ID }}
-          TG_API_HASH: ${{ secrets.TG_API_HASH }}
-          TG_SESSION: ${{ secrets.TG_SESSION }}
+          TG_API_ID: ${{ secrets.API_ID }}
+          TG_API_HASH: ${{ secrets.API_HASH }}
+          TG_SESSION: ${{ secrets.SESSION_STRING }}
         run: python update_library.py
         
       - name: Commit & Push Changes
