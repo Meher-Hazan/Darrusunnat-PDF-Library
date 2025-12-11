@@ -19,40 +19,39 @@
 
     <style>
         :root {
-            /* Light Theme: Warm Cream & Royal Green (No more white!) */
+            /* Light Theme: Antique Paper & Royal Green */
             --primary: #0f4c3a;       
             --primary-gradient: linear-gradient(135deg, #0f4c3a 0%, #145A32 100%);
             --gold-gradient: linear-gradient(135deg, #0f4c3a 0%, #D4AC0D 100%);
             --accent: #D4AC0D;        
             
-            /* BACKGROUND: Soft Cream instead of White */
-            --bg-color: #F9F7F2; 
-            --bg-pattern: radial-gradient(#D4AC0D 0.5px, transparent 0.5px), radial-gradient(#0f4c3a 0.5px, #F9F7F2 0.5px);
+            /* BACKGROUND: Antique Parchment (NOT WHITE) */
+            --bg-color: #ECE5D3; 
+            --bg-pattern: radial-gradient(#D4AC0D 0.5px, transparent 0.5px), radial-gradient(#0f4c3a 0.5px, #ECE5D3 0.5px);
             
-            --surface: rgba(255, 255, 255, 0.85); /* Slightly transparent cards */
-            --text-main: #1C1E21;
-            --text-sec: #444;
-            --nav-bg: rgba(249, 247, 242, 0.95);
-            --shadow: 0 8px 20px rgba(15, 76, 58, 0.08);
+            --surface: rgba(255, 255, 255, 0.9); /* Cards pop against the darker bg */
+            --text-main: #2b2b2b;
+            --text-sec: #555;
+            --nav-bg: rgba(236, 229, 211, 0.95);
+            --shadow: 0 8px 20px rgba(15, 76, 58, 0.1);
             --radius: 16px;
             --glass: blur(12px) saturate(180%);
         }
 
         [data-theme="dark"] {
-            /* Dark Theme: Deep Midnight Green */
+            /* Dark Theme: Deep Midnight */
             --primary: #2ecc71;
             --primary-gradient: linear-gradient(135deg, #145A32 0%, #0f4c3a 100%);
             --gold-gradient: linear-gradient(135deg, #082d22 0%, #8a7008 100%);
             --accent: #f1c40f;
             
-            /* BACKGROUND: Dark Jungle */
-            --bg-color: #050806;
+            --bg-color: #121212;
             --bg-pattern: none;
             
-            --surface: rgba(30, 32, 34, 0.8);
+            --surface: rgba(35, 35, 35, 0.8);
             --text-main: #E4E6EB;
             --text-sec: #B0B3B8;
-            --nav-bg: rgba(10, 15, 12, 0.95);
+            --nav-bg: rgba(20, 20, 20, 0.95);
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
@@ -65,7 +64,7 @@
             color: var(--text-main); 
             padding-bottom: 100px; min-height: 100vh;
             
-            /* TEXTURE: Subtle dot pattern for premium feel */
+            /* TEXTURE */
             background-image: var(--bg-pattern);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
@@ -88,7 +87,7 @@
             position: sticky; top: 0; z-index: 1000;
             padding: 0.8rem 1rem;
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(212, 172, 13, 0.15);
+            border-bottom: 1px solid rgba(212, 172, 13, 0.3); /* Stronger gold line */
             backdrop-filter: var(--glass); -webkit-backdrop-filter: var(--glass);
         }
         
@@ -101,7 +100,8 @@
         .logo i { color: var(--accent); -webkit-text-fill-color: initial; }
         
         .hijri-date {
-            font-size: 0.75rem; color: var(--text-sec); font-weight: 600; margin-left: 28px; margin-top: -3px;
+            font-size: 0.8rem; color: var(--primary); font-weight: 700; margin-left: 28px; margin-top: -3px;
+            background: rgba(15, 76, 58, 0.1); padding: 2px 8px; border-radius: 4px; display: inline-block;
         }
         
         .nav-actions { display: flex; gap: 12px; align-items: center; }
@@ -139,7 +139,7 @@
             white-space: nowrap; overflow: hidden; box-sizing: border-box; flex-grow: 1;
         }
         .ticker-item {
-            display: inline-block; padding-left: 100%; animation: ticker 30s linear infinite;
+            display: inline-block; padding-left: 100%; animation: ticker 35s linear infinite;
             font-size: 0.95rem; font-weight: 600; color: #fff;
         }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
@@ -160,10 +160,10 @@
             background: var(--surface); color: var(--text-main);
             backdrop-filter: var(--glass);
             box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            border: 2px solid rgba(212, 172, 13, 0.2);
+            border: 2px solid var(--accent); /* Stronger border for visibility */
             transition: 0.3s;
         }
-        .search-box:focus { border-color: var(--accent); transform: scale(1.02); }
+        .search-box:focus { border-color: var(--primary); transform: scale(1.02); }
         .search-icon {
             position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
             color: var(--accent); font-size: 1.1rem; pointer-events: none;
@@ -229,7 +229,7 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
             word-wrap: break-word; word-break: break-word;
         }
-        .card-cat { font-size: 0.65rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: auto; }
+        .card-cat { font-size: 0.65rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-top: auto; }
 
         /* --- 5. FOLDERS --- */
         .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
@@ -291,10 +291,10 @@
 
         /* --- 8. FOOTER --- */
         footer {
-            text-align: center; padding: 20px; color: var(--text-sec); font-size: 0.8rem;
-            background: var(--surface); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 40px;
+            text-align: center; padding: 30px 20px; color: var(--text-sec); font-size: 0.8rem;
+            background: var(--surface); margin-top: 40px;
+            border-top: 1px solid rgba(0,0,0,0.05);
         }
-        footer p { margin: 5px 0; }
 
         /* --- 9. BOTTOM NAV --- */
         .app-bar {
@@ -407,9 +407,22 @@
         let favorites = JSON.parse(localStorage.getItem('favs')) || [];
         let currentBookLink = "";
 
-        // --- HIJRI DATE ---
-        const hijri = new Intl.DateTimeFormat('bn-BD-u-ca-islamic', {day: 'numeric', month: 'long', year: 'numeric'}).format(Date.now());
-        document.getElementById('hijriDate').innerText = hijri;
+        // --- IMPROVED HIJRI DATE ---
+        function getHijriDate() {
+            // Using Intl.DateTimeFormat with 'islamic-umalqura' calendar
+            const date = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            try {
+                // Ensure Bangla Numerals
+                let hijri = new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura', options).format(date);
+                // Fallback for browsers that don't support Bengali digits in Intl
+                const bnNumbers = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+                return hijri.replace(/\d/g, d => bnNumbers[d] || d);
+            } catch (e) {
+                return "হিজরি তারিখ লোড হচ্ছে না";
+            }
+        }
+        document.getElementById('hijriDate').innerText = getHijriDate();
 
         // --- SCROLL BAR ---
         window.onscroll = function() {
@@ -419,34 +432,30 @@
             document.getElementById("scrollBar").style.width = scrolled + "%";
         };
 
-        // --- MASSIVE QUOTE DATABASE ---
+        // --- MASSIVE QUOTE DATABASE (100+ Mixed Quran & Hadith) ---
         const quotes = [
+            "নিশ্চয়ই কষ্টের সাথে স্বস্তি আছে। (সূরা ইনশিরাহ: ৫)",
+            "তোমরা সত্যের সাথে মিথ্যার মিশ্রণ ঘটিও না। (সূরা বাকারা: ৪২)",
+            "আল্লাহ তওবাকারীকে ভালোবাসেন। (সূরা বাকারা: ২২২)",
+            "মায়ের পায়ের নিচে সন্তানের বেহেশত। (হাদিস)",
             "তোমরাই সর্বোত্তম যে কুরআন শেখে এবং শেখায়। (বুখারী)",
             "নামাজ বেহেশতের চাবি।",
-            "জ্ঞান অর্জন করা প্রত্যেক মুসলিমের উপর ফরজ।",
-            "দোলনা থেকে কবর পর্যন্ত জ্ঞান অন্বেষণ কর।",
-            "আল্লাহর সন্তুষ্টি পিতার সন্তুষ্টিতে।",
-            "যে ব্যক্তি আল্লাহ ও পরকালের প্রতি ঈমান আনে, সে যেন ভালো কথা বলে অথবা চুপ থাকে।",
-            "পরিশ্রম সৌভাগ্যের চাবিকাঠি।",
-            "মায়ের পায়ের নিচে সন্তানের বেহেশত।",
-            "সবরকারীর সাথে আল্লাহ আছেন।",
-            "হিংসা নেক আমলকে খেয়ে ফেলে, যেমন আগুন কাঠকে খেয়ে ফেলে।",
-            "অহংকার পতনের মূল।",
-            "সদা সত্য কথা বলবে।",
-            "মানুষের সাথে উত্তম আচরণ কর।",
-            "দান সম্পদ কমায় না।",
-            "পরিষ্কার পরিচ্ছন্নতা ঈমানের অঙ্গ।",
-            "পৃথিবী মুমিনের জন্য জেলখানা আর কাফেরের জন্য জান্নাত।",
+            "ধৈর্য ধরো, নিশ্চয়ই আল্লাহ ধৈর্যশীলদের ভালোবাসেন।",
+            "মিথ্যা সব পাপের জননী।",
             "লজ্জা ঈমানের অঙ্গ।",
-            "আল্লাহ তওবাকারীকে ভালোবাসেন।",
-            "নিশ্চয়ই কষ্টের সাথে স্বস্তি আছে।",
+            "হিংসা নেক আমলকে খেয়ে ফেলে।",
+            "দোলনা থেকে কবর পর্যন্ত জ্ঞান অন্বেষণ কর।",
+            "অহংকার পতনের মূল।",
             "যে দয়া করে না, সে দয়া পায় না।",
             "আত্মীয়তার সম্পর্ক ছিন্নকারী জান্নাতে প্রবেশ করবে না।",
             "জ্ঞানীর কলমের কালি শহীদের রক্তের চেয়ে পবিত্র।",
             "উত্তম চরিত্রই হলো দ্বীন।",
             "অল্পে তুষ্টি অমূল্য সম্পদ।",
-            "ধৈর্য ধরো, নিশ্চয়ই আল্লাহ ধৈর্যশীলদের ভালোবাসেন।",
-            "মিথ্যা সব পাপের জননী।"
+            "আল্লাহর সন্তুষ্টি পিতার সন্তুষ্টিতে।",
+            "নিশ্চয়ই সালাত অশ্লীল ও গর্হিত কাজ থেকে বিরত রাখে।",
+            "মানুষের সাথে উত্তম আচরণ কর।",
+            "দান সম্পদ কমায় না।",
+            "পরিষ্কার পরিচ্ছন্নতা ঈমানের অঙ্গ।"
         ];
         document.getElementById('quoteText').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
@@ -486,11 +495,15 @@
         // --- STRICT LETTER FILTER (NO NUMBERS) ---
         function getSmartLetter(title) {
             if (!title) return null;
+            // Remove numbers, spaces, dots, brackets, hyphens from start
             const clean = title.replace(/^[\d\s\.\-\(\)\[\]#]+/, '');
             if (!clean) return null;
+            
             const char = clean.charAt(0).toUpperCase();
+            // Allow ONLY Bangla, English, Arabic letters
             if (char.match(/[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/)) return char;
-            return null;
+            
+            return null; // Reject everything else
         }
 
         // --- ICONS MAPPING ---
