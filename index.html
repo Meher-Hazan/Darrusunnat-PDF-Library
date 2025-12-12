@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
     
-    <meta name="theme-color" content="#0f4c3a">
+    <meta name="theme-color" content="#051410">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/480/quran.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,25 +17,27 @@
 
     <style>
         :root {
-            /* PERMANENT ROYAL PALETTE */
+            /* ROYAL CRYSTAL PALETTE */
             --primary: #0f4c3a;       
             --gold: #FFD700;
             --accent: #D4AC0D;
             
-            /* Background: Deep Emerald & Black Gradient */
-            --bg-body: linear-gradient(135deg, #051410 0%, #0f4c3a 50%, #020a05 100%);
+            /* Background: Deep Emerald Void */
+            --bg-body: #020504;
+            --bg-gradient: radial-gradient(circle at 10% 20%, rgba(15, 76, 58, 0.2) 0%, transparent 40%),
+                           radial-gradient(circle at 90% 80%, rgba(212, 172, 13, 0.1) 0%, transparent 40%);
             
-            /* Glass Surfaces (Dark & Gold) */
-            --glass-nav: rgba(5, 20, 16, 0.9);
-            --glass-card: rgba(0, 20, 10, 0.6); 
-            --glass-border: 1px solid rgba(212, 172, 13, 0.3); /* Gold Border */
+            /* Glass System */
+            --glass-nav: rgba(5, 20, 15, 0.95);
+            --glass-card: rgba(20, 30, 25, 0.5);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --gold-border: 1px solid rgba(212, 172, 13, 0.3);
             
             --text-main: #ffffff;
-            --text-sec: #e0e0e0;
+            --text-sec: #b0b0b0;
             
-            --shadow-card: 0 10px 30px rgba(0,0,0,0.5);
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
             --radius: 16px;
-            --blur: blur(15px);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -44,36 +45,25 @@
         
         body { 
             margin: 0; font-family: 'Hind Siliguri', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            padding-bottom: 100px; min-height: 100vh;
-            background-attachment: fixed;
+            background-color: var(--bg-body); background-image: var(--bg-gradient);
+            color: var(--text-main); padding-bottom: 100px; min-height: 100vh;
+            overflow-x: hidden; background-attachment: fixed;
         }
         
         a { text-decoration: none; color: inherit; }
 
-        /* --- DECORATIVE BACKGROUND --- */
-        .bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(212, 172, 13, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px; pointer-events: none; z-index: -1; opacity: 0.5;
-        }
-
-        /* --- HEADER --- */
+        /* HEADER */
         nav {
             background: var(--glass-nav); position: sticky; top: 0; z-index: 1000;
             padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: var(--glass-border); backdrop-filter: var(--blur);
+            border-bottom: var(--gold-border); backdrop-filter: blur(20px);
         }
         
         .logo { 
             font-family: 'Playfair Display', serif; font-size: 1.3rem; 
-            color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 8px; 
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 10px; 
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
-        .logo i { color: #fff; }
-        
-        .date-badge { font-size: 0.75rem; color: #ccc; font-weight: 600; margin-top: -3px; }
         
         .join-btn {
             background: linear-gradient(135deg, #FFD700, #F39C12); color: #000; 
@@ -81,7 +71,7 @@
             box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
         }
 
-        /* --- HERO --- */
+        /* HERO SECTION */
         .hero { text-align: center; padding: 30px 15px 10px; }
         .hero h1 { 
             font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0; 
@@ -89,19 +79,15 @@
             font-weight: 900; drop-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        .search-wrapper { position: relative; max-width: 600px; margin: 25px auto 0; z-index: 10; }
         .search-box {
-            width: 100%; padding: 16px 50px 16px 25px; border: none; border-radius: 50px;
-            font-size: 1rem; font-family: 'Hind Siliguri', sans-serif;
-            background: rgba(0, 0, 0, 0.3); color: #fff;
-            backdrop-filter: blur(10px); box-shadow: var(--shadow-card);
-            border: 1px solid rgba(212, 172, 13, 0.5); transition: 0.3s;
+            width: 100%; max-width: 600px; padding: 16px 25px; margin: 20px auto;
+            border-radius: 50px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); color: #fff; font-size: 1rem;
+            backdrop-filter: blur(10px); transition: 0.3s; display: block;
         }
-        .search-box::placeholder { color: #aaa; }
-        .search-box:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 172, 13, 0.3); }
-        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 1.2rem; }
+        .search-box:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); outline: none; }
 
-        .quick-tags { display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .quick-tags { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .q-tag {
             background: rgba(255,255,255,0.05); color: #ddd; padding: 6px 15px;
             border-radius: 20px; font-size: 0.8rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
@@ -109,13 +95,11 @@
         }
         .q-tag:hover { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* --- TABS --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 10px 20px; }
-        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        /* TABS & CONTROLS */
+        .controls { max-width: 1200px; margin: 30px auto 10px; padding: 0 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .tab {
-            background: rgba(0,0,0,0.2); color: #aaa;
-            padding: 10px 22px; border-radius: 50px; cursor: pointer; 
-            font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3); color: #aaa; padding: 8px 20px; border-radius: 50px; 
+            cursor: pointer; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
             transition: 0.3s;
         }
         .tab.active { 
@@ -123,126 +107,68 @@
             border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(15, 76, 58, 0.5);
         }
 
-        /* --- GRID --- */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; animation: fadeIn 0.5s ease; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; } }
+        /* GRID SYSTEM */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 10px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
 
         .card {
             background: var(--glass-card); border-radius: var(--radius); overflow: hidden;
-            box-shadow: var(--shadow-card); display: flex; flex-direction: column; height: 100%; 
-            position: relative; border: var(--glass-border); backdrop-filter: var(--blur);
+            display: flex; flex-direction: column; position: relative; border: var(--glass-border);
             transition: transform 0.3s;
         }
-        .card:hover { transform: translateY(-8px); border-color: var(--gold); }
+        .card:active { transform: scale(0.96); }
         
-        /* IMAGE FIX */
-        .card-img-wrapper { 
-            position: relative; 
-            padding-top: 145%; /* Aspect Ratio */
-            background: rgba(0,0,0,0.3); /* Dark placeholder */
-            width: 100%;
-        }
-        .card-img { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: cover; /* Ensures image fills box */
-            display: block; 
-        }
+        .card-img-wrapper { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); }
+        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         
-        /* NEW BADGE */
-        .ribbon {
-            position: absolute; top: -5px; left: -5px; z-index: 2; width: 50px; height: 50px; overflow: hidden;
+        /* FAVORITE BUTTON ON CARD */
+        .card-fav {
+            position: absolute; top: 5px; right: 5px; width: 30px; height: 30px;
+            background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; z-index: 5; backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2); transition: 0.2s;
         }
-        .ribbon::before {
-            content: 'NEW'; position: absolute; width: 120%; height: 20px;
-            background: #e74c3c; transform: rotate(-45deg) translateY(-10px) translateX(-25px);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.55rem; font-weight: 900; color: #fff; top: 15px; left: -5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
+        .card-fav.active { background: #e74c3c; border-color: #e74c3c; color: white; }
 
-        .card-body { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-body { padding: 10px; }
         .card-title { 
-            font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; color: var(--text-main); 
+            font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; color: #fff; 
             line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .card-auth { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 2px; }
-        .card-cat { 
-            font-size: 0.65rem; color: var(--gold); font-weight: 800; 
-            text-transform: uppercase; margin-top: auto; letter-spacing: 1px; 
-        }
+        .card-cat { font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
 
-        /* --- LIST VIEW --- */
-        .list-view { display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.5s ease; }
-        .list-item {
-            display: flex; align-items: center; background: var(--glass-card); padding: 10px;
-            border-radius: 15px; border: var(--glass-border); gap: 15px; backdrop-filter: var(--blur);
-        }
-        .list-img { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .list-info { flex-grow: 1; }
-        .list-title { font-weight: bold; font-size: 0.95rem; color: #fff; line-height: 1.2; margin-bottom: 4px; }
-        .list-auth { font-size: 0.8rem; color: #aaa; display: block; }
-        .list-cat { font-size: 0.7rem; color: var(--gold); font-weight: 700; }
-
-        /* --- FOLDERS --- */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
-        .folder-btn {
-            background: rgba(255,255,255,0.05); padding: 20px 10px; border-radius: 15px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); cursor: pointer;
-        }
-        .folder-btn:hover { border-color: var(--gold); background: rgba(212,172,13,0.1); }
-        .folder-letter { 
-            font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; 
-            color: var(--gold); display: block; line-height: 1; margin-bottom: 5px;
-        }
-        .folder-count { font-size: 0.75rem; color: #888; }
-
-        /* --- MODAL --- */
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
             z-index: 2000; display: none; align-items: center; justify-content: center;
-            padding: 20px; opacity: 0; transition: opacity 0.3s;
+            padding: 20px; opacity: 0; transition: opacity 0.2s;
         }
         .modal-overlay.open { display: flex; opacity: 1; }
         .modal-box {
-            background: rgba(20, 30, 25, 0.8); width: 100%; max-width: 350px;
-            border-radius: 30px; padding: 30px 20px; text-align: center;
-            box-shadow: 0 0 50px rgba(15, 76, 58, 0.5); transform: scale(0.8); transition: 0.3s;
-            position: relative; border: 1px solid var(--gold); overflow-y: auto; max-height: 90vh;
+            background: rgba(20, 30, 25, 0.9); width: 100%; max-width: 350px;
+            border-radius: 25px; padding: 25px; text-align: center;
+            border: 1px solid var(--gold); position: relative;
         }
-        .modal-overlay.open .modal-box { transform: scale(1); }
-        .modal-img { 
-            width: 140px; height: 210px; object-fit: cover; border-radius: 8px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; 
-            border: 2px solid rgba(255,255,255,0.2); 
-        }
-        .modal-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; color: var(--text-main); }
-        .modal-auth { font-size: 0.9rem; color: var(--text-sec); display: block; margin-bottom: 25px; font-weight: 600; }
+        .modal-img { width: 130px; height: 190px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); }
+        .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .modal-auth { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; display: block; }
         
-        .modal-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .modal-actions { display: flex; gap: 10px; }
         .modal-btn {
-            padding: 14px; border-radius: 50px; font-weight: bold; font-size: 1rem;
-            cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+            flex: 1; padding: 12px; border-radius: 50px; font-weight: bold; font-size: 0.9rem;
+            cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-read { 
-            background: linear-gradient(135deg, #FFD700, #F39C12); color: #000; text-decoration: none; 
-            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3); 
-        }
-        .btn-report { background: rgba(255,255,255,0.1); color: #e74c3c; font-size: 0.8rem; }
+        .btn-read { background: var(--gold); color: #000; }
+        .btn-share { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .related-section { margin-top: 25px; text-align: left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
-        .related-header { font-size: 0.9rem; font-weight: bold; color: #888; margin-bottom: 15px; }
-        .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .rel-item { cursor: pointer; text-align: center; }
-        .rel-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,0.1); }
-        .rel-title { font-size: 0.65rem; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-
-        /* --- BOTTOM NAV --- */
+        /* BOTTOM NAV */
         .app-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: rgba(10, 20, 15, 0.95); backdrop-filter: blur(25px);
             padding: 10px 25px; border-radius: 60px;
-            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6); z-index: 2000;
             border: 1px solid rgba(212, 172, 13, 0.3); width: 90%; max-width: 400px;
         }
@@ -252,264 +178,271 @@
             width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
         }
-        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
         .nav-btn.active { color: var(--gold); background: rgba(212,172,13,0.15); box-shadow: 0 0 10px rgba(212,172,13,0.1); }
 
-        .back-bar { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; cursor: pointer; color: var(--gold); font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-        .load-more-btn { background: transparent; color: var(--gold); border: 2px solid var(--gold); padding: 10px 30px; border-radius: 50px; font-weight: bold; margin: 40px auto 0; display: block; }
+        .back-bar { 
+            display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; 
+            padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; 
+            cursor: pointer; color: var(--gold); font-weight: bold; border: 1px solid rgba(255,255,255,0.1); 
+        }
         .loading { text-align: center; padding: 50px; color: #888; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+        .folder-btn { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .folder-letter { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--gold); display: block; }
     </style>
 </head>
 <body>
 
-    <div class="bg-pattern"></div>
-
     <nav>
-        <div class="logo-area">
-            <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
-            <div class="date-badge" id="dateDisplay">...</div>
-        </div>
-        <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn"><i class="fab fa-telegram-plane"></i> Join</a>
+        <div class="logo"><i class="fas fa-book-open"></i> Darrusunnat</div>
+        <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">Join</a>
     </nav>
 
-    <header class="hero">
+    <header class="hero" id="homeSection">
         <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-box" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
-            <i class="fas fa-search search-icon"></i>
-        </div>
+        <input type="text" id="searchInput" class="search-box" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="app.handleSearch()">
         <div class="quick-tags">
-            <div class="q-tag" onclick="quickFilter('Quran')">কুরআন</div>
-            <div class="q-tag" onclick="quickFilter('Hadith')">হাদিস</div>
-            <div class="q-tag" onclick="quickFilter('History')">ইতিহাস</div>
-            <div class="q-tag" onclick="quickFilter('Novel')">উপন্যাস</div>
+            <div class="q-tag" onclick="app.router.navigate('category/Quran')">কুরআন</div>
+            <div class="q-tag" onclick="app.router.navigate('category/Hadith')">হাদিস</div>
+            <div class="q-tag" onclick="app.router.navigate('category/History')">ইতিহাস</div>
+            <div class="q-tag" onclick="app.router.navigate('category/Novel')">উপন্যাস</div>
         </div>
     </header>
 
-    <div class="container" id="app">
-        <div class="tabs">
-            <div class="tab active" onclick="setMode('latest')">সর্বশেষ</div>
-            <div class="tab" onclick="setMode('az')">বই</div>
-            <div class="tab" onclick="setMode('auth')">লেখক</div>
-            <div class="tab" onclick="setMode('cat')">বিষয়</div>
-        </div>
-        
-        <div id="contentArea">
-            <div class="loading"><i class="fas fa-spinner fa-spin"></i> লাইব্রেরি লোড হচ্ছে...</div>
-        </div>
+    <div class="controls">
+        <div class="tab active" onclick="app.router.navigate('')">সর্বশেষ</div>
+        <div class="tab" onclick="app.router.navigate('authors')">লেখক</div>
+        <div class="tab" onclick="app.router.navigate('categories')">বিষয়</div>
+        <div class="tab" onclick="app.router.navigate('favorites')" style="color:#e74c3c"><i class="fas fa-heart"></i></div>
     </div>
 
-    <footer style="text-align:center; padding:30px; color:#555; font-size:0.8rem; margin-top:30px;">
-        © ২০২৫ দারুচ্ছুন্নাত লাইব্রেরি
-    </footer>
+    <div class="container" id="mainContent">
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading App...</div>
+    </div>
 
-    <div class="modal-overlay" id="bookModal" onclick="closeModal(event)">
+    <div class="modal-overlay" id="modalOverlay" onclick="app.ui.closeModal(event)">
         <div class="modal-box">
-            <button class="close-modal" onclick="closeModal(event)" style="position:absolute; top:20px; right:20px; background:none; border:none; font-size:1.5rem; color:#fff;">×</button>
+            <button onclick="app.ui.closeModal(event)" style="position:absolute; top:15px; right:15px; background:none; border:none; color:#fff; font-size:1.5rem;">×</button>
             <img src="" class="modal-img" id="mImg">
             <div class="modal-title" id="mTitle"></div>
             <span class="modal-auth" id="mAuth"></span>
-            
-            <a href="#" target="_blank" class="modal-btn btn-read" id="mRead"><i class="fas fa-book-reader"></i> অনলাইনে পড়ুন</a>
-            <button class="modal-btn btn-report" onclick="reportBook()"><i class="fas fa-exclamation-triangle"></i> অভিযোগ করুন</button>
-
-            <div class="related-section" id="relatedSection">
-                <div class="related-header">সম্পর্কিত বই (Related)</div>
-                <div class="related-grid" id="relatedGrid"></div>
+            <div class="modal-actions">
+                <a href="#" target="_blank" class="modal-btn btn-read" id="mRead"><i class="fas fa-book-open"></i> পড়ুন</a>
+                <button class="modal-btn btn-share" onclick="app.share()"><i class="fas fa-share-alt"></i></button>
             </div>
         </div>
     </div>
 
     <div class="app-bar">
-        <button class="nav-btn active" onclick="setMode('latest'); window.scrollTo(0,0)" title="Home"><i class="fas fa-home"></i></button>
-        <button class="nav-btn" onclick="toggleView()" id="viewBtn" title="Layout"><i class="fas fa-th-large"></i></button>
-        <button class="nav-btn" onclick="openRandomBook()" title="Random"><i class="fas fa-dice"></i></button>
+        <button class="nav-btn active" onclick="app.router.navigate('')"><i class="fas fa-home"></i></button>
+        <button class="nav-btn" onclick="app.ui.toggleView()"><i class="fas fa-th-large"></i></button>
+        <button class="nav-btn" onclick="app.openRandom()"><i class="fas fa-dice"></i></button>
         <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></a>
     </div>
 
     <script>
-        let booksDB = [];
-        let displayLimit = 24;
-        let currentMode = 'latest';
-        let currentFilterData = null;
-        let viewMode = 'grid'; 
-        let currentBookId = null;
-        const defaultCover = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book";
+        /**
+         * Darrusunnat Library App Engine v2.0 (SPA Mode)
+         * Handles Routing, Favorites, and UI
+         */
+        class LibraryApp {
+            constructor() {
+                this.db = [];
+                this.favorites = JSON.parse(localStorage.getItem('favs')) || [];
+                this.view = 'grid';
+                
+                // ROUTER: Handles URL changes (e.g., #book/123)
+                this.router = {
+                    navigate: (path) => {
+                        window.location.hash = path;
+                        this.handleRoute();
+                    }
+                };
 
-        // DATE
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', options);
+                // Initialize
+                window.addEventListener('hashchange', () => this.handleRoute());
+                this.loadData();
+            }
 
-        // LOAD DATA
-        fetch('books_data.json?t=' + Date.now()).then(r => r.json()).then(d => {
-            booksDB = d.sort((a, b) => b.id - a.id); 
-            renderLatest();
-        }).catch(err => {
-            document.getElementById('contentArea').innerHTML = "<div class='loading'>Failed to load data</div>";
-        });
+            async loadData() {
+                try {
+                    const res = await fetch('books_data.json?t=' + Date.now());
+                    this.db = await res.json();
+                    this.db.sort((a, b) => b.id - a.id);
+                    this.handleRoute(); // Render current page
+                } catch (e) {
+                    document.getElementById('mainContent').innerHTML = "<div class='loading'>Failed to load database.</div>";
+                }
+            }
 
-        function toggleView() {
-            viewMode = viewMode === 'grid' ? 'list' : 'grid';
-            document.getElementById('viewBtn').innerHTML = viewMode === 'grid' ? '<i class="fas fa-th-large"></i>' : '<i class="fas fa-list"></i>';
-            if(currentMode === 'latest') renderGridWithPagination(booksDB);
-            else renderGridWithPagination(currentFilterData);
-        }
+            handleRoute() {
+                const hash = window.location.hash.slice(1) || '';
+                const parts = hash.split('/');
+                const page = parts[0] || 'home';
+                const id = decodeURIComponent(parts[1] || '');
 
-        function renderLatest() {
-            currentMode = 'latest'; displayLimit = 24;
-            renderGridWithPagination(booksDB);
-        }
+                // Reset UI State
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                
+                if (page === 'home') this.renderHome();
+                else if (page === 'book') this.ui.openModal(parseInt(id));
+                else if (page === 'category') this.renderFilter('category', id);
+                else if (page === 'author') this.renderFilter('author', id);
+                else if (page === 'authors') this.renderGroups('author');
+                else if (page === 'categories') this.renderGroups('category');
+                else if (page === 'favorites') this.renderFavorites();
+            }
 
-        function renderGridWithPagination(list) {
-            const area = document.getElementById('contentArea');
-            if(list.length === 0) { area.innerHTML = "<div class='loading'>No books found</div>"; return; }
+            // --- RENDERING LOGIC ---
             
-            const visible = list.slice(0, displayLimit);
-            let html = viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
-            
-            visible.forEach((b, index) => {
-                const isNew = (currentMode === 'latest' && index < 5);
-                html += viewMode === 'grid' ? createGridCard(b, isNew) : createListCard(b);
-            });
-            html += '</div>';
+            renderHome() {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                this.renderGrid(this.db.slice(0, 24)); // Show first 24
+            }
 
-            if (list.length > displayLimit) html += `<button class="load-more-btn" onclick="loadMore()">আরো দেখুন</button>`;
-            area.innerHTML = html;
-        }
+            renderFavorites() {
+                document.querySelector('.tab:nth-child(4)').classList.add('active');
+                const favs = this.db.filter(b => this.favorites.includes(b.id));
+                if (favs.length === 0) {
+                    document.getElementById('mainContent').innerHTML = "<div class='loading'>No favorites added yet.</div>";
+                } else {
+                    this.renderGrid(favs);
+                }
+            }
 
-        window.loadMore = function() {
-            displayLimit += 24;
-            if(currentMode === 'latest') renderGridWithPagination(booksDB);
-            else renderGridWithPagination(currentFilterData);
-        }
-
-        function createGridCard(b, isNew) {
-            const auth = (b.author && b.author !== 'Darrusunnat Library') ? `<span class="card-auth">${b.author}</span>` : '';
-            const badge = isNew ? `<div class="ribbon"></div>` : '';
-            return `
-                <div class="card" onclick="openModal(${b.id})">
-                    ${badge}
-                    <div class="card-img-wrapper"><img src="${b.image||defaultCover}" class="card-img" loading="lazy"></div>
-                    <div class="card-body">
-                        <div class="card-title">${b.title}</div>
-                        ${auth}
-                        <div class="card-cat">${b.category}</div>
+            renderFilter(field, value) {
+                const results = this.db.filter(b => b[field] === value);
+                const header = `
+                    <div class="back-bar" onclick="app.router.navigate('')">
+                        <i class="fas fa-arrow-left"></i> Back
                     </div>
-                </div>`;
-        }
+                    <h2 style="color:var(--gold); margin-bottom:15px;">${value}</h2>
+                `;
+                this.renderGrid(results, header);
+            }
 
-        function createListCard(b) {
-            const auth = (b.author && b.author !== 'Darrusunnat Library') ? `<span class="list-auth">${b.author}</span>` : '';
-            return `
-                <div class="list-item" onclick="openModal(${b.id})">
-                    <img src="${b.image||defaultCover}" class="list-img" loading="lazy">
-                    <div class="list-info">
-                        <div class="list-title">${b.title}</div>
-                        ${auth}
-                        <span class="list-cat">${b.category}</span>
-                    </div>
-                </div>`;
-        }
+            renderGroups(field) {
+                // Determine active tab
+                const tabIndex = field === 'author' ? 2 : 3;
+                document.querySelector(`.tab:nth-child(${tabIndex})`).classList.add('active');
 
-        function renderAZ() {
-            currentMode = 'az';
-            renderGrouped(booksDB, b => {
-                const clean = b.title.replace(/^[\d\s\.\-\(\)\[\]#]+/, '');
-                const char = clean.charAt(0).toUpperCase();
-                return char.match(/[a-zA-Z\u0980-\u09FF]/) ? char : null;
-            });
-        }
-        function renderCat() { currentMode = 'cat'; renderGrouped(booksDB, b => b.category); }
-        function renderAuth() { 
-            currentMode = 'auth'; 
-            renderGrouped(booksDB.filter(b => b.author && b.author !== 'Darrusunnat Library'), b => b.author.trim()); 
-        }
+                const counts = {};
+                this.db.forEach(b => {
+                    const key = b[field];
+                    if (key && key !== 'Darrusunnat Library') {
+                        counts[key] = (counts[key] || 0) + 1;
+                    }
+                });
 
-        function renderGrouped(list, keyFn) {
-            const groups = {};
-            list.forEach(b => {
-                const k = keyFn(b);
-                if(k) { if(!groups[k]) groups[k]=[]; groups[k].push(b); }
-            });
-            const keys = Object.keys(groups).sort();
+                const sortedKeys = Object.keys(counts).sort();
+                let html = '<div class="folder-grid">';
+                sortedKeys.forEach(k => {
+                    html += `
+                        <div class="folder-btn" onclick="app.router.navigate('${field}/${encodeURIComponent(k)}')">
+                            <span class="folder-letter">${k}</span>
+                            <span class="folder-count">${counts[k]} Books</span>
+                        </div>`;
+                });
+                html += '</div>';
+                document.getElementById('mainContent').innerHTML = html;
+            }
+
+            renderGrid(list, headerHtml = '') {
+                let html = headerHtml + '<div class="grid">';
+                const def = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book";
+                
+                list.forEach(b => {
+                    const isFav = this.favorites.includes(b.id) ? 'active' : '';
+                    html += `
+                        <div class="card">
+                            <div class="card-fav ${isFav}" onclick="app.toggleFav(event, ${b.id})">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="card-img-wrapper" onclick="app.router.navigate('book/${b.id}')">
+                                <img src="${b.image || def}" class="card-img" loading="lazy">
+                            </div>
+                            <div class="card-body">
+                                <div class="card-title">${b.title}</div>
+                                <div class="card-cat">${b.category}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                document.getElementById('mainContent').innerHTML = html;
+                window.scrollTo(0, 0);
+            }
+
+            // --- ACTIONS ---
+
+            toggleFav(e, id) {
+                e.stopPropagation(); // Don't trigger book click
+                const btn = e.currentTarget;
+                
+                if (this.favorites.includes(id)) {
+                    this.favorites = this.favorites.filter(x => x !== id);
+                    btn.classList.remove('active');
+                } else {
+                    this.favorites.push(id);
+                    btn.classList.add('active');
+                }
+                localStorage.setItem('favs', JSON.stringify(this.favorites));
+                
+                // If on favorites page, refresh immediately
+                if (window.location.hash.includes('favorites')) this.renderFavorites();
+            }
+
+            handleSearch() {
+                const q = document.getElementById('searchInput').value;
+                if (!q) { this.renderHome(); return; }
+                
+                const fuse = new Fuse(this.db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+                const results = fuse.search(q).map(r => r.item);
+                this.renderGrid(results);
+            }
+
+            openRandom() {
+                if (this.db.length) {
+                    const randomId = this.db[Math.floor(Math.random() * this.db.length)].id;
+                    this.router.navigate(`book/${randomId}`);
+                }
+            }
             
-            let html = '<div class="folder-grid">';
-            keys.forEach(k => {
-                html += `<div class="folder-btn" onclick="openFolder('${k}')"><span class="folder-letter">${k}</span><span class="folder-count">${groups[k].length}</span></div>`;
-            });
-            html += '</div>';
-            document.getElementById('contentArea').innerHTML = html;
+            share() {
+                const url = window.location.href;
+                navigator.clipboard.writeText(url);
+                alert("Link copied! Share it anywhere.");
+            }
+
+            // --- UI HELPERS ---
+            ui = {
+                openModal: (id) => {
+                    const b = this.db.find(x => x.id === id);
+                    if (!b) return;
+                    
+                    const def = "https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book";
+                    document.getElementById('mImg').src = b.image || def;
+                    document.getElementById('mTitle').innerText = b.title;
+                    document.getElementById('mAuth').innerText = b.author || '';
+                    document.getElementById('mRead').href = b.link;
+                    document.getElementById('modalOverlay').classList.add('open');
+                },
+                closeModal: (e) => {
+                    if(e.target.id === 'modalOverlay' || e.target.tagName === 'BUTTON') {
+                        document.getElementById('modalOverlay').classList.remove('open');
+                        // Go back to previous state if simply closing
+                        if(window.history.length > 1) window.history.back();
+                        else this.router.navigate('home');
+                    }
+                },
+                toggleView: () => {
+                    alert("Grid view is optimized for this theme. List view coming in v3.0!");
+                }
+            }
         }
 
-        window.openFolder = function(key) {
-            currentMode = 'folder'; displayLimit = 24;
-            currentFilterData = booksDB.filter(b => 
-                (b.category === key) || (b.author && b.author.trim() === key) || 
-                (b.title.includes(key))
-            );
-            currentFilterData.sort((a,b) => a.title.localeCompare(b.title));
-            
-            const area = document.getElementById('contentArea');
-            const header = `<div class="back-bar" onclick="setMode('latest')"><i class="fas fa-arrow-left"></i> পেছনে যান</div><h3 style="color:var(--gold); margin:0 0 20px 10px;">${key}</h3>`;
-            
-            renderGridWithPagination(currentFilterData);
-            area.innerHTML = header + area.innerHTML;
-            window.scrollTo(0,0);
-        }
-
-        window.openModal = function(id) {
-            currentBookId = id;
-            const b = booksDB.find(x => x.id === id);
-            document.getElementById('mImg').src = b.image || defaultCover;
-            document.getElementById('mTitle').innerText = b.title;
-            const authText = (b.author && b.author !== 'Darrusunnat Library') ? b.author : "";
-            document.getElementById('mAuth').innerText = authText;
-            document.getElementById('mRead').href = b.link;
-            
-            const related = getSmartRelated(b);
-            let relHtml = '';
-            related.forEach(x => {
-                relHtml += `<div class="rel-item" onclick="openModal(${x.id})"><img src="${x.image||defaultCover}" class="rel-img"><span class="rel-title">${x.title}</span></div>`;
-            });
-            document.getElementById('relatedGrid').innerHTML = relHtml;
-
-            document.getElementById('bookModal').classList.add('open');
-        }
-
-        function getSmartRelated(curr) {
-            return booksDB.filter(b => b.id !== curr.id)
-                .map(b => {
-                    let score = 0;
-                    if(b.category === curr.category) score += 1;
-                    if(b.author && curr.author && b.author === curr.author) score += 3;
-                    if(b.title.split(' ')[0] === curr.title.split(' ')[0]) score += 2;
-                    return {book: b, score: score};
-                })
-                .sort((a,b) => b.score - a.score)
-                .slice(0, 3)
-                .map(item => item.book);
-        }
-
-        window.closeModal = function(e) { if(e.target===e.currentTarget||e.target.classList.contains('close-modal')) document.getElementById('bookModal').classList.remove('open'); }
-        window.reportBook = function() { window.open(`https://t.me/IslamicBooks_us`); }
-
-        window.setMode = function(m) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            const idx = ['latest', 'az', 'auth', 'cat'].indexOf(m);
-            if(idx > -1) document.querySelectorAll('.tab')[idx].classList.add('active');
-            if(m==='latest') renderLatest(); if(m==='az') renderAZ(); if(m==='auth') renderAuth(); if(m==='cat') renderCat();
-        }
-        window.handleSearch = function() {
-            const q = document.getElementById('searchInput').value;
-            if(!q) { renderLatest(); return; }
-            const res = new Fuse(booksDB, {keys:['title','author','category'], threshold:0.3}).search(q).map(r=>r.item);
-            currentFilterData = res; currentMode = 'folder'; displayLimit = 24;
-            renderGridWithPagination(res);
-        }
-        window.quickFilter = function(t) { document.getElementById('searchInput').value=t; handleSearch(); }
-        window.openRandomBook = function() { if(booksDB.length) openModal(booksDB[Math.floor(Math.random()*booksDB.length)].id); }
+        // START APP
+        const app = new LibraryApp();
     </script>
 </body>
 </html>
