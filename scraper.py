@@ -1,10 +1,11 @@
 import os
 import json
 import asyncio
+import re
 import random
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 # --- CONFIGURATION ---
 if 'API_ID' not in os.environ or 'SESSION_STRING' not in os.environ:
@@ -31,29 +32,27 @@ CATEGORIES = {
     'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'সমগ্র']
 }
 
-# Colors for generated covers
-COVER_COLORS = [
-    (15, 76, 58), (22, 160, 133), (44, 62, 80), 
-    (142, 68, 173), (192, 57, 43), (211, 84, 0), (127, 140, 141)
-]
+COVER_COLORS = [(15, 76, 58), (22, 160, 133), (44, 62, 80), (142, 68, 173), (192, 57, 43)]
 
-def generate_cover(book_id, title, author):
-    """Generates a placeholder cover if none exists"""
+def clean_title(text):
+    """Removes numbers, underscores, and file extensions"""
+    # Remove extension
+    text = os.path.splitext(text)[0]
+    # Remove leading numbers/symbols like "01. ", "02-", "_final"
+    text = re.sub(r'^[\d\.\-\_\s]+', '', text)
+    # Remove trailing junk like "_final", "(1)"
+    text = re.sub(r'[\_\-\s]+final$', '', text, flags=re.IGNORECASE)
+    return text.strip()
+
+def generate_cover(book_id):
+    """Generates simple art cover"""
     try:
         width, height = 400, 600
         color = random.choice(COVER_COLORS)
         img = Image.new('RGB', (width, height), color=color)
         d = ImageDraw.Draw(img)
+        d.rectangle([15, 15, width-15, height-15], outline="white", width=4)
         
-        # Border
-        d.rectangle([15, 15, width-15, height-15], outline="white", width=3)
-        
-        # Text (Basic positioning)
-        # Note: PIL default font is tiny. For real production, we'd need a .ttf file.
-        # This is a fallback to ensure we have *something*.
-        d.text((width/2, height/3), "ISLAMIC LIBRARY", fill="gold", anchor="mm")
-        
-        # Save
         filename = f"{book_id}_gen.jpg"
         path = os.path.join(IMAGES_DIR, filename)
         img.save(path)
@@ -66,7 +65,6 @@ async def main():
     client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
     await client.start()
 
-    # 1. Load Data
     books = []
     processed_ids = set()
     if os.path.exists(DATA_FILE):
@@ -76,7 +74,6 @@ async def main():
                 processed_ids = {b['id'] for b in books}
         except: pass
     
-    # 2. Scan History
     print("Scanning last 100 messages...")
     messages = await client.get_messages(CHANNEL_ID, limit=100)
     
@@ -84,8 +81,6 @@ async def main():
     pending_cover = "" 
     
     for message in reversed(messages):
-        
-        # PHOTO
         if message.photo:
             filename = f"{message.id}.jpg"
             file_path = os.path.join(IMAGES_DIR, filename)
@@ -94,36 +89,22 @@ async def main():
             pending_cover = f"images/{filename}"
             continue
 
-        # PDF
         if message.document and message.document.mime_type == 'application/pdf':
-            
             current_cover = pending_cover
-            pending_cover = "" # Reset
+            pending_cover = "" 
 
-            # --- AUTHOR & TITLE EXTRACTION ---
-            # Priority: File Name. Fallback: Caption.
-            raw_filename = message.file.name or ""
-            clean_filename = os.path.splitext(raw_filename)[0] # Remove .pdf
+            raw_name = message.file.name or message.text or f"Book {message.id}"
             
-            title = clean_filename
+            # --- INTELLIGENT PARSING ---
+            title = clean_title(raw_name)
             author = ""
-
-            # Attempt to split "Author - Title" or "Title - Author"
-            # We assume the pattern: "Author Name - Book Title"
-            if " - " in clean_filename:
-                parts = clean_filename.split(" - ")
-                if len(parts) >= 2:
-                    author = parts[0].strip()
-                    title = parts[1].strip()
-            elif " | " in clean_filename:
-                parts = clean_filename.split(" | ")
-                if len(parts) >= 2:
-                    author = parts[0].strip()
-                    title = parts[1].strip()
             
-            # Fallback title if extraction failed or file name is weird
-            if not title and message.text:
-                title = message.text.split('\n')[0]
+            # Try splitting "Author - Title"
+            if " - " in raw_name:
+                parts = raw_name.split(" - ")
+                if len(parts) >= 2:
+                    author = parts[0].strip()
+                    title = clean_title(parts[1])
 
             # Categorization
             category = "General"
@@ -133,34 +114,27 @@ async def main():
                     category = cat.capitalize()
                     break
 
-            # Image Generation Check
             if not current_cover:
-                current_cover = generate_cover(message.id, title, author)
+                current_cover = generate_cover(message.id)
 
-            # Check Duplicate
             if message.id in processed_ids:
-                # Update logic if we want to refresh metadata
-                # For now, we skip to save time, or update if cover was missing
                 continue
 
             clean_id = str(CHANNEL_ID).replace("-100", "")
             post_link = f"https://t.me/c/{clean_id}/{message.id}"
 
-            new_book = {
+            books.append({
                 "id": message.id,
                 "title": title,
-                "author": author, # NEW FIELD
+                "author": author,
                 "category": category,
                 "link": post_link,
                 "image": current_cover
-            }
-            
-            books.append(new_book)
+            })
             processed_ids.add(message.id)
             new_count += 1
-            print(f" + Added: {title} (Author: {author})")
+            print(f" + Added: {title}")
 
-    # 3. Save
     if new_count > 0:
         books.sort(key=lambda x: x['id'], reverse=True)
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
