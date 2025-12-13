@@ -7,7 +7,7 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 from PIL import Image, ImageDraw
 
-# --- CONFIGURATION ---
+# --- SECRETS ---
 if 'API_ID' not in os.environ or 'SESSION_STRING' not in os.environ:
     print("Error: Secrets missing.")
     exit(1)
@@ -29,30 +29,31 @@ CATEGORIES = {
     'fiqh': ['fiqh', 'salah', 'namaz', 'zakat', 'ফিকহ', 'নামাজ', 'মাসায়েল', 'ফতোয়া'],
     'history': ['history', 'seerah', 'biography', 'ইতিহাস', 'সিরাত', 'জীবনী', 'খেলাফত'],
     'quran': ['quran', 'tafsir', 'কুরআন', 'তাফসির', 'সুরা'],
-    'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'সমগ্র']
+    'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'সমগ্র', 'natok']
 }
 
-COVER_COLORS = [(15, 76, 58), (22, 160, 133), (44, 62, 80), (142, 68, 173), (192, 57, 43)]
+COVER_COLORS = [(15, 76, 58), (22, 160, 133), (44, 62, 80), (142, 68, 173), (127, 140, 141)]
 
 def clean_title(text):
-    """Removes numbers, underscores, and file extensions"""
-    # Remove extension
+    """Smart Cleaner: Removes 01., 02-, _final, .pdf"""
+    # 1. Remove extension
     text = os.path.splitext(text)[0]
-    # Remove leading numbers/symbols like "01. ", "02-", "_final"
-    text = re.sub(r'^[\d\.\-\_\s]+', '', text)
-    # Remove trailing junk like "_final", "(1)"
-    text = re.sub(r'[\_\-\s]+final$', '', text, flags=re.IGNORECASE)
+    # 2. Remove starting numbers/symbols (e.g. "01. ", "02-", "#")
+    text = re.sub(r'^[\d\.\-\_\#\s]+', '', text)
+    # 3. Remove typical junk at end
+    text = re.sub(r'(_final|_v\d|\(1\))$', '', text, flags=re.IGNORECASE)
     return text.strip()
 
 def generate_cover(book_id):
-    """Generates simple art cover"""
+    """Paint a generic cover if missing"""
     try:
         width, height = 400, 600
         color = random.choice(COVER_COLORS)
         img = Image.new('RGB', (width, height), color=color)
         d = ImageDraw.Draw(img)
-        d.rectangle([15, 15, width-15, height-15], outline="white", width=4)
-        
+        # Gold Border
+        d.rectangle([20, 20, width-20, height-20], outline="#FFD700", width=5)
+        # Save
         filename = f"{book_id}_gen.jpg"
         path = os.path.join(IMAGES_DIR, filename)
         img.save(path)
@@ -67,6 +68,8 @@ async def main():
 
     books = []
     processed_ids = set()
+    
+    # Load existing to prevent re-processing
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
@@ -80,7 +83,10 @@ async def main():
     new_count = 0
     pending_cover = "" 
     
+    # Process Oldest -> Newest to keep order
     for message in reversed(messages):
+        
+        # 1. Grab Cover
         if message.photo:
             filename = f"{message.id}.jpg"
             file_path = os.path.join(IMAGES_DIR, filename)
@@ -89,24 +95,32 @@ async def main():
             pending_cover = f"images/{filename}"
             continue
 
+        # 2. Grab Book
         if message.document and message.document.mime_type == 'application/pdf':
             current_cover = pending_cover
-            pending_cover = "" 
+            pending_cover = "" # Reset immediately logic
 
-            raw_name = message.file.name or message.text or f"Book {message.id}"
-            
-            # --- INTELLIGENT PARSING ---
+            # Extract raw name from file attribute or text
+            raw_name = ""
+            if message.file and message.file.name:
+                raw_name = message.file.name
+            elif message.text:
+                raw_name = message.text.split('\n')[0]
+            else:
+                raw_name = f"Book {message.id}"
+
+            # --- SMART AUTHOR EXTRACTION ---
+            # Looks for "Author - Title" format
             title = clean_title(raw_name)
             author = ""
             
-            # Try splitting "Author - Title"
             if " - " in raw_name:
                 parts = raw_name.split(" - ")
                 if len(parts) >= 2:
-                    author = parts[0].strip()
+                    author = parts[0].strip() # Author is usually first
                     title = clean_title(parts[1])
-
-            # Categorization
+            
+            # Determine Category
             category = "General"
             check_text = (title + " " + (message.text or "")).lower()
             for cat, keywords in CATEGORIES.items():
@@ -114,12 +128,15 @@ async def main():
                     category = cat.capitalize()
                     break
 
+            # If no cover, generate one
             if not current_cover:
                 current_cover = generate_cover(message.id)
 
+            # Skip duplicates
             if message.id in processed_ids:
                 continue
 
+            # Build Link
             clean_id = str(CHANNEL_ID).replace("-100", "")
             post_link = f"https://t.me/c/{clean_id}/{message.id}"
 
@@ -135,6 +152,7 @@ async def main():
             new_count += 1
             print(f" + Added: {title}")
 
+    # 3. Save
     if new_count > 0:
         books.sort(key=lambda x: x['id'], reverse=True)
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
