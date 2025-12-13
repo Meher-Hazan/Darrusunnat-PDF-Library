@@ -3,675 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="Darrusunnat Islamic Library - A premium archive of Islamic knowledge">
+    <meta name="description" content="Darrusunnat Islamic Library - Premium Archive">
     <meta name="theme-color" content="#0f4c3a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি | Ultimate Edition</title>
+    <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
     <style>
         :root {
-            /* --- COLOR VARIABLES --- */
-            --color-primary: #0f4c3a;
-            --color-primary-dark: #051410;
-            --color-gold: #FFD700;
-            --color-gold-dim: #D4AC0D;
-            --color-danger: #e74c3c;
-            --color-info: #3498db;
-            --color-text-main: #ffffff;
-            --color-text-muted: #a0a0a0;
-            
-            /* --- BACKGROUNDS --- */
-            --bg-royal: linear-gradient(160deg, #020504 0%, #0f4c3a 50%, #000000 100%);
-            
-            /* --- GLASSMORPHISM SYSTEM --- */
-            --glass-nav: rgba(5, 15, 10, 0.95);
-            --glass-card: rgba(15, 35, 25, 0.65);
-            --glass-modal: rgba(10, 20, 15, 0.98);
+            /* ROYAL EMERALD PALETTE */
+            --col-bg-deep: #020504;
+            --col-primary: #0f4c3a;
+            --col-primary-light: #145A32;
+            --col-gold: #FFD700;
+            --col-gold-dim: #D4AC0D;
+            --col-danger: #e74c3c;
+            --col-info: #3498db;
+            --col-white: #ffffff;
+            --col-mute: #b0b0b0;
+
+            /* GLASS SYSTEM */
+            --glass-nav: rgba(5, 20, 15, 0.95);
+            --glass-panel: rgba(15, 30, 25, 0.65);
+            --glass-modal: rgba(8, 20, 16, 0.98);
             --glass-border: 1px solid rgba(255, 215, 0, 0.15);
-            --glass-shine: 1px solid rgba(255, 255, 255, 0.1);
-
-            /* --- DIMENSIONS & SPACING --- */
-            --radius-card: 16px;
+            
+            /* SHADOWS & RADIUS */
+            --shadow-card: 0 10px 30px rgba(0,0,0,0.5);
+            --shadow-float: 0 15px 40px rgba(0,0,0,0.7);
+            --radius-box: 16px;
             --radius-pill: 50px;
-            --shadow-soft: 0 10px 30px rgba(0,0,0,0.5);
-            --shadow-hard: 0 20px 60px rgba(0,0,0,0.8);
-            --font-main: 'Hind Siliguri', sans-serif;
-            --font-serif: 'Amiri', serif;
         }
 
-        /* RESET & BASE */
-        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         html { scroll-behavior: smooth; }
-        
-        body { 
-            margin: 0; padding: 0;
-            font-family: var(--font-main);
-            background: var(--bg-royal);
-            color: var(--color-text-main);
-            min-height: 100vh;
-            padding-bottom: 100px; /* Space for bottom nav */
-            overflow-x: hidden;
-            background-attachment: fixed;
+        body {
+            margin: 0; font-family: 'Hind Siliguri', sans-serif;
+            background: linear-gradient(160deg, #020504 0%, #0f4c3a 60%, #000000 100%);
+            color: var(--col-white);
+            min-height: 100vh; padding-bottom: 120px;
+            background-attachment: fixed; overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; font-family: inherit; background: none; }
+
+        /* --- DECORATION --- */
+        .bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 50% 50%, rgba(212, 172, 13, 0.05) 0%, transparent 60%);
+            pointer-events: none; z-index: -1;
         }
 
-        /* --- TYPOGRAPHY UTILS --- */
-        h1, h2, h3 { margin: 0; font-weight: 700; }
-        a { text-decoration: none; color: inherit; transition: 0.2s; }
-        button { cursor: pointer; border: none; font-family: inherit; background: none; padding: 0; }
-
-        /* --- LAYOUT CONTAINERS --- */
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 15px; 
-            min-height: 60vh;
-        }
-
-        /* --- HEADER NAVIGATION --- */
+        /* --- HEADER & CLOCK --- */
         .top-nav {
-            background: var(--glass-nav);
-            position: sticky; top: 0; z-index: 1000;
-            padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: var(--glass-border);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            background: var(--glass-nav); position: sticky; top: 0; z-index: 1000;
+            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: var(--glass-border); backdrop-filter: blur(20px);
         }
+        .brand { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--col-gold); font-weight: 800; display: flex; align-items: center; gap: 8px; }
         
-        .brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            color: var(--color-gold);
-            font-weight: 800;
-            display: flex; align-items: center; gap: 10px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        .clock-widget {
+            font-size: 0.75rem; text-align: right; line-height: 1.2; color: var(--col-mute);
         }
-        
-        .join-btn {
-            background: linear-gradient(135deg, var(--color-gold), #F39C12);
-            color: #000;
-            padding: 8px 20px;
-            border-radius: var(--radius-pill);
-            font-size: 0.85rem; font-weight: 800;
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
-            display: flex; align-items: center; gap: 8px;
-            transition: transform 0.2s;
-        }
-        .join-btn:active { transform: scale(0.95); }
+        .clock-time { color: var(--col-gold); font-weight: 700; font-size: 0.9rem; font-family: 'Amiri', serif; }
 
         /* --- HERO & SEARCH --- */
-        .hero-section {
-            text-align: center;
-            padding: 40px 15px 20px;
-        }
-        
-        .main-title {
-            font-family: var(--font-serif);
-            font-size: 2.8rem;
-            background: linear-gradient(to bottom, #fff, var(--color-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-            margin-bottom: 25px;
+        .hero { text-align: center; padding: 30px 15px 15px; }
+        .hero-title { 
+            font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0 0 20px 0;
+            background: linear-gradient(to bottom, #fff, var(--col-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.5));
         }
 
-        .search-container {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto 20px;
+        .search-wrap { position: relative; max-width: 600px; margin: 0 auto 20px; }
+        .search-inp {
+            width: 100%; padding: 15px 50px 15px 25px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+            color: #fff; font-size: 1rem; backdrop-filter: blur(10px); transition: 0.3s;
         }
-        
-        .search-input {
-            width: 100%;
-            padding: 16px 50px 16px 25px;
-            border-radius: var(--radius-pill);
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            font-size: 1.05rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+        .search-inp:focus { border-color: var(--col-gold); background: rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--col-gold-dim); pointer-events: none; }
+
+        /* --- TABS --- */
+        .tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 0 10px; }
+        .tab-btn {
+            background: rgba(255,255,255,0.03); color: var(--col-mute);
+            padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 6px; transition: 0.3s;
         }
-        .search-input:focus {
-            border-color: var(--color-gold);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-        
-        .search-icon {
-            position: absolute; right: 20px; top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-gold-dim);
-            pointer-events: none;
+        .tab-btn:hover, .tab-btn.active {
+            background: linear-gradient(135deg, var(--col-primary), #05291e); color: var(--col-gold);
+            border-color: var(--col-gold); box-shadow: 0 0 15px rgba(15, 76, 58, 0.6); transform: translateY(-2px);
         }
 
-        /* --- TAB CONTROLS --- */
-        .tabs-wrapper {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
+        /* --- LAYOUTS (GRID VS LIST) --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; min-height: 60vh; }
         
-        .tab-chip {
-            background: rgba(255,255,255,0.03);
-            color: var(--color-text-muted);
-            padding: 10px 20px;
-            border-radius: var(--radius-pill);
-            font-size: 0.9rem; font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.3s;
-        }
-        .tab-chip:hover { background: rgba(255,255,255,0.08); }
+        .view-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; animation: fadeIn 0.5s; }
+        @media (min-width: 768px) { .view-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
         
-        .tab-chip.active {
-            background: linear-gradient(135deg, var(--color-primary), #05291e);
-            color: var(--color-gold);
-            border-color: var(--color-gold);
-            box-shadow: 0 0 15px rgba(15, 76, 58, 0.6);
-            transform: translateY(-2px);
-        }
+        .view-list { display: flex; flex-direction: column; gap: 12px; animation: fadeIn 0.5s; }
 
-        /* --- BOOK GRID SYSTEM --- */
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            animation: slideUp 0.5s ease;
+        /* --- BOOK CARD (Grid) --- */
+        .card {
+            background: var(--glass-panel); border-radius: var(--radius-box); overflow: hidden;
+            display: flex; flex-direction: column; position: relative; border: var(--glass-border);
+            transition: transform 0.3s; height: 100%;
         }
-        @media (min-width: 768px) {
-            .book-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; }
-        }
+        .card:hover { transform: translateY(-5px); border-color: var(--col-gold); box-shadow: var(--shadow-card); }
+        
+        .card-img-box { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); overflow: hidden; }
+        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover .card-img { transform: scale(1.05); }
 
-        /* --- CARD DESIGN 2.0 --- */
-        .book-card {
-            background: var(--glass-card);
-            border-radius: var(--radius-card);
-            overflow: hidden;
-            display: flex; flex-direction: column;
-            position: relative;
-            border: var(--glass-border);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            height: 100%;
+        .card-actions { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+        .act-btn {
+            width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff;
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: 0.2s;
         }
-        
-        .book-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--color-gold);
-            box-shadow: var(--shadow-soft);
-        }
+        .act-btn.active-fav { background: var(--col-danger); color: white; }
+        .act-btn.active-read { background: var(--col-info); color: white; }
 
-        .card-cover-area {
-            position: relative;
-            padding-top: 145%; /* Standard Book Ratio */
-            background: rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .card-image {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        .book-card:hover .card-image { transform: scale(1.05); }
+        .card-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 0.65rem; color: var(--col-gold-dim); font-weight: 800; text-transform: uppercase; margin-top: auto; }
 
-        /* Floating Overlay Buttons */
-        .card-overlays {
-            position: absolute; top: 8px; right: 8px;
-            display: flex; flex-direction: column; gap: 8px;
-            z-index: 5;
+        /* --- LIST ITEM (Row) --- */
+        .list-item { 
+            display: flex; align-items: center; background: var(--glass-panel); 
+            padding: 10px; border-radius: 12px; border: var(--glass-border); gap: 15px; 
         }
-        
-        .overlay-btn {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.6);
-            color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-            transition: 0.2s;
-        }
-        .overlay-btn svg { width: 14px; height: 14px; fill: currentColor; }
-        
-        .overlay-btn.is-fav { background: var(--color-danger); color: white; box-shadow: 0 0 10px var(--color-danger); }
-        .overlay-btn.is-read { background: var(--color-info); color: white; box-shadow: 0 0 10px var(--color-info); }
+        .list-thumb { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; }
+        .list-data { flex-grow: 1; }
+        .list-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #fff; }
+        .list-cat { font-size: 0.75rem; color: var(--col-gold); }
 
-        .card-details {
-            padding: 12px;
-            flex-grow: 1;
-            display: flex; flex-direction: column;
-            justify-content: space-between;
+        /* --- FOLDERS (A-Z) --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; animation: fadeIn 0.4s; }
+        .folder {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.3s;
         }
-        
-        .card-title {
-            font-size: 0.9rem; font-weight: 700;
-            margin-bottom: 5px; line-height: 1.3;
-            color: #fff;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        
-        .card-category {
-            font-size: 0.7rem; color: var(--color-gold-dim);
-            font-weight: 800; text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- FOLDER SYSTEM (Smart A-Z) --- */
-        .folder-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 15px; animation: slideUp 0.4s;
-        }
-        
-        .folder-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer; transition: 0.3s;
-        }
-        .folder-item:hover {
-            border-color: var(--color-gold);
-            background: rgba(212,172,13,0.15);
-            transform: translateY(-5px);
-        }
-        
-        .folder-icon {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            color: var(--color-gold);
-            font-weight: 700; display: block;
-            margin-bottom: 5px;
-        }
-        .folder-meta { font-size: 0.75rem; color: var(--color-text-muted); }
+        .folder:hover { border-color: var(--col-gold); background: rgba(212,172,13,0.15); transform: translateY(-3px); }
+        .folder-icon { font-family: 'Amiri', serif; font-size: 2rem; color: var(--col-gold); font-weight: 700; display: block; line-height: 1; }
+        .folder-label { font-size: 0.75rem; color: var(--col-mute); margin-top: 5px; display: block; }
 
         /* --- MODAL (POPUP) --- */
-        .modal-backdrop {
+        .modal-wrap {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.92); backdrop-filter: blur(15px);
-            z-index: 5000;
-            display: none; align-items: center; justify-content: center;
-            padding: 20px; opacity: 0; transition: opacity 0.3s;
+            z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px;
         }
-        .modal-backdrop.active { display: flex; opacity: 1; }
-        
-        .modal-content {
-            background: var(--glass-modal);
-            width: 100%; max-width: 400px;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid var(--color-gold-dim);
-            box-shadow: 0 0 50px rgba(15, 76, 58, 0.5);
-            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 90vh; overflow-y: auto;
+        .modal-wrap.open { display: flex; }
+        .modal-box {
+            background: var(--glass-modal); width: 100%; max-width: 380px;
+            border-radius: 24px; padding: 25px; text-align: center;
+            border: 1px solid var(--col-gold-dim); position: relative; max-height: 90vh; overflow-y: auto;
+            box-shadow: var(--shadow-float); transform: scale(0.95); transition: 0.3s;
         }
-        .modal-backdrop.active .modal-content { transform: scale(1); }
+        .modal-wrap.open .modal-box { transform: scale(1); }
         
-        .modal-cover {
-            width: 140px; height: 210px; object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            border: 2px solid rgba(255,255,255,0.1);
-            margin-bottom: 20px;
+        .modal-img { width: 140px; height: 210px; object-fit: cover; border-radius: 10px; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-h2 { font-size: 1.2rem; margin-bottom: 5px; color: #fff; font-weight: 700; }
+        .modal-sub { color: var(--col-mute); display: block; margin-bottom: 20px; font-size: 0.9rem; }
+        
+        .btn-stack { display: flex; flex-direction: column; gap: 10px; }
+        .btn-main {
+            width: 100%; padding: 12px; border-radius: 50px; background: linear-gradient(135deg, var(--col-gold), #F39C12);
+            color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+        .btn-sec {
+            width: 100%; padding: 12px; border-radius: 50px; background: rgba(255,255,255,0.05);
+            color: #fff; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
-        .modal-btn-stack { display: flex; flex-direction: column; gap: 12px; margin: 25px 0; }
-        
-        .btn-primary {
-            width: 100%; padding: 14px; border-radius: 50px;
-            background: linear-gradient(135deg, var(--color-gold), #F39C12);
-            color: #000; font-weight: 800; font-size: 1rem;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3);
-        }
-        
-        .btn-secondary {
-            width: 100%; padding: 12px; border-radius: 50px;
-            background: rgba(255,255,255,0.05); color: #fff;
-            border: 1px solid rgba(255,255,255,0.1);
-            font-weight: 600; font-size: 0.9rem;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        /* --- RELATED BOOKS --- */
-        .related-books {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px; text-align: left;
-        }
-        .rel-title { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 10px; font-weight: 700; }
-        .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        /* RELATED BOOKS */
+        .rel-sec { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px; text-align: left; }
+        .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .rel-item { text-align: center; cursor: pointer; }
-        .rel-item img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; margin-bottom: 5px; opacity: 0.8; }
-        .rel-item span { display: block; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rel-item img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); opacity: 0.8; }
+        .rel-item span { display: block; font-size: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; color: #ccc; }
 
-        /* --- BOTTOM NAVIGATION --- */
-        .bottom-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 450px;
-            background: var(--glass-nav); backdrop-filter: blur(25px);
-            border-radius: 60px;
-            padding: 10px 25px;
+        /* --- BOTTOM NAV --- */
+        .bot-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px;
+            background: var(--glass-nav); backdrop-filter: blur(25px); border-radius: 60px; padding: 10px 25px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(212, 172, 13, 0.3);
-            box-shadow: var(--shadow-hard);
-            z-index: 2000;
+            border: 1px solid rgba(212, 172, 13, 0.3); box-shadow: var(--shadow-float); z-index: 2000;
         }
-        
-        .nav-icon {
-            width: 45px; height: 45px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            color: var(--color-text-muted);
-            transition: 0.3s;
-        }
-        .nav-icon svg { width: 22px; height: 22px; fill: currentColor; }
-        
-        .nav-icon.active {
-            color: var(--color-gold);
-            background: rgba(212,172,13,0.15);
-            box-shadow: 0 0 15px rgba(212,172,13,0.1);
-            transform: translateY(-2px);
-        }
+        .nav-btn { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--col-mute); transition: 0.3s; }
+        .nav-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .nav-btn.active { color: var(--col-gold); background: rgba(212,172,13,0.15); box-shadow: 0 0 15px rgba(212,172,13,0.1); transform: translateY(-2px); }
 
-        /* --- TOAST NOTIFICATIONS --- */
-        .toast-container {
-            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
-            z-index: 6000; pointer-events: none;
+        /* UTILS */
+        .load-more-container { text-align: center; margin-top: 30px; }
+        .load-more-btn { 
+            padding: 10px 30px; border: 1px solid var(--col-gold); color: var(--col-gold); 
+            border-radius: 30px; font-weight: bold; background: rgba(255,215,0,0.05); 
         }
-        .toast {
-            background: rgba(0,0,0,0.9); color: #fff;
-            padding: 10px 20px; border-radius: 30px;
-            margin-bottom: 10px; font-size: 0.9rem;
-            border: 1px solid var(--color-gold);
-            animation: slideDown 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
-        /* UTILITIES & ANIMATIONS */
-        .loading { text-align: center; padding: 60px 20px; color: var(--color-text-muted); }
+        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.08); border-radius: 20px; margin-bottom: 20px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: var(--col-gold); font-size: 0.9rem; }
         .hidden { display: none !important; }
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.05); border-radius: 20px; margin-bottom: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: var(--color-gold); font-size: 0.9rem; }
-        
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .loading { text-align: center; padding: 60px; color: var(--col-mute); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <svg style="display: none;">
-        <symbol id="icon-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
-        <symbol id="icon-grid" viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></symbol>
-        <symbol id="icon-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
-        <symbol id="icon-dice" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></symbol>
-        <symbol id="icon-telegram" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.28 7.77-7.02c.35-.31-.08-.48-.54-.17l-9.6 6.05L4.09 12c-.92-.28-.93-.9.18-1.35l17.75-6.85c.81-.3 1.53.18 1.26 1.1L19.26 19.1c-.2.9-1.34 1.1-1.92.82l-5.33-2.3 2.5-2.2c.45-.4.82-.48.47-1.07l-2.4 2.1-5.7.53c-.92.08-1.37-.47.28-1.1L18.8 4.67 9.78 18.65z"/></symbol>
-        <symbol id="icon-history" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></symbol>
-        <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
-        <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></symbol>
-        <symbol id="icon-share" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></symbol>
-        <symbol id="icon-read" viewBox="0 0 24 24"><path d="M12 6c2.62 0 4.88.86 6.5 2.24.64.55 1.5 1.05 1.5 2.06 0 .86-.68 1.4-1.5 1.2H18c-.3 0-.58.13-.7.4l-1.47 3.32c-.52 1.18-1.7 1.78-2.93 1.78-1.23 0-2.41-.6-2.93-1.78l-1.47-3.32c-.12-.27-.4-.4-.7-.4h-.5c-.82.2-1.5-.34-1.5-1.2 0-1.01.86-1.51 1.5-2.06C8.12 6.86 10.38 6 12 6z"/></symbol>
-        <symbol id="icon-report" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></symbol>
-        <symbol id="icon-book" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
-        <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></symbol>
-        <symbol id="icon-cross" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+        <symbol id="ic-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
+        <symbol id="ic-grid" viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></symbol>
+        <symbol id="ic-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
+        <symbol id="ic-dice" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></symbol>
+        <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+        <symbol id="ic-book" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></symbol>
+        <symbol id="ic-share" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></symbol>
+        <symbol id="ic-tel" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.28 7.77-7.02c.35-.31-.08-.48-.54-.17l-9.6 6.05L4.09 12c-.92-.28-.93-.9.18-1.35l17.75-6.85c.81-.3 1.53.18 1.26 1.1L19.26 19.1c-.2.9-1.34 1.1-1.92.82l-5.33-2.3 2.5-2.2c.45-.4.82-.48.47-1.07l-2.4 2.1-5.7.53c-.92.08-1.37-.47.28-1.1L18.8 4.67 9.78 18.65z"/></symbol>
+        <symbol id="ic-read" viewBox="0 0 24 24"><path d="M12 6c2.62 0 4.88.86 6.5 2.24.64.55 1.5 1.05 1.5 2.06 0 .86-.68 1.4-1.5 1.2H18c-.3 0-.58.13-.7.4l-1.47 3.32c-.52 1.18-1.7 1.78-2.93 1.78-1.23 0-2.41-.6-2.93-1.78l-1.47-3.32c-.12-.27-.4-.4-.7-.4h-.5c-.82.2-1.5-.34-1.5-1.2 0-1.01.86-1.51 1.5-2.06C8.12 6.86 10.38 6 12 6z"/></symbol>
     </svg>
+
+    <div class="bg-pattern"></div>
 
     <header class="top-nav">
         <div class="brand">
-            <svg style="width:24px;height:24px;fill:var(--color-gold)"><use href="#icon-book"></use></svg>
-            Darrusunnat
+            <svg style="width:24px;height:24px;fill:var(--col-gold)"><use href="#ic-read"></use></svg> Darrusunnat
         </div>
-        <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
-            <svg style="width:16px;height:16px;fill:#000"><use href="#icon-telegram"></use></svg>
-            JOIN
-        </a>
+        <div class="clock-widget">
+            <div class="clock-time" id="clockTime">00:00</div>
+            <div style="font-size:0.65rem" id="clockDate">Loading...</div>
+        </div>
     </header>
 
-    <div id="toast-area" class="toast-container"></div>
+    <div class="hero" id="homeHero">
+        <h1 class="hero-title">দারুচ্ছুন্নাত লাইব্রেরি</h1>
+        <div class="search-wrap">
+            <input type="text" class="search-inp" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="app.search()">
+            <div class="search-icon"><svg style="width:18px;height:18px;fill:currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="app.router('home')" id="tab-home">সর্বশেষ</button>
+            <button class="tab-btn" onclick="app.router('az')" id="tab-az">A-Z</button>
+            <button class="tab-btn" onclick="app.router('auth')" id="tab-auth">লেখক</button>
+            <button class="tab-btn" onclick="app.router('cat')" id="tab-cat">বিষয়</button>
+            <button class="tab-btn" onclick="app.router('save')" id="tab-save" style="color:var(--col-info)"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-book"></use></svg></button>
+            <button class="tab-btn" onclick="app.router('fav')" id="tab-fav" style="color:var(--col-danger)"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-heart"></use></svg></button>
+        </div>
+    </div>
 
-    <div id="main-scroll-area">
-        
-        <div class="hero-section" id="hero">
-            <h1 class="main-title">দারুচ্ছুন্নাত লাইব্রেরি</h1>
+    <main class="container" id="app-content">
+        <div class="loading"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>লাইব্রেরি লোড হচ্ছে...</div>
+    </main>
+
+    <div class="modal-wrap" id="bookModal" onclick="app.ui.closeModal(event)">
+        <div class="modal-box">
+            <button onclick="app.ui.closeModal(event)" style="position:absolute; top:20px; right:20px; background:none; color:#fff; font-size:1.8rem;">&times;</button>
+            <img src="" class="modal-img" id="mImg">
+            <h2 class="modal-h2" id="mTitle"></h2>
+            <span class="modal-sub" id="mAuth"></span>
             
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="engine.search()">
-                <div class="search-icon">
-                    <svg style="width:20px;height:20px;fill:currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                </div>
+            <div class="btn-stack">
+                <a href="#" target="_blank" class="btn-main" id="mRead"><svg style="width:18px;height:18px;fill:currentColor"><use href="#ic-read"></use></svg> অনলাইনে পড়ুন</a>
+                <button class="btn-sec" onclick="app.action.share()"><svg style="width:16px;height:16px;fill:currentColor"><use href="#ic-share"></use></svg> শেয়ার করুন</button>
+                <button class="btn-sec" onclick="app.action.report()" style="color:var(--col-danger); border-color:rgba(231,76,60,0.3)"><i class="fas fa-exclamation-triangle"></i> অভিযোগ করুন</button>
             </div>
 
-            <div class="tabs-wrapper">
-                <button class="tab-chip active" onclick="engine.router('home')" id="tab-home">
-                    <svg style="width:16px;height:16px;fill:currentColor"><use href="#icon-home"></use></svg> সর্বশেষ
-                </button>
-                <button class="tab-chip" onclick="engine.router('az')" id="tab-az">
-                    AZ তালিকা
-                </button>
-                <button class="tab-chip" onclick="engine.router('authors')" id="tab-authors">
-                    <svg style="width:16px;height:16px;fill:currentColor"><use href="#icon-user"></use></svg> লেখক
-                </button>
-                <button class="tab-chip" onclick="engine.router('categories')" id="tab-categories">
-                    বিষয়
-                </button>
-                <button class="tab-chip" onclick="engine.router('readlater')" id="tab-readlater" style="color:var(--color-info)">
-                    <svg style="width:16px;height:16px;fill:currentColor"><use href="#icon-bookmark"></use></svg>
-                </button>
-                <button class="tab-chip" onclick="engine.router('favorites')" id="tab-favorites" style="color:var(--color-danger)">
-                    <svg style="width:16px;height:16px;fill:currentColor"><use href="#icon-heart"></use></svg>
-                </button>
-            </div>
-        </div>
-
-        <main class="container" id="app-content">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>
-                লাইব্রেরি লোড হচ্ছে...
-            </div>
-        </main>
-
-    </div>
-
-    <div class="modal-backdrop" id="bookModal" onclick="engine.ui.closeModal(event)">
-        <div class="modal-content">
-            <button onclick="engine.ui.closeModal(event)" style="position:absolute; top:20px; right:20px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; display:flex; align-items:center; justify-content:center;">
-                <svg style="width:20px;height:20px;fill:currentColor"><use href="#icon-cross"></use></svg>
-            </button>
-
-            <img src="" class="modal-cover" id="mCover">
-            <h2 class="modal-title" id="mTitle">Book Title</h2>
-            <span class="modal-auth" id="mAuth">Author Name</span>
-
-            <div class="modal-btn-stack">
-                <a href="#" target="_blank" class="btn-primary" id="mReadBtn">
-                    <svg style="width:20px;height:20px;fill:currentColor"><use href="#icon-read"></use></svg>
-                    অনলাইনে পড়ুন
-                </a>
-                <button class="btn-secondary" onclick="engine.actions.shareBook()">
-                    <svg style="width:18px;height:18px;fill:currentColor"><use href="#icon-share"></use></svg>
-                    শেয়ার করুন
-                </button>
-                <button class="btn-secondary" onclick="engine.actions.reportBook()" style="color:var(--color-danger); border-color:rgba(231,76,60,0.3)">
-                    <svg style="width:18px;height:18px;fill:currentColor"><use href="#icon-report"></use></svg>
-                    অভিযোগ করুন
-                </button>
-            </div>
-
-            <div class="related-books" id="relatedSection">
-                <div class="rel-title">সম্পর্কিত বই (You might like)</div>
-                <div class="rel-grid" id="relatedGrid"></div>
+            <div class="rel-sec" id="relatedSection">
+                <div style="font-weight:bold; color:var(--col-mute); margin-bottom:10px; font-size:0.9rem">সম্পর্কিত বই</div>
+                <div class="rel-grid" id="relGrid"></div>
             </div>
         </div>
     </div>
 
-    <nav class="bottom-bar">
-        <button class="nav-icon active" onclick="engine.router('home')" id="nav-home">
-            <svg><use href="#icon-home"></use></svg>
-        </button>
-        <button class="nav-icon" onclick="engine.ui.toggleView()" id="nav-view">
-            <svg><use href="#icon-grid"></use></svg>
-        </button>
-        <button class="nav-icon" onclick="engine.actions.random()" style="color:var(--color-gold); transform:scale(1.2)">
-            <svg><use href="#icon-dice"></use></svg>
-        </button>
-        <button class="nav-icon" onclick="engine.router('history')" id="nav-history">
-            <svg><use href="#icon-history"></use></svg>
-        </button>
-        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-icon" style="color:var(--color-info)">
-            <svg><use href="#icon-telegram"></use></svg>
-        </a>
+    <nav class="bot-nav">
+        <button class="nav-btn active" onclick="app.router('home')" id="nav-home"><svg><use href="#ic-home"></use></svg></button>
+        <button class="nav-btn" onclick="app.ui.toggleView()" id="nav-view"><svg><use href="#ic-grid"></use></svg></button>
+        <button class="nav-btn" onclick="app.action.random()" style="color:var(--col-gold); transform:scale(1.2)"><svg><use href="#ic-dice"></use></svg></button>
+        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:var(--col-info)"><svg><use href="#ic-tel"></use></svg></a>
     </nav>
 
     <script>
-        /**
-         * LibraryEngine v4.0 - Professional Monolithic Core
-         */
-        const engine = {
-            // --- STATE MANAGEMENT ---
-            data: [],
+        const app = {
+            db: [],
             config: {
-                api: 'books_data.json',
-                placeholder: 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=No+Cover'
+                limit: 24, // Initial Load
+                defImg: 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book'
             },
-            store: {
+            state: {
                 favs: JSON.parse(localStorage.getItem('favs')) || [],
-                readLater: JSON.parse(localStorage.getItem('readLater')) || [],
-                history: JSON.parse(localStorage.getItem('history')) || [],
-                view: localStorage.getItem('viewMode') || 'grid'
-            },
-            runtime: {
-                currentTab: 'home',
-                currentBook: null,
-                filterSet: []
+                saved: JSON.parse(localStorage.getItem('saved')) || [],
+                view: localStorage.getItem('view') || 'grid',
+                tab: 'home',
+                filterSet: [], // Current list of books to display
+                showCount: 24, // How many currently showing
+                currentBook: null
             },
 
-            // --- INITIALIZATION ---
             init: async function() {
                 try {
-                    // Prevent caching with timestamp
-                    const res = await fetch(`${this.config.api}?t=${Date.now()}`);
-                    if(!res.ok) throw new Error("Network error");
+                    const res = await fetch('books_data.json?t=' + Date.now());
+                    this.db = await res.json();
+                    this.db.sort((a,b) => b.id - a.id); // Newest First
                     
-                    this.data = await res.json();
-                    
-                    // Sort Newest First (ID Descending)
-                    this.data.sort((a,b) => b.id - a.id);
-                    
-                    // Restore View & Tab
-                    this.ui.updateViewIcon();
-                    this.router('home');
-                    
-                    // console.log("Engine Started. Books Loaded:", this.data.length);
+                    // Start Clock
+                    setInterval(this.ui.updateClock, 1000);
+                    this.ui.updateClock();
+                    this.ui.setViewIcon();
+
+                    // Router Init
+                    window.addEventListener('hashchange', () => this.handleHash());
+                    this.handleHash(); // Initial Check
+
                 } catch(e) {
-                    document.getElementById('app-content').innerHTML = `
-                        <div class="loading">
-                            ⚠️ ডেটা লোড ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করুন।<br>
-                            <button class="btn-secondary" style="margin-top:20px; width:auto; display:inline-flex" onclick="location.reload()">Reload</button>
-                        </div>`;
+                    document.getElementById('app-content').innerHTML = "<div class='loading'>Failed to load data. Check connection.</div>";
                 }
             },
 
-            // --- ROUTER (NAVIGATION LOGIC) ---
-            router: function(route) {
-                this.runtime.currentTab = route;
+            // --- ROUTER & NAVIGATION ---
+            handleHash: function() {
+                const hash = window.location.hash.replace('#', '');
+                if (!hash) { this.router('home', false); return; }
+
+                const [route, val] = hash.split(':');
+                const param = decodeURIComponent(val || '');
+
+                if (route === 'book') this.ui.openModal(parseInt(param));
+                else if (route === 'folder') this.logic.openFolder(param); 
+                else this.router(route, false);
+            },
+
+            router: function(tab, updateHash = true) {
+                this.state.tab = tab;
+                this.state.showCount = this.config.limit; // Reset pagination
+                if(updateHash && tab !== 'home') window.location.hash = tab;
+                if(updateHash && tab === 'home') history.replaceState(null, null, ' ');
+
+                // UI Reset
+                document.querySelectorAll('.tab-btn, .nav-btn').forEach(el => el.classList.remove('active'));
+                if(document.getElementById('tab-'+tab)) document.getElementById('tab-'+tab).classList.add('active');
+                if(document.getElementById('nav-'+tab)) document.getElementById('nav-'+tab).classList.add('active');
                 
-                // Highlight Tabs
-                document.querySelectorAll('.tab-chip').forEach(el => el.classList.remove('active'));
-                const activeTab = document.getElementById(`tab-${route}`);
-                if(activeTab) activeTab.classList.add('active');
-
-                // Highlight Bottom Nav
-                document.querySelectorAll('.nav-icon').forEach(el => el.classList.remove('active'));
-                const activeNav = document.getElementById(`nav-${route}`);
-                if(activeNav) activeNav.classList.add('active');
-
-                // Hero Visibility
-                const hero = document.getElementById('hero');
-                if(route === 'home') hero.style.display = 'block';
-                else hero.style.display = 'none';
-
-                // Scroll Reset
-                window.scrollTo(0,0);
+                const hero = document.getElementById('homeHero');
+                hero.style.display = (tab === 'home') ? 'block' : 'none';
+                
+                if (tab !== 'home') window.scrollTo(0,0);
 
                 // Logic Switch
-                switch(route) {
+                switch(tab) {
                     case 'home':
-                        this.runtime.filterSet = this.data;
-                        this.render.list(this.data.slice(0, 40)); // Lazy render first 40
+                        this.state.filterSet = this.db;
+                        this.render.list(this.db.slice(0, this.state.showCount));
                         break;
-                    case 'favorites':
-                        const favs = this.data.filter(b => this.store.favs.includes(b.id));
-                        this.runtime.filterSet = favs;
-                        this.render.list(favs, "আপনার পছন্দ (Favorites)");
+                    case 'fav':
+                        const f = this.db.filter(b => this.state.favs.includes(b.id));
+                        this.state.filterSet = f;
+                        this.render.list(f, "আপনার পছন্দ (Favorites)");
                         break;
-                    case 'readlater':
-                        const reads = this.data.filter(b => this.store.readLater.includes(b.id));
-                        this.runtime.filterSet = reads;
-                        this.render.list(reads, "পরে পড়বেন (Read Later)");
+                    case 'save':
+                        const s = this.db.filter(b => this.state.saved.includes(b.id));
+                        this.state.filterSet = s;
+                        this.render.list(s, "সেভ করা বই (Saved)");
                         break;
-                    case 'history':
-                        // Map history IDs back to book objects
-                        const hist = this.store.history.map(id => this.data.find(x => x.id === id)).filter(x => x);
-                        this.render.list(hist, "সম্প্রতি দেখেছেন (History)");
-                        break;
-                    case 'az':
-                        this.logic.renderAZFolders();
-                        break;
-                    case 'authors':
-                        this.logic.renderGroupFolders('author');
-                        break;
-                    case 'categories':
-                        this.logic.renderGroupFolders('category');
-                        break;
+                    case 'az': this.logic.renderFolders('az'); break;
+                    case 'auth': this.logic.renderFolders('author'); break;
+                    case 'cat': this.logic.renderFolders('category'); break;
                 }
             },
 
-            // --- RENDERERS (UI PAINTERS) ---
+            // --- RENDER ENGINE ---
             render: {
-                // Main Book List/Grid Renderer
-                list: function(list, title = null) {
-                    const container = document.getElementById('app-content');
+                list: function(list, title = '') {
+                    const con = document.getElementById('app-content');
+                    if(!list || list.length === 0) { con.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
+
+                    let html = title ? `<h2 style="color:var(--col-gold); margin-bottom:15px; font-size:1.2rem">${title}</h2>` : '';
                     
-                    if(!list || list.length === 0) {
-                        container.innerHTML = `<div class="loading">কোনো বই পাওয়া যায়নি</div>`;
-                        return;
+                    const gridClass = app.state.view === 'grid' ? 'view-grid' : 'view-list';
+                    html += `<div class="${gridClass}">`;
+                    
+                    list.forEach(b => {
+                        html += app.state.view === 'grid' ? app.tpl.card(b) : app.tpl.list(b);
+                    });
+                    html += '</div>';
+
+                    // Load More Button Logic
+                    if (app.state.tab === 'home' && list.length < app.state.filterSet.length) {
+                        html += `<div class="load-more-container"><button class="load-more-btn" onclick="app.action.loadMore()">Load More...</button></div>`;
                     }
 
-                    let html = title ? `<h2 style="color:var(--color-gold); margin-bottom:20px;">${title}</h2>` : '';
-                    
-                    if(engine.store.view === 'grid') {
-                        html += '<div class="book-grid">';
-                        list.forEach(book => html += engine.templates.card(book));
-                        html += '</div>';
-                    } else {
-                        html += '<div class="list-view" style="display:flex; flex-direction:column; gap:10px">';
-                        list.forEach(book => html += engine.templates.listItem(book));
-                        html += '</div>';
-                    }
-                    container.innerHTML = html;
+                    con.innerHTML = html;
                 },
-
-                // Folder Renderer
-                folders: function(folders, type) {
+                folders: function(items, type) {
                     let html = '<div class="folder-grid">';
-                    folders.forEach(f => {
-                        html += `
-                            <div class="folder-item" onclick="engine.logic.openFolder('${type}', '${f.key}')">
-                                <span class="folder-icon">${f.key}</span>
-                                <span class="folder-meta">${f.count} Books</span>
-                            </div>`;
+                    items.forEach(i => {
+                        html += `<div class="folder" onclick="window.location.hash = 'folder:${type}|${i.name}'">
+                            <span class="folder-icon">${i.name}</span>
+                            <span class="folder-label">${i.count} Books</span>
+                        </div>`;
                     });
                     html += '</div>';
                     document.getElementById('app-content').innerHTML = html;
@@ -679,258 +412,166 @@
             },
 
             // --- HTML TEMPLATES ---
-            templates: {
+            tpl: {
                 card: function(b) {
-                    const img = b.image || engine.config.placeholder;
-                    const isFav = engine.store.favs.includes(b.id) ? 'is-fav' : '';
-                    const isRead = engine.store.readLater.includes(b.id) ? 'is-read' : '';
-                    
+                    const isFav = app.state.favs.includes(b.id) ? 'active-fav' : '';
+                    const isSave = app.state.saved.includes(b.id) ? 'active-read' : '';
                     return `
-                    <div class="book-card">
-                        <div class="card-overlays">
-                            <button class="overlay-btn ${isFav}" onclick="engine.actions.toggleFav(event, ${b.id})">
-                                <svg><use href="#icon-heart"></use></svg>
-                            </button>
-                            <button class="overlay-btn ${isRead}" onclick="engine.actions.toggleReadLater(event, ${b.id})">
-                                <svg><use href="#icon-bookmark"></use></svg>
-                            </button>
+                    <div class="card">
+                        <div class="card-actions">
+                            <button class="act-btn ${isFav}" onclick="app.action.fav(event, ${b.id})"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-heart"></use></svg></button>
+                            <button class="act-btn ${isSave}" onclick="app.action.save(event, ${b.id})"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-book"></use></svg></button>
                         </div>
-                        <div class="card-cover-area" onclick="engine.ui.openModal(${b.id})">
-                            <img src="${img}" class="card-image" loading="lazy" alt="${b.title}">
+                        <div class="card-img-box" onclick="window.location.hash='book:${b.id}'">
+                            <img src="${b.image || app.config.defImg}" class="card-img" loading="lazy">
                         </div>
-                        <div class="card-details">
+                        <div class="card-info">
                             <div class="card-title">${b.title}</div>
-                            <div class="card-category">${b.category}</div>
+                            <div class="card-cat">${b.category}</div>
                         </div>
                     </div>`;
                 },
-
-                listItem: function(b) {
-                    const img = b.image || engine.config.placeholder;
+                list: function(b) {
                     return `
-                    <div class="list-item" onclick="engine.ui.openModal(${b.id})">
-                        <img src="${img}" class="list-img">
-                        <div class="list-info">
+                    <div class="list-item" onclick="window.location.hash='book:${b.id}'">
+                        <img src="${b.image || app.config.defImg}" class="list-thumb" loading="lazy">
+                        <div class="list-data">
                             <div class="list-title">${b.title}</div>
-                            <div class="list-cat" style="font-size:0.75rem; color:var(--color-gold)">${b.category}</div>
+                            <div class="list-cat">${b.category}</div>
                         </div>
-                        <div style="color:#666"><svg style="width:20px;height:20px;fill:currentColor"><use href="#icon-arrow-left" style="transform:rotate(180deg)"></use></svg></div>
                     </div>`;
                 }
             },
 
-            // --- CORE LOGIC (SORTING & FILTERING) ---
+            // --- BUSINESS LOGIC ---
             logic: {
-                // The Smart A-Z Sorter
                 getSortChar: function(str) {
-                    // Remove starting numbers, dots, spaces, brackets
+                    // Remove numbers/symbols from start
                     const clean = str.replace(/^[\d\s\.\-\_\#\(\)\[\]]+/, '').trim();
-                    // Get first letter
                     const match = clean.match(/[a-zA-Z\u0980-\u09FF]/);
-                    if(match) return match[0].toUpperCase();
-                    return '#';
+                    return match ? match[0].toUpperCase() : '#';
                 },
-
-                renderAZFolders: function() {
+                renderFolders: function(type) {
                     const groups = {};
-                    engine.data.forEach(b => {
-                        const char = this.getSortChar(b.title);
-                        if(!groups[char]) groups[char] = 0;
-                        groups[char]++;
-                    });
-                    
-                    const sorted = Object.keys(groups).sort().map(k => ({key: k, count: groups[k]}));
-                    engine.render.folders(sorted, 'az');
-                },
-
-                renderGroupFolders: function(field) {
-                    const groups = {};
-                    engine.data.forEach(b => {
-                        const key = b[field] || 'Unknown';
-                        if(field === 'author' && key === 'Darrusunnat Library') return; // Filter Admin
+                    app.db.forEach(b => {
+                        let key = 'Unknown';
+                        if(type === 'az') key = this.getSortChar(b.title);
+                        else key = b[type] || 'Unknown';
+                        
+                        if(type === 'author' && key === 'Darrusunnat Library') return; // Filter Admin
+                        
                         if(!groups[key]) groups[key] = 0;
                         groups[key]++;
                     });
-                    
-                    const sorted = Object.keys(groups).sort().map(k => ({key: k, count: groups[k]}));
-                    engine.render.folders(sorted, field);
+                    const sorted = Object.keys(groups).sort().map(k => ({name: k, count: groups[k]}));
+                    app.render.folders(sorted, type);
                 },
-
-                openFolder: function(type, key) {
-                    let filtered = [];
+                openFolder: function(param) {
+                    const [type, key] = param.split('|');
+                    let list = [];
                     
-                    if(type === 'az') {
-                        // Strict check: Does this book belong in this folder?
-                        filtered = engine.data.filter(b => engine.logic.getSortChar(b.title) === key);
-                    } else {
-                        // Normal grouping
-                        filtered = engine.data.filter(b => b[type] === key);
-                    }
+                    if(type === 'az') list = app.db.filter(b => app.logic.getSortChar(b.title) === key);
+                    else list = app.db.filter(b => b[type] === key);
                     
-                    engine.runtime.filterSet = filtered;
-                    const backBtn = `<button class="back-btn" onclick="engine.router('${engine.runtime.currentTab}')"><svg style="width:16px;height:16px;fill:currentColor"><use href="#icon-arrow-left"></use></svg> Back</button>`;
-                    engine.render.list(filtered, `${backBtn}<br>${key}`);
-                }
-            },
-
-            // --- UI CONTROLLERS ---
-            ui: {
-                openModal: function(id) {
-                    const book = engine.data.find(x => x.id === id);
-                    if(!book) return;
-
-                    engine.runtime.currentBook = book;
-                    engine.actions.addToHistory(id);
-
-                    document.getElementById('mCover').src = book.image || engine.config.placeholder;
-                    document.getElementById('mTitle').innerText = book.title;
-                    document.getElementById('mAuth').innerText = book.author || 'Unknown Author';
-                    document.getElementById('mReadBtn').href = book.link;
-
-                    // Related Books Logic
-                    const related = engine.data.filter(b => 
-                        b.id !== id && 
-                        (b.category === book.category || (book.author && b.author === book.author))
-                    ).slice(0, 3);
-                    
-                    let relHtml = '';
-                    related.forEach(r => {
-                        relHtml += `
-                        <div class="rel-item" onclick="engine.ui.openModal(${r.id})">
-                            <img src="${r.image || engine.config.placeholder}">
-                            <span>${r.title}</span>
-                        </div>`;
-                    });
-                    document.getElementById('relatedGrid').innerHTML = relHtml || '<p style="font-size:0.8rem; color:#666">No related books found.</p>';
-
-                    const modal = document.getElementById('bookModal');
-                    modal.classList.add('active');
-                    // Prevent background scroll
-                    document.body.style.overflow = 'hidden';
-                },
-
-                closeModal: function(e) {
-                    if(!e || e.target.id === 'bookModal' || e.target.closest('button')) {
-                        document.getElementById('bookModal').classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                },
-
-                toggleView: function() {
-                    engine.store.view = engine.store.view === 'grid' ? 'list' : 'grid';
-                    localStorage.setItem('viewMode', engine.store.view);
-                    this.updateViewIcon();
-                    
-                    // Re-render current set
-                    const currentTitle = document.querySelector('h2')?.innerText;
-                    engine.render.list(engine.runtime.filterSet, currentTitle);
-                },
-                
-                updateViewIcon: function() {
-                    const iconUse = engine.store.view === 'grid' ? '#icon-list' : '#icon-grid';
-                    document.querySelector('#nav-view svg use').setAttribute('href', iconUse);
-                },
-
-                toast: function(msg) {
-                    const t = document.createElement('div');
-                    t.className = 'toast';
-                    t.innerText = msg;
-                    document.getElementById('toast-area').appendChild(t);
-                    setTimeout(() => t.remove(), 2500);
+                    app.state.filterSet = list;
+                    const back = `<div class="back-bar" onclick="history.back()"><svg style="width:16px;height:16px;fill:currentColor"><use href="#ic-arrow-left"></use></svg> Back</div>`;
+                    app.render.list(list, `${back}<br>${key}`);
+                    window.scrollTo(0,0);
                 }
             },
 
             // --- ACTIONS ---
-            actions: {
-                toggleFav: function(e, id) {
+            action: {
+                fav: function(e, id) {
                     e.stopPropagation();
-                    const list = engine.store.favs;
-                    const index = list.indexOf(id);
-                    
-                    if(index === -1) {
-                        list.push(id);
-                        engine.ui.toast("Added to Favorites ❤️");
-                    } else {
-                        list.splice(index, 1);
-                        engine.ui.toast("Removed from Favorites");
-                    }
-                    
-                    localStorage.setItem('favs', JSON.stringify(list));
-                    
-                    // Live Update
-                    if(engine.runtime.currentTab === 'favorites') engine.router('favorites');
-                    else e.currentTarget.classList.toggle('active-fav'); // Toggle class if on grid
+                    const i = app.state.favs.indexOf(id);
+                    if(i === -1) app.state.favs.push(id); else app.state.favs.splice(i, 1);
+                    localStorage.setItem('favs', JSON.stringify(app.state.favs));
+                    if(app.state.tab === 'fav') app.router('fav'); else e.currentTarget.classList.toggle('active-fav');
                 },
-
-                toggleReadLater: function(e, id) {
+                save: function(e, id) {
                     e.stopPropagation();
-                    const list = engine.store.readLater;
-                    const index = list.indexOf(id);
-                    
-                    if(index === -1) {
-                        list.push(id);
-                        engine.ui.toast("Saved to Read Later 🔖");
-                    } else {
-                        list.splice(index, 1);
-                        engine.ui.toast("Removed from Read Later");
-                    }
-                    
-                    localStorage.setItem('readLater', JSON.stringify(list));
-                    if(engine.runtime.currentTab === 'readlater') engine.router('readlater');
-                    else e.currentTarget.classList.toggle('active-read');
+                    const i = app.state.saved.indexOf(id);
+                    if(i === -1) app.state.saved.push(id); else app.state.saved.splice(i, 1);
+                    localStorage.setItem('saved', JSON.stringify(app.state.saved));
+                    if(app.state.tab === 'save') app.router('save'); else e.currentTarget.classList.toggle('active-read');
                 },
-
-                addToHistory: function(id) {
-                    let h = engine.store.history;
-                    h = [id, ...h.filter(x => x !== id)].slice(0, 30); // Keep unique, max 30
-                    engine.store.history = h;
-                    localStorage.setItem('history', JSON.stringify(h));
+                loadMore: function() {
+                    app.state.showCount += 24;
+                    app.render.list(app.state.filterSet.slice(0, app.state.showCount));
                 },
-
                 random: function() {
-                    if(engine.data.length) {
-                        const r = engine.data[Math.floor(Math.random() * engine.data.length)];
-                        engine.ui.openModal(r.id);
-                    }
+                    if(app.db.length) window.location.hash = 'book:' + app.db[Math.floor(Math.random() * app.db.length)].id;
                 },
-
-                shareBook: function() {
-                    const b = engine.runtime.currentBook;
-                    if(navigator.share) {
-                        navigator.share({ title: b.title, url: b.link }).catch(console.error);
-                    } else {
-                        navigator.clipboard.writeText(b.link);
-                        engine.ui.toast("Link Copied!");
-                    }
+                share: function() {
+                    const b = app.state.currentBook;
+                    if(navigator.share) navigator.share({title: b.title, url: b.link});
+                    else { navigator.clipboard.writeText(b.link); alert("Link Copied!"); }
                 },
-                
-                reportBook: function() {
-                    window.open(`https://t.me/IslamicBooks_us`);
-                }
+                report: function() { window.open("https://t.me/IslamicBooks_us"); }
             },
 
-            // --- SEARCH ENGINE ---
+            // --- UI CONTROLLERS ---
+            ui: {
+                updateClock: function() {
+                    const d = new Date();
+                    document.getElementById('clockTime').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    document.getElementById('clockDate').innerText = d.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+                },
+                openModal: function(id) {
+                    const b = app.db.find(x => x.id === id);
+                    if(!b) return;
+                    app.state.currentBook = b;
+                    
+                    document.getElementById('mImg').src = b.image || app.config.defImg;
+                    document.getElementById('mTitle').innerText = b.title;
+                    document.getElementById('mAuth').innerText = b.author || '';
+                    document.getElementById('mRead').href = b.link;
+                    
+                    const rel = app.db.filter(x => x.id !== id && (x.category === b.category)).slice(0, 3);
+                    let h = '';
+                    rel.forEach(r => {
+                        h += `<div class="rel-item" onclick="window.location.hash='book:${r.id}'">
+                            <img src="${r.image}"><span>${r.title}</span></div>`;
+                    });
+                    document.getElementById('relGrid').innerHTML = h;
+                    
+                    document.getElementById('bookModal').classList.add('open');
+                },
+                closeModal: function(e) {
+                    if(!e || e.target.id === 'bookModal' || e.target.tagName === 'BUTTON') {
+                        document.getElementById('bookModal').classList.remove('open');
+                        history.back(); // Important: Go back in history
+                    }
+                },
+                toggleView: function() {
+                    app.state.view = app.state.view === 'grid' ? 'list' : 'grid';
+                    localStorage.setItem('view', app.state.view);
+                    app.ui.setViewIcon();
+                    // Redraw current list without reloading
+                    if(app.state.tab !== 'az' && app.state.tab !== 'auth' && app.state.tab !== 'cat') {
+                        const title = document.querySelector('h2')?.innerText || '';
+                        app.render.list(app.state.filterSet.slice(0, app.state.showCount), title);
+                    }
+                },
+                setViewIcon: function() {
+                    const icon = app.state.view === 'grid' ? '#ic-list' : '#ic-grid';
+                    document.querySelector('#nav-view svg use').setAttribute('href', icon);
+                }
+            },
+            
             search: function() {
                 const q = document.getElementById('searchInput').value;
-                if(!q) {
-                    engine.router('home');
-                    return;
-                }
-                
-                const fuse = new Fuse(engine.data, {
-                    keys: ['title', 'author', 'category'],
-                    threshold: 0.3
-                });
-                
-                const results = fuse.search(q).map(r => r.item);
-                engine.runtime.filterSet = results;
-                engine.render.list(results, `Search: "${q}"`);
+                if(!q) { app.router('home'); return; }
+                const fuse = new Fuse(app.db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+                const res = fuse.search(q).map(r => r.item);
+                app.state.filterSet = res;
+                app.render.list(res, `Search: "${q}"`);
             }
         };
 
-        // START ENGINE
-        document.addEventListener('DOMContentLoaded', () => engine.init());
-
+        // BOOT
+        document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 </body>
 </html>
