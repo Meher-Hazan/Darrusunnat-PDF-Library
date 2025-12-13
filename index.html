@@ -2,547 +2,444 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি - একটি সমৃদ্ধ ইসলামিক বইয়ের সংগ্রহশালা">
-    <meta name="theme-color" content="#0f4c3a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>দারুচ্ছুন্নাত ইসলামিক লাইব্রেরি</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0f4c3a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
     <style>
         :root {
             /* ROYAL THEME */
-            --col-bg-deep: #020504;
-            --col-primary: #0f4c3a;
-            --col-gold: #FFD700;
-            --col-gold-dim: #D4AC0D;
-            --col-danger: #e74c3c;
-            --col-info: #3498db;
-            --col-white: #ffffff;
-            --col-mute: #b0b0b0;
-
-            /* GLASS UI */
-            --glass-nav: rgba(5, 20, 15, 0.95);
-            --glass-panel: rgba(15, 30, 25, 0.65);
-            --glass-modal: rgba(8, 20, 16, 0.98);
-            --glass-border: 1px solid rgba(255, 215, 0, 0.15);
+            --primary: #0f4c3a;
+            --gold: #FFD700;
+            --gold-dim: #D4AC0D;
+            --bg-deep: #051410;
             
-            /* UTILS */
-            --radius-box: 16px;
-            --shadow-hard: 0 20px 60px rgba(0,0,0,0.8);
+            /* GLASS COLORS */
+            --glass-nav: rgba(10, 25, 20, 0.95);
+            --glass-card: rgba(20, 35, 30, 0.7);
+            --border: 1px solid rgba(255, 215, 0, 0.15);
+            
+            --text-white: #ffffff;
+            --text-gray: #b0b0b0;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body {
+        body { 
             margin: 0; font-family: 'Hind Siliguri', sans-serif;
-            background: linear-gradient(160deg, #020504 0%, #0f4c3a 60%, #000000 100%);
-            color: var(--col-white);
-            min-height: 100vh; padding-bottom: 120px;
-            background-attachment: fixed; overflow-x: hidden;
-        }
-        a { text-decoration: none; color: inherit; }
-        button { cursor: pointer; border: none; font-family: inherit; background: none; }
-
-        /* DECORATION */
-        .bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 50% 50%, rgba(212, 172, 13, 0.05) 0%, transparent 60%);
-            pointer-events: none; z-index: -1;
+            background: linear-gradient(160deg, #020504 0%, #0f4c3a 70%, #000000 100%);
+            color: var(--text-white); padding-bottom: 100px; min-height: 100vh;
+            background-attachment: fixed;
         }
 
-        /* HEADER */
-        .top-nav {
+        /* --- ICONS (SVG) --- */
+        .icon { width: 1.2em; height: 1.2em; fill: currentColor; vertical-align: middle; }
+
+        /* --- HEADER --- */
+        .top-bar {
             background: var(--glass-nav); position: sticky; top: 0; z-index: 1000;
-            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: var(--glass-border); backdrop-filter: blur(20px);
+            padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: var(--border); backdrop-filter: blur(10px);
         }
-        .brand { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--col-gold); font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .clock-widget { font-size: 0.75rem; text-align: right; line-height: 1.2; color: var(--col-mute); }
-        .clock-time { color: var(--col-gold); font-weight: 700; font-size: 0.9rem; font-family: 'Amiri', serif; }
+        .logo { font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--gold); font-weight: 700; }
+        .clock { font-size: 0.75rem; text-align: right; color: var(--text-gray); line-height: 1.2; }
+        .clock-time { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
 
-        /* HERO */
-        .hero { text-align: center; padding: 30px 15px 15px; }
-        .hero-title { 
+        /* --- HERO --- */
+        .hero { text-align: center; padding: 30px 15px 10px; }
+        .hero h1 { 
             font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0 0 20px 0;
-            background: linear-gradient(to bottom, #fff, var(--col-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.5));
+            background: linear-gradient(to bottom, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .search-wrap { position: relative; max-width: 600px; margin: 0 auto 20px; }
-        .search-inp {
-            width: 100%; padding: 15px 50px 15px 25px; border-radius: 50px;
+        .search-box {
+            width: 100%; max-width: 600px; margin: 0 auto 20px;
+            padding: 15px 25px; border-radius: 50px;
             border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
-            color: #fff; font-size: 1rem; backdrop-filter: blur(10px); transition: 0.3s;
+            color: #fff; font-size: 1rem; transition: 0.3s;
         }
-        .search-inp:focus { border-color: var(--col-gold); background: rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
-        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--col-gold-dim); pointer-events: none; }
+        .search-box:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
 
-        /* TABS */
-        .tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 0 10px; }
-        .tab-btn {
-            background: rgba(255,255,255,0.03); color: var(--col-mute);
-            padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem;
-            border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 6px; transition: 0.3s;
+        /* --- TABS --- */
+        .tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .tab {
+            padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 600;
+            background: rgba(255,255,255,0.05); color: var(--text-gray); border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; transition: 0.2s;
         }
-        .tab-btn:hover, .tab-btn.active {
-            background: linear-gradient(135deg, var(--col-primary), #05291e); color: var(--col-gold);
-            border-color: var(--col-gold); box-shadow: 0 0 15px rgba(15, 76, 58, 0.6); transform: translateY(-2px);
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary), #000); color: var(--gold); border-color: var(--gold);
         }
 
-        /* CONTAINER */
-        .container { max-width: 1200px; margin: 0 auto; padding: 15px; min-height: 60vh; }
-        
-        .view-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; animation: fadeIn 0.5s; }
-        @media (min-width: 768px) { .view-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
-        .view-list { display: flex; flex-direction: column; gap: 12px; animation: fadeIn 0.5s; }
+        /* --- CONTAINER --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 10px; min-height: 50vh; }
 
-        /* GRID CARD */
+        /* --- GRID VIEW --- */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; } }
+
         .card {
-            background: var(--glass-panel); border-radius: var(--radius-box); overflow: hidden;
-            display: flex; flex-direction: column; position: relative; border: var(--glass-border);
-            transition: transform 0.3s; height: 100%;
+            background: var(--glass-card); border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column; position: relative; border: var(--border);
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--col-gold); box-shadow: var(--shadow-card); }
-        .card-img-box { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); overflow: hidden; }
-        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover .card-img { transform: scale(1.05); }
-
-        .card-actions { position: absolute; top: 8px; right: 8px; z-index: 5; }
-        .act-btn {
-            width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff;
-            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: 0.2s;
+        .card-img-wrap { position: relative; padding-top: 145%; background: rgba(0,0,0,0.3); }
+        .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        .save-btn {
+            position: absolute; top: 5px; right: 5px; width: 30px; height: 30px;
+            background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; z-index: 5; font-size: 1.2rem; cursor: pointer;
         }
-        .act-btn.active-read { background: var(--col-info); color: white; box-shadow: 0 0 10px var(--col-info); }
+        .save-btn.active { color: #3498db; }
 
-        .card-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-cat { font-size: 0.65rem; color: var(--col-gold-dim); font-weight: 800; text-transform: uppercase; margin-top: auto; }
+        .card-body { padding: 10px; }
+        .card-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 0.65rem; color: var(--gold); font-weight: 700; }
 
-        /* LIST ITEM (FIXED OVERFLOW) */
-        .list-item { 
-            display: flex; align-items: center; background: var(--glass-panel); 
-            padding: 10px; border-radius: 12px; border: var(--glass-border); gap: 15px; 
+        /* --- LIST VIEW --- */
+        .list-view { display: flex; flex-direction: column; gap: 10px; }
+        .list-item {
+            display: flex; align-items: center; background: var(--glass-card); padding: 10px;
+            border-radius: 12px; border: var(--border); gap: 15px;
         }
         .list-thumb { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-        .list-data { flex-grow: 1; min-width: 0; /* Critical for overflow fix */ }
-        .list-title { 
-            font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #fff; line-height: 1.3;
-            /* Overflow Fix */
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;
-        }
-        .list-cat { font-size: 0.75rem; color: var(--col-gold); white-space: nowrap; }
+        .list-info { flex-grow: 1; overflow: hidden; }
+        .list-title { font-size: 0.95rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+        .list-cat { font-size: 0.75rem; color: var(--gold); }
 
-        /* FOLDERS */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; animation: fadeIn 0.4s; }
+        /* --- FOLDERS --- */
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; }
         .folder {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.3s;
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; text-align: center;
+            border: var(--border); cursor: pointer;
         }
-        .folder:hover { border-color: var(--col-gold); background: rgba(212,172,13,0.15); transform: translateY(-3px); }
-        .folder-icon { font-family: 'Amiri', serif; font-size: 2rem; color: var(--col-gold); font-weight: 700; display: block; line-height: 1; }
-        .folder-label { font-size: 0.75rem; color: var(--col-mute); margin-top: 5px; display: block; }
+        .folder-icon { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--gold); display: block; }
+        .folder-name { font-size: 0.75rem; color: var(--text-gray); margin-top: 5px; display: block; }
 
-        /* MODAL */
-        .modal-wrap {
+        /* --- MODAL --- */
+        .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(15px);
-            z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px;
+            background: rgba(0,0,0,0.95); z-index: 5000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
         }
-        .modal-wrap.open { display: flex; }
+        .modal.active { display: flex; }
         .modal-box {
-            background: var(--glass-modal); width: 100%; max-width: 380px;
-            border-radius: 24px; padding: 25px; text-align: center;
-            border: 1px solid var(--col-gold-dim); position: relative; max-height: 90vh; overflow-y: auto;
-            box-shadow: var(--shadow-float); transform: scale(0.95); transition: 0.3s;
+            background: #0a1f18; width: 100%; max-width: 350px; border-radius: 20px;
+            padding: 25px; text-align: center; border: 1px solid var(--gold);
+            position: relative; max-height: 90vh; overflow-y: auto;
         }
-        .modal-wrap.open .modal-box { transform: scale(1); }
-        .modal-img { width: 140px; height: 210px; object-fit: cover; border-radius: 10px; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .modal-h2 { font-size: 1.3rem; margin-bottom: 5px; color: #fff; font-weight: 700; }
-        .modal-sub { color: var(--col-mute); display: block; margin-bottom: 20px; font-size: 0.9rem; }
+        .modal-img { width: 130px; height: 190px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.1); }
+        .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; }
+        .modal-auth { color: var(--text-gray); font-size: 0.9rem; display: block; margin-bottom: 20px; }
         
-        .btn-stack { display: flex; flex-direction: column; gap: 10px; }
         .btn-main {
-            width: 100%; padding: 12px; border-radius: 50px; background: linear-gradient(135deg, var(--col-gold), #F39C12);
-            color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: block; width: 100%; padding: 12px; border-radius: 50px;
+            background: linear-gradient(135deg, var(--gold), #F39C12); color: #000;
+            font-weight: 800; margin-bottom: 10px; text-decoration: none;
         }
         .btn-sec {
-            width: 100%; padding: 12px; border-radius: 50px; background: rgba(255,255,255,0.05);
-            color: #fff; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: block; width: 100%; padding: 12px; border-radius: 50px;
+            background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; cursor: pointer; margin-bottom: 10px;
         }
 
-        /* RELATED */
-        .rel-sec { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px; text-align: left; }
-        .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-        .rel-item { text-align: center; cursor: pointer; }
-        .rel-item img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); opacity: 0.8; }
-        .rel-item span { display: block; font-size: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; color: #ccc; }
-
-        /* BOTTOM NAV */
-        .bot-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px;
-            background: var(--glass-nav); backdrop-filter: blur(25px); border-radius: 60px; padding: 10px 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(212, 172, 13, 0.3); box-shadow: var(--shadow-hard); z-index: 2000;
+        /* --- BOTTOM NAV --- */
+        .nav-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
+            background: var(--glass-nav); backdrop-filter: blur(20px); border-radius: 50px;
+            display: flex; justify-content: space-between; padding: 10px 25px;
+            border: var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 2000;
         }
-        .nav-btn { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--col-mute); transition: 0.3s; }
-        .nav-btn svg { width: 22px; height: 22px; fill: currentColor; }
-        .nav-btn.active { color: var(--col-gold); background: rgba(212,172,13,0.15); box-shadow: 0 0 15px rgba(212,172,13,0.1); transform: translateY(-2px); }
+        .nav-btn { font-size: 1.5rem; color: var(--text-gray); background: none; border: none; cursor: pointer; }
+        .nav-btn.active { color: var(--gold); }
 
         /* UTILS */
-        .load-more-btn { display: block; margin: 30px auto; padding: 10px 30px; background: transparent; border: 1px solid var(--col-gold); color: var(--col-gold); border-radius: 30px; font-weight: bold; }
-        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.08); border-radius: 20px; margin-bottom: 20px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: var(--col-gold); font-size: 0.9rem; }
-        .loading { text-align: center; padding: 60px; color: var(--col-mute); }
-        .hidden { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .load-more { display: block; margin: 30px auto; padding: 10px 30px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 30px; }
+        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 15px; cursor: pointer; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <svg style="display: none;">
-        <symbol id="ic-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
-        <symbol id="ic-grid" viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></symbol>
-        <symbol id="ic-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
-        <symbol id="ic-dice" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></symbol>
-        <symbol id="ic-book" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></symbol>
-        <symbol id="ic-share" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></symbol>
-        <symbol id="ic-tel" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.28 7.77-7.02c.35-.31-.08-.48-.54-.17l-9.6 6.05L4.09 12c-.92-.28-.93-.9.18-1.35l17.75-6.85c.81-.3 1.53.18 1.26 1.1L19.26 19.1c-.2.9-1.34 1.1-1.92.82l-5.33-2.3 2.5-2.2c.45-.4.82-.48.47-1.07l-2.4 2.1-5.7.53c-.92.08-1.37-.47.28-1.1L18.8 4.67 9.78 18.65z"/></symbol>
-        <symbol id="ic-read" viewBox="0 0 24 24"><path d="M12 6c2.62 0 4.88.86 6.5 2.24.64.55 1.5 1.05 1.5 2.06 0 .86-.68 1.4-1.5 1.2H18c-.3 0-.58.13-.7.4l-1.47 3.32c-.52 1.18-1.7 1.78-2.93 1.78-1.23 0-2.41-.6-2.93-1.78l-1.47-3.32c-.12-.27-.4-.4-.7-.4h-.5c-.82.2-1.5-.34-1.5-1.2 0-1.01.86-1.51 1.5-2.06C8.12 6.86 10.38 6 12 6z"/></symbol>
-    </svg>
-
-    <div class="bg-pattern"></div>
-
-    <header class="top-nav">
-        <div class="brand">
-            <svg style="width:24px;height:24px;fill:var(--col-gold)"><use href="#ic-read"></use></svg> Darrusunnat
-        </div>
-        <div class="clock-widget">
+    <div class="top-bar">
+        <div class="logo">Darrusunnat</div>
+        <div class="clock">
             <div class="clock-time" id="clockTime">00:00</div>
-            <div style="font-size:0.65rem" id="clockDate">Loading...</div>
+            <div id="clockDate">...</div>
         </div>
-    </header>
+    </div>
 
-    <div class="hero" id="homeHero">
-        <h1 class="hero-title">দারুচ্ছুন্নাত লাইব্রেরি</h1>
-        <div class="search-wrap">
-            <input type="text" class="search-inp" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="app.search()">
-            <div class="search-icon"><svg style="width:18px;height:18px;fill:currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
-        </div>
+    <div class="hero" id="heroSection">
+        <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
+        <input type="text" class="search-box" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
+        
         <div class="tabs">
-            <button class="tab-btn active" onclick="app.router('home')" id="tab-home">সর্বশেষ</button>
-            <button class="tab-btn" onclick="app.router('az')" id="tab-az">বর্ণানুক্রমিক</button>
-            <button class="tab-btn" onclick="app.router('auth')" id="tab-auth">লেখক</button>
-            <button class="tab-btn" onclick="app.router('cat')" id="tab-cat">বিষয়</button>
-            <button class="tab-btn" onclick="app.router('save')" id="tab-save" style="color:var(--col-info)"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-book"></use></svg> সংরক্ষিত</button>
+            <div class="tab active" onclick="setTab('home')" id="btn-home">সর্বশেষ</div>
+            <div class="tab" onclick="setTab('az')" id="btn-az">বর্ণানুক্রমিক</div>
+            <div class="tab" onclick="setTab('auth')" id="btn-auth">লেখক</div>
+            <div class="tab" onclick="setTab('cat')" id="btn-cat">বিষয়</div>
+            <div class="tab" onclick="setTab('save')" id="btn-save" style="color:#3498db">সংরক্ষিত</div>
         </div>
     </div>
 
-    <main class="container" id="app-content">
-        <div class="loading"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>লাইব্রেরি লোড হচ্ছে...</div>
-    </main>
+    <div class="container" id="content">
+        <div style="text-align:center; padding:50px; color:#888;">লাইব্রেরি লোড হচ্ছে...</div>
+    </div>
 
-    <div class="modal-wrap" id="bookModal" onclick="app.ui.closeModal(event)">
+    <div class="modal" id="bookModal">
         <div class="modal-box">
-            <button onclick="app.ui.closeModal(event)" style="position:absolute; top:20px; right:20px; background:none; color:#fff; font-size:1.8rem;">&times;</button>
+            <div onclick="closeModal()" style="position:absolute; top:15px; right:15px; font-size:1.5rem; color:#fff; cursor:pointer;">&times;</div>
             <img src="" class="modal-img" id="mImg">
-            <h2 class="modal-h2" id="mTitle"></h2>
-            <span class="modal-sub" id="mAuth"></span>
+            <div class="modal-title" id="mTitle"></div>
+            <div class="modal-auth" id="mAuth"></div>
             
-            <div class="btn-stack">
-                <a href="#" target="_blank" class="btn-main" id="mRead">
-                    <svg style="width:18px;height:18px;fill:currentColor"><use href="#ic-read"></use></svg> অনলাইনে পড়ুন
-                </a>
-                <button class="btn-sec" onclick="app.action.share()">
-                    <svg style="width:16px;height:16px;fill:currentColor"><use href="#ic-share"></use></svg> শেয়ার করুন
-                </button>
-                <button class="btn-sec" onclick="app.action.report()" style="color:var(--col-danger); border-color:rgba(231,76,60,0.3)">
-                    <svg style="width:16px;height:16px;fill:currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> অভিযোগ করুন
-                </button>
-            </div>
-
-            <div class="rel-sec" id="relatedSection">
-                <div style="font-weight:bold; color:var(--col-mute); margin-bottom:10px; font-size:0.9rem">আরও দেখুন</div>
-                <div class="rel-grid" id="relGrid"></div>
-            </div>
+            <a href="#" target="_blank" class="btn-main" id="mRead">অনলাইনে পড়ুন</a>
+            <button class="btn-sec" onclick="shareBook()">শেয়ার করুন</button>
+            <button class="btn-sec" onclick="reportBook()" style="color:#e74c3c">অভিযোগ করুন</button>
         </div>
     </div>
 
-    <nav class="bot-nav">
-        <button class="nav-btn active" onclick="app.router('home')" id="nav-home">
-            <svg><use href="#ic-home"></use></svg>
-        </button>
-        <button class="nav-btn" onclick="app.ui.toggleView()" id="nav-view">
-            <svg><use href="#ic-grid"></use></svg>
-        </button>
-        <button class="nav-btn" onclick="app.action.random()" style="color:var(--col-gold); transform:scale(1.2)">
-            <svg><use href="#ic-dice"></use></svg>
-        </button>
-        <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-btn" style="color:var(--col-info)">
-            <svg><use href="#ic-tel"></use></svg>
-        </a>
-    </nav>
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="setTab('home')" id="nav-home">🏠</button>
+        <button class="nav-btn" onclick="toggleView()" id="nav-view">⊞</button>
+        <button class="nav-btn" onclick="openRandom()" style="color:var(--gold)">🎲</button>
+        <a href="https://t.me/SobBoiErPdf" class="nav-btn" style="color:#3498db">✈️</a>
+    </div>
 
     <script>
-        const app = {
-            db: [],
-            config: {
-                limit: 24, 
-                defImg: 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book'
-            },
-            state: {
-                saved: JSON.parse(localStorage.getItem('saved')) || [],
-                view: localStorage.getItem('view') || 'grid',
-                tab: 'home',
-                filterSet: [],
-                showCount: 24,
-                currentBook: null
-            },
+        // --- DATA & STATE ---
+        let db = [];
+        let saved = JSON.parse(localStorage.getItem('saved')) || [];
+        let viewMode = localStorage.getItem('viewMode') || 'grid';
+        let currentTab = 'home';
+        let displayCount = 24;
+        let currentFilterList = [];
+        
+        // --- INITIALIZATION ---
+        fetch('books_data.json?t=' + Date.now())
+            .then(res => res.json())
+            .then(data => {
+                db = data.sort((a, b) => b.id - a.id); // Newest First
+                setTab('home');
+                startClock();
+            })
+            .catch(() => document.getElementById('content').innerHTML = "Failed to load.");
 
-            init: async function() {
-                try {
-                    const res = await fetch('books_data.json?t=' + Date.now());
-                    this.db = await res.json();
-                    this.db.sort((a,b) => b.id - a.id);
-                    
-                    setInterval(this.ui.updateClock, 1000);
-                    this.ui.updateClock();
-                    this.ui.setViewIcon();
+        // --- CLOCK ---
+        function startClock() {
+            setInterval(() => {
+                const d = new Date();
+                document.getElementById('clockTime').innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                document.getElementById('clockDate').innerText = d.toLocaleDateString('bn-BD');
+            }, 1000);
+        }
 
-                    window.addEventListener('hashchange', () => this.handleHash());
-                    this.handleHash(); 
+        // --- TABS & NAVIGATION ---
+        function setTab(tab) {
+            currentTab = tab;
+            displayCount = 24; // Reset count
+            
+            // UI Highlights
+            document.querySelectorAll('.tab, .nav-btn').forEach(e => e.classList.remove('active'));
+            if(document.getElementById('btn-'+tab)) document.getElementById('btn-'+tab).classList.add('active');
+            if(document.getElementById('nav-'+tab)) document.getElementById('nav-'+tab).classList.add('active');
 
-                } catch(e) {
-                    document.getElementById('app-content').innerHTML = "<div class='loading'>Failed to load data. Check connection.</div>";
-                }
-            },
+            // Hero Visibility
+            document.getElementById('heroSection').style.display = (tab === 'home') ? 'block' : 'none';
+            window.scrollTo(0, 0);
 
-            handleHash: function() {
-                const hash = window.location.hash.replace('#', '');
-                if (!hash) { this.router('home', false); return; }
+            // Logic
+            if (tab === 'home') {
+                currentFilterList = db;
+                renderBooks(db.slice(0, displayCount));
+            } else if (tab === 'save') {
+                const list = db.filter(b => saved.includes(b.id));
+                currentFilterList = list;
+                renderBooks(list, "সংরক্ষিত বই");
+            } else if (tab === 'az') {
+                renderFolders('az');
+            } else if (tab === 'auth') {
+                renderFolders('author');
+            } else if (tab === 'cat') {
+                renderFolders('category');
+            }
+        }
 
-                const [route, val] = hash.split(':');
-                const param = decodeURIComponent(val || '');
+        // --- RENDER BOOKS (GRID/LIST) ---
+        function renderBooks(list, title = '') {
+            const con = document.getElementById('content');
+            if (!list || list.length === 0) { con.innerHTML = "<div style='text-align:center; padding:50px;'>কিছু পাওয়া যায়নি</div>"; return; }
 
-                if (route === 'book') this.ui.openModal(parseInt(param));
-                else if (route === 'folder') this.logic.openFolder(param); 
-                else this.router(route, false);
-            },
-
-            router: function(tab, updateHash = true) {
-                this.state.tab = tab;
-                this.state.showCount = this.config.limit;
-                if(updateHash && tab !== 'home') window.location.hash = tab;
-                if(updateHash && tab === 'home') history.replaceState(null, null, ' ');
-
-                document.querySelectorAll('.tab-btn, .nav-btn').forEach(el => el.classList.remove('active'));
-                if(document.getElementById('tab-'+tab)) document.getElementById('tab-'+tab).classList.add('active');
-                if(document.getElementById('nav-'+tab)) document.getElementById('nav-'+tab).classList.add('active');
+            let html = title ? `<h2 style="color:var(--gold); margin-bottom:15px;">${title}</h2>` : '';
+            
+            html += viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
+            
+            list.forEach(b => {
+                const img = b.image || 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book';
+                const isSaved = saved.includes(b.id) ? 'active' : '';
                 
-                const hero = document.getElementById('homeHero');
-                hero.style.display = (tab === 'home') ? 'block' : 'none';
-                
-                if (tab !== 'home') window.scrollTo(0,0);
-
-                switch(tab) {
-                    case 'home':
-                        this.state.filterSet = this.db;
-                        this.render.list(this.db.slice(0, this.state.showCount));
-                        break;
-                    case 'save':
-                        const s = this.db.filter(b => this.state.saved.includes(b.id));
-                        this.state.filterSet = s;
-                        this.render.list(s, "সংরক্ষিত বই");
-                        break;
-                    case 'az': this.logic.renderFolders('az'); break;
-                    case 'auth': this.logic.renderFolders('author'); break;
-                    case 'cat': this.logic.renderFolders('category'); break;
-                }
-            },
-
-            render: {
-                list: function(list, title = '') {
-                    const con = document.getElementById('app-content');
-                    if(!list || list.length === 0) { con.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
-
-                    let html = title ? `<h2 style="color:var(--col-gold); margin-bottom:15px; font-size:1.2rem">${title}</h2>` : '';
-                    
-                    const gridClass = app.state.view === 'grid' ? 'view-grid' : 'view-list';
-                    html += `<div class="${gridClass}">`;
-                    
-                    list.forEach(b => {
-                        html += app.state.view === 'grid' ? app.tpl.card(b) : app.tpl.list(b);
-                    });
-                    html += '</div>';
-
-                    if (app.state.tab === 'home' && list.length < app.state.filterSet.length) {
-                        html += `<div class="load-more-container"><button class="load-more-btn" onclick="app.action.loadMore()">আরও দেখুন...</button></div>`;
-                    }
-
-                    con.innerHTML = html;
-                },
-                folders: function(items, type) {
-                    let html = '<div class="folder-grid">';
-                    items.forEach(i => {
-                        html += `<div class="folder" onclick="window.location.hash = 'folder:${type}|${i.name}'">
-                            <span class="folder-icon">${i.name}</span>
-                            <span class="folder-label">${i.count} টি বই</span>
-                        </div>`;
-                    });
-                    html += '</div>';
-                    document.getElementById('app-content').innerHTML = html;
-                }
-            },
-
-            tpl: {
-                card: function(b) {
-                    const img = b.image || app.config.defImg;
-                    const isSave = app.state.saved.includes(b.id) ? 'active-read' : '';
-                    return `
+                if (viewMode === 'grid') {
+                    html += `
                     <div class="card">
-                        <div class="card-actions">
-                            <button class="act-btn ${isSave}" onclick="app.action.save(event, ${b.id})"><svg style="width:14px;height:14px;fill:currentColor"><use href="#ic-book"></use></svg></button>
-                        </div>
-                        <div class="card-img-box" onclick="window.location.hash='book:${b.id}'">
+                        <div class="save-btn ${isSaved}" onclick="toggleSave(event, ${b.id})">🔖</div>
+                        <div class="card-img-wrap" onclick="openModal(${b.id})">
                             <img src="${img}" class="card-img" loading="lazy">
                         </div>
-                        <div class="card-info">
+                        <div class="card-body">
                             <div class="card-title">${b.title}</div>
                             <div class="card-cat">${b.category}</div>
                         </div>
                     </div>`;
-                },
-                list: function(b) {
-                    const img = b.image || app.config.defImg;
-                    return `
-                    <div class="list-item" onclick="window.location.hash='book:${b.id}'">
+                } else {
+                    html += `
+                    <div class="list-item" onclick="openModal(${b.id})">
                         <img src="${img}" class="list-thumb" loading="lazy">
-                        <div class="list-data">
+                        <div class="list-info">
                             <div class="list-title">${b.title}</div>
                             <div class="list-cat">${b.category}</div>
                         </div>
                     </div>`;
                 }
-            },
+            });
+            html += '</div>';
 
-            logic: {
-                getSortChar: function(str) {
-                    const clean = str.replace(/^[\d\s\.\-\_\#\(\)\[\]]+/, '').trim();
+            if (currentTab === 'home' && list.length < db.length) {
+                html += `<button class="load-more" onclick="loadMore()">আরও দেখুন...</button>`;
+            }
+            con.innerHTML = html;
+        }
+
+        // --- RENDER FOLDERS (Clean A-Z) ---
+        function renderFolders(type) {
+            const groups = {};
+            db.forEach(b => {
+                let key = 'Other';
+                if (type === 'az') {
+                    // Strict cleaner: Remove numbers/symbols
+                    const clean = b.title.replace(/^[\d\s\.\-\_\#\(\)\[\]]+/, '').trim();
                     const match = clean.match(/[a-zA-Z\u0980-\u09FF]/);
-                    return match ? match[0].toUpperCase() : '#';
-                },
-                renderFolders: function(type) {
-                    const groups = {};
-                    app.db.forEach(b => {
-                        let key = 'Unknown';
-                        if(type === 'az') key = this.getSortChar(b.title);
-                        else key = b[type] || 'Unknown';
-                        if(type === 'author' && key === 'Darrusunnat Library') return; 
-                        if(!groups[key]) groups[key] = 0;
-                        groups[key]++;
-                    });
-                    const sorted = Object.keys(groups).sort().map(k => ({name: k, count: groups[k]}));
-                    app.render.folders(sorted, type);
-                },
-                openFolder: function(param) {
-                    const [type, key] = param.split('|');
-                    let list = [];
-                    if(type === 'az') list = app.db.filter(b => app.logic.getSortChar(b.title) === key);
-                    else list = app.db.filter(b => b[type] === key);
-                    
-                    app.state.filterSet = list;
-                    const back = `<div class="back-bar" onclick="history.back()"><svg style="width:16px;height:16px;fill:currentColor; transform:rotate(180deg)"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> পেছনে যান</div>`;
-                    app.render.list(list, `${back}<br>${key}`);
-                    window.scrollTo(0,0);
+                    key = match ? match[0].toUpperCase() : '#';
+                } else {
+                    key = b[type] || 'Unknown';
+                    if (type === 'author' && key === 'Darrusunnat Library') return;
                 }
-            },
+                if(!groups[key]) groups[key] = 0;
+                groups[key]++;
+            });
 
-            action: {
-                save: function(e, id) {
-                    e.stopPropagation();
-                    const i = app.state.saved.indexOf(id);
-                    if(i === -1) app.state.saved.push(id); else app.state.saved.splice(i, 1);
-                    localStorage.setItem('saved', JSON.stringify(app.state.saved));
-                    if(app.state.tab === 'save') app.router('save'); else e.currentTarget.classList.toggle('active-read');
-                },
-                loadMore: function() {
-                    app.state.showCount += 24;
-                    app.render.list(app.state.filterSet.slice(0, app.state.showCount));
-                },
-                random: function() {
-                    if(app.db.length) window.location.hash = 'book:' + app.db[Math.floor(Math.random() * app.db.length)].id;
-                },
-                share: function() {
-                    const b = app.state.currentBook;
-                    if(navigator.share) navigator.share({title: b.title, url: b.link});
-                    else { navigator.clipboard.writeText(b.link); alert("Link Copied!"); }
-                },
-                report: function() { window.open("https://t.me/IslamicBooks_us"); }
-            },
+            const keys = Object.keys(groups).sort();
+            let html = '<div class="folder-grid">';
+            keys.forEach(k => {
+                html += `
+                <div class="folder" onclick="openFolder('${type}', '${k}')">
+                    <span class="folder-icon">${k}</span>
+                    <span class="folder-name">${groups[k]} টি বই</span>
+                </div>`;
+            });
+            html += '</div>';
+            document.getElementById('content').innerHTML = html;
+        }
 
-            ui: {
-                updateClock: function() {
-                    const d = new Date();
-                    document.getElementById('clockTime').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    document.getElementById('clockDate').innerText = d.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
-                },
-                openModal: function(id) {
-                    const b = app.db.find(x => x.id === id);
-                    if(!b) return;
-                    app.state.currentBook = b;
-                    
-                    document.getElementById('mImg').src = b.image || app.config.defImg;
-                    document.getElementById('mTitle').innerText = b.title;
-                    document.getElementById('mAuth').innerText = b.author || '';
-                    document.getElementById('mRead').href = b.link;
-                    
-                    const rel = app.db.filter(x => x.id !== id && (x.category === b.category)).slice(0, 3);
-                    let h = '';
-                    rel.forEach(r => {
-                        h += `<div class="rel-item" onclick="window.location.hash='book:${r.id}'">
-                            <img src="${r.image}"><span>${r.title}</span></div>`;
-                    });
-                    document.getElementById('relGrid').innerHTML = h;
-                    
-                    document.getElementById('bookModal').classList.add('active');
-                },
-                closeModal: function(e) {
-                    if(!e || e.target.id === 'bookModal' || e.target.tagName === 'BUTTON') {
-                        document.getElementById('bookModal').classList.remove('active');
-                        // Fix: Go to current tab instead of closing site
-                        const current = app.state.tab === 'home' ? ' ' : app.state.tab;
-                        history.replaceState(null, null, '#' + current);
-                    }
-                },
-                toggleView: function() {
-                    app.state.view = app.state.view === 'grid' ? 'list' : 'grid';
-                    localStorage.setItem('view', app.state.view);
-                    app.ui.setViewIcon();
-                    if(app.state.tab !== 'az' && app.state.tab !== 'auth' && app.state.tab !== 'cat') {
-                        const title = document.querySelector('h2')?.innerText || '';
-                        app.render.list(app.state.filterSet.slice(0, app.state.showCount), title);
-                    }
-                },
-                setViewIcon: function() {
-                    const icon = app.state.view === 'grid' ? '#ic-list' : '#ic-grid';
-                    document.querySelector('#nav-view svg use').setAttribute('href', icon);
-                }
-            },
+        function openFolder(type, key) {
+            let list = [];
+            if (type === 'az') {
+                list = db.filter(b => {
+                    const clean = b.title.replace(/^[\d\s\.\-\_\#\(\)\[\]]+/, '').trim();
+                    const match = clean.match(/[a-zA-Z\u0980-\u09FF]/);
+                    return match && match[0].toUpperCase() === key;
+                });
+            } else {
+                list = db.filter(b => b[type] === key);
+            }
+            currentFilterList = list;
+            const backBtn = `<div class="back-bar" onclick="setTab('${currentTab}')">⬅ পেছনে যান</div>`;
+            renderBooks(list, `${backBtn}<br>${key}`);
+        }
+
+        // --- ACTIONS ---
+        function toggleSave(e, id) {
+            e.stopPropagation();
+            if (saved.includes(id)) saved = saved.filter(x => x !== id);
+            else saved.push(id);
+            localStorage.setItem('saved', JSON.stringify(saved));
             
-            search: function() {
-                const q = document.getElementById('searchInput').value;
-                if(!q) { app.router('home'); return; }
-                const fuse = new Fuse(this.db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
-                const res = fuse.search(q).map(r => r.item);
-                app.state.filterSet = res;
-                app.render.list(res, `অনুসন্ধান: "${q}"`);
+            if (currentTab === 'save') setTab('save');
+            else e.target.classList.toggle('active');
+        }
+
+        function loadMore() {
+            displayCount += 24;
+            renderBooks(db.slice(0, displayCount));
+        }
+
+        function toggleView() {
+            viewMode = viewMode === 'grid' ? 'list' : 'grid';
+            localStorage.setItem('viewMode', viewMode);
+            document.getElementById('nav-view').innerText = viewMode === 'grid' ? '⊞' : '☰';
+            // Re-render current view
+            if (currentTab === 'az' || currentTab === 'auth' || currentTab === 'cat') {
+                if (currentFilterList.length > 0) renderBooks(currentFilterList, document.querySelector('h2')?.innerHTML);
+            } else {
+                setTab(currentTab);
+            }
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('searchInput').value;
+            if (!q) { setTab('home'); return; }
+            const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+            const res = fuse.search(q).map(r => r.item);
+            currentFilterList = res;
+            renderBooks(res, `অনুসন্ধান: "${q}"`);
+        }
+
+        // --- MODAL ---
+        let currentBookLink = "";
+        
+        function openModal(id) {
+            const b = db.find(x => x.id === id);
+            if(!b) return;
+            
+            currentBookLink = b.link;
+            document.getElementById('mImg').src = b.image || 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book';
+            document.getElementById('mTitle').innerText = b.title;
+            document.getElementById('mAuth').innerText = b.author || '';
+            document.getElementById('mRead').href = b.link;
+            
+            // Push history state so back button works
+            window.history.pushState({modal: true}, null, "");
+            document.getElementById('bookModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('bookModal').classList.remove('active');
+            // If we pushed state, go back. If not (page load), just close.
+            if (window.history.state && window.history.state.modal) {
+                window.history.back();
+            }
+        }
+
+        // Handle Browser Back Button for Modal
+        window.onpopstate = function(event) {
+            if (document.getElementById('bookModal').classList.contains('active')) {
+                document.getElementById('bookModal').classList.remove('active');
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => app.init());
+        function openRandom() {
+            if(db.length) openModal(db[Math.floor(Math.random() * db.length)].id);
+        }
+
+        function shareBook() {
+            navigator.clipboard.writeText(currentBookLink);
+            alert("লিংক কপি হয়েছে!");
+        }
+
+        function reportBook() {
+            window.open("https://t.me/IslamicBooks_us");
+        }
     </script>
 </body>
 </html>
