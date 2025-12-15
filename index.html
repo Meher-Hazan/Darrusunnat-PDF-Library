@@ -26,107 +26,155 @@
         body { 
             margin: 0; font-family: 'Hind Siliguri', sans-serif;
             background: linear-gradient(160deg, #020504 0%, #0f4c3a 60%, #000000 100%);
-            color: var(--text-white); padding-bottom: 120px; min-height: 100vh;
+            color: var(--text-white); min-height: 100vh;
             background-attachment: fixed;
         }
         a { text-decoration: none; color: inherit; }
         button { cursor: pointer; border: none; font-family: inherit; background: none; }
 
-        /* HEADER (DASHBOARD) */
+        /* =========================================
+           1. MOBILE VIEW (Default < 600px)
+           ========================================= */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .container { padding: 10px 10px 100px 10px; max-width: 100%; }
+        
+        /* Elements visible on Mobile/Tablet */
+        .top-nav { display: flex; }
+        .bot-nav { display: flex; }
+        .pc-sidebar { display: none; } /* Hide PC Sidebar */
+        
+        /* Mobile Header */
         .top-nav {
             background: var(--glass-nav); position: sticky; top: 0; z-index: 1000;
-            padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(255,215,0,0.15); backdrop-filter: blur(20px);
         }
         .brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 5px; }
         
-        .nav-right { display: flex; align-items: center; gap: 10px; }
+        /* Mobile Bottom Nav */
+        .bot-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #051410; border-top: 1px solid rgba(255,255,255,0.1);
+            justify-content: space-around; padding: 10px 0; z-index: 2000;
+        }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: none; border: none; color: #666; font-size: 0.7rem; gap: 3px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-item i { font-size: 1.2rem; }
+        .nav-item.active { color: var(--gold); transform: translateY(-3px); }
+
+        /* =========================================
+           2. TABLET VIEW (600px - 1023px)
+           ========================================= */
+        @media (min-width: 600px) and (max-width: 1023px) {
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+            .container { padding: 20px 20px 120px 20px; }
+            .card-title { font-size: 1rem; } /* Bigger text for tablet */
+            .nav-item { font-size: 0.8rem; }
+            .nav-item i { font-size: 1.4rem; }
+        }
+
+        /* =========================================
+           3. PC / DESKTOP VIEW (1024px+)
+           ========================================= */
+        @media (min-width: 1024px) {
+            body { padding-left: 260px; padding-bottom: 0; } /* Make space for Sidebar */
+            
+            /* Hide Mobile Elements */
+            .top-nav { display: none !important; }
+            .bot-nav { display: none !important; }
+            
+            /* Show PC Elements */
+            .pc-sidebar { display: flex !important; }
+            
+            /* PC Grid Layout */
+            .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
+            .container { padding: 40px; max-width: 1400px; }
+            
+            /* PC Hero Adjustments */
+            .hero { padding-top: 40px; text-align: left; padding-left: 40px; }
+            .search-wrap { margin: 0; max-width: 500px; }
+        }
+
+        /* --- PC SIDEBAR DESIGN --- */
+        .pc-sidebar { 
+            display: none; /* Hidden by default */
+            position: fixed; left: 0; top: 0; height: 100vh; width: 260px;
+            background: rgba(5, 20, 15, 0.98); border-right: 1px solid rgba(255,255,255,0.1);
+            flex-direction: column; padding: 30px 20px; z-index: 2000;
+        }
+        .pc-brand { 
+            font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--gold); 
+            margin-bottom: 40px; font-weight: bold; text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;
+        }
+        .pc-link {
+            display: flex; align-items: center; gap: 15px; color: #ccc;
+            padding: 15px; margin-bottom: 8px; border-radius: 12px;
+            cursor: pointer; transition: 0.2s; font-size: 1rem;
+        }
+        .pc-link:hover, .pc-link.active { 
+            background: linear-gradient(90deg, rgba(255,215,0,0.15), transparent); 
+            color: var(--gold); border-left: 3px solid var(--gold);
+        }
+        .pc-link i { width: 25px; text-align: center; }
+
+        /* --- GLOBAL COMPONENTS --- */
         
-        .header-icon { 
-            color: var(--text-gray); font-size: 1.2rem; padding: 5px; 
-            transition: 0.3s; cursor: pointer; 
-        }
-        .header-icon:active { color: var(--gold); transform: scale(0.9); }
-
-        .join-btn {
-            background: linear-gradient(135deg, var(--gold), #F39C12);
-            color: #000; padding: 4px 10px; border-radius: 50px;
-            font-weight: 800; font-size: 0.7rem; text-decoration: none;
-            display: flex; align-items: center; gap: 4px;
-            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
-        }
-
-        /* HERO */
-        .hero { text-align: center; padding: 25px 15px 10px; }
-        .search-wrap { position: relative; max-width: 600px; margin: 0 auto 15px; }
+        /* SEARCH */
+        .hero { padding: 20px; }
+        .search-wrap { position: relative; max-width: 600px; margin: 0 auto; }
         .search-inp {
             width: 100%; padding: 12px 40px 12px 20px; border-radius: 50px;
             border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
-            color: #fff; font-size: 0.95rem; backdrop-filter: blur(10px); transition: 0.3s;
+            color: #fff; font-size: 1rem; backdrop-filter: blur(10px); transition: 0.3s;
         }
-        .search-inp:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+        .search-inp:focus { border-color: var(--gold); background: rgba(255,255,255,0.15); }
         .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold-dim); }
 
-        /* CONTENT */
-        .container { max-width: 1200px; margin: 0 auto; padding: 10px; min-height: 60vh; }
-        
-        /* RESPONSIVE LAYOUT */
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .list-view { display: flex; flex-direction: column; gap: 10px; }
-        
-        @media (min-width: 600px) {
-            .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
-            .container { padding: 20px; }
-        }
-        @media (min-width: 1024px) {
-            body { padding-left: 260px; padding-bottom: 0; }
-            .grid { grid-template-columns: repeat(5, 1fr); gap: 20px; }
-            .bot-nav { display: none; }
-            .top-nav { display: none; }
-            .pc-sidebar { display: flex; }
-        }
-
-        /* CARD DESIGN */
+        /* CARD */
         .card {
             background: var(--glass-card); border-radius: 12px; overflow: hidden;
             display: flex; flex-direction: column; position: relative; border: 1px solid rgba(255,255,255,0.1);
-            height: 100%; cursor: pointer;
+            height: 100%; cursor: pointer; transition: transform 0.2s;
         }
-        .card-img-box { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); }
+        .card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        
+        .card-img-wrap { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); }
         .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         
         .save-btn {
-            position: absolute; top: 8px; right: 8px; width: 30px; height: 30px;
+            position: absolute; top: 8px; right: 8px; width: 32px; height: 32px;
             background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #fff; z-index: 5; font-size: 0.9rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; z-index: 5; font-size: 1rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
         }
         .save-btn.active { color: #3498db; background: rgba(255,255,255,0.9); }
 
-        .card-info { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 3px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-cat { font-size: 0.65rem; color: var(--gold-dim); font-weight: 800; text-transform: uppercase; margin-top: auto; }
+        .card-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 0.7rem; color: var(--gold-dim); font-weight: 800; text-transform: uppercase; margin-top: auto; }
 
         /* LIST ITEM */
+        .list-view { display: flex; flex-direction: column; gap: 10px; }
         .list-item { 
             display: flex; align-items: center; background: var(--glass-card); 
-            padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); gap: 12px; cursor: pointer;
+            padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); gap: 15px; cursor: pointer;
         }
-        .list-thumb { width: 45px; height: 65px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
+        .list-thumb { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
         .list-data { flex-grow: 1; min-width: 0; }
-        .list-title { 
-            font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; color: #fff; line-height: 1.3;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .list-cat { font-size: 0.7rem; color: var(--gold); }
+        .list-title { font-weight: 700; font-size: 1rem; margin-bottom: 3px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-cat { font-size: 0.75rem; color: var(--gold); }
 
         /* FOLDERS */
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
         .folder {
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer;
+            border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.2s;
         }
+        .folder:hover { border-color: var(--gold); background: rgba(255,215,0,0.1); }
         .folder-icon { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--gold); display: block; margin-bottom: 5px; }
-        .folder-label { font-size: 0.75rem; color: var(--text-gray); display: block; }
+        .folder-label { font-size: 0.8rem; color: var(--text-gray); }
 
         /* MODAL */
         .modal {
@@ -136,50 +184,37 @@
         }
         .modal.active { display: flex; }
         .modal-box {
-            background: #0a1f18; width: 100%; max-width: 350px; border-radius: 20px;
+            background: #0a1f18; width: 100%; max-width: 380px; border-radius: 20px;
             padding: 25px; text-align: center; border: 1px solid var(--gold);
             position: relative; max-height: 90vh; overflow-y: auto;
             box-shadow: 0 0 50px rgba(15,76,58,0.5);
         }
-        .modal-img { width: 130px; height: 190px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); }
-        .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
-        .modal-auth { color: var(--text-gray); font-size: 0.9rem; display: block; margin-bottom: 25px; }
+        .modal-img { width: 130px; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); }
+        .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
+        .modal-auth { color: var(--text-gray); font-size: 0.95rem; display: block; margin-bottom: 25px; }
         
-        .btn-stack { display: flex; flex-direction: column; gap: 10px; }
-        .btn-1 { width: 100%; padding: 12px; border-radius: 50px; background: linear-gradient(135deg, var(--gold), #F39C12); color: #000; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; }
-        .btn-2 { width: 100%; padding: 12px; border-radius: 50px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        .btn-3 { width: 100%; padding: 12px; border-radius: 50px; background: rgba(39, 174, 96, 0.15); color: #2ecc71; font-weight: 600; border: 1px solid #2ecc71; cursor: pointer; }
+        .btn-stack { display: flex; flex-direction: column; gap: 12px; }
+        .btn-1 { width: 100%; padding: 14px; border-radius: 50px; background: linear-gradient(135deg, var(--gold), #F39C12); color: #000; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-2 { width: 100%; padding: 12px; border-radius: 50px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-3 { width: 100%; padding: 12px; border-radius: 50px; background: rgba(39, 174, 96, 0.15); color: #2ecc71; font-weight: 600; border: 1px solid #2ecc71; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-        /* PC SIDEBAR */
-        .pc-sidebar { 
-            display: none; position: fixed; left: 0; top: 0; height: 100vh; width: 260px;
-            background: rgba(5, 20, 15, 0.95); border-right: 1px solid rgba(255,255,255,0.1);
-            flex-direction: column; padding: 30px 20px; z-index: 2000;
+        /* HEADER EXTRAS */
+        .join-btn {
+            background: linear-gradient(135deg, var(--gold), #F39C12);
+            color: #000; padding: 5px 15px; border-radius: 50px;
+            font-weight: 800; font-size: 0.8rem; text-decoration: none;
+            display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
         }
-        .pc-brand { font-family: 'Amiri', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 40px; font-weight: bold; }
-        .pc-link {
-            display: flex; align-items: center; gap: 15px; color: #ccc;
-            padding: 15px; margin-bottom: 5px; border-radius: 12px;
-            cursor: pointer; transition: 0.2s; font-size: 1rem;
-        }
-        .pc-link:hover, .pc-link.active { background: rgba(255,215,0,0.15); color: var(--gold); font-weight: bold; }
+        .header-icon { color: var(--text-gray); font-size: 1.2rem; cursor: pointer; padding: 5px; }
+        
+        /* CLOCK WIDGET */
+        .clock-widget { text-align: right; line-height: 1.1; margin-left: 10px; }
+        .clock-time { color: var(--gold); font-weight: bold; font-size: 0.9rem; font-family: 'Amiri'; }
+        .clock-date { font-size: 0.65rem; color: var(--text-gray); }
 
-        /* BOTTOM NAV (MOBILE) */
-        .bot-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #051410; border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex; justify-content: space-around; padding: 10px 0; z-index: 2000;
-        }
-        .nav-item { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: none; border: none; color: #666; font-size: 0.7rem; gap: 3px; cursor: pointer; transition: 0.3s;
-        }
-        .nav-item i { font-size: 1.2rem; }
-        .nav-item.active { color: var(--gold); }
-
-        /* UTILS */
-        .load-more { display: block; margin: 30px auto; padding: 10px 30px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 30px; font-weight: bold; cursor: pointer; }
-        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin-bottom: 15px; cursor: pointer; color: var(--gold); }
+        .load-more { display: block; margin: 30px auto; padding: 12px 40px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin-bottom: 20px; cursor: pointer; color: var(--gold); border: 1px solid rgba(255,255,255,0.1); }
         .loading { text-align: center; padding: 60px; color: var(--text-gray); }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -187,15 +222,19 @@
 <body>
 
     <div class="pc-sidebar">
-        <div class="pc-brand">Darrusunnat PDF</div>
+        <div class="pc-brand"><i class="fas fa-book-open"></i> Darrusunnat</div>
+        
         <div class="pc-link active" onclick="setTab('home')" id="pc-home"><i class="fas fa-home"></i> হোম</div>
+        <div class="pc-link" onclick="setTab('az')" id="pc-az"><i class="fas fa-sort-alpha-down"></i> বর্ণানুক্রমিক</div>
         <div class="pc-link" onclick="setTab('auth')" id="pc-auth"><i class="fas fa-pen-nib"></i> লেখক</div>
         <div class="pc-link" onclick="setTab('cat')" id="pc-cat"><i class="fas fa-layer-group"></i> বিষয়</div>
-        <div class="pc-link" onclick="setTab('az')" id="pc-az"><i class="fas fa-sort-alpha-down"></i> বর্ণানুক্রমিক</div>
         <div class="pc-link" onclick="setTab('save')" id="pc-save"><i class="fas fa-bookmark"></i> সংরক্ষিত</div>
         
-        <div style="margin-top:auto; text-align:center">
-            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn" style="justify-content:center; width:100%; padding:10px; font-size:0.9rem;">
+        <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1); text-align:center;">
+            <div class="clock-time" id="pcTime" style="font-size:1.2rem; margin-bottom:5px;">00:00</div>
+            <div class="clock-date" id="pcDate">...</div>
+            <br>
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn" style="justify-content:center; width:100%; padding:12px;">
                 <i class="fab fa-telegram-plane"></i> Join Telegram
             </a>
         </div>
@@ -203,23 +242,28 @@
 
     <div class="top-nav">
         <div class="brand">Darrusunnat</div>
-        <div class="nav-right">
+        <div style="display:flex; align-items:center; gap:10px;">
             <div class="header-icon" onclick="toggleView()" id="headerViewBtn"><i class="fas fa-th-large"></i></div>
+            
             <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
                 <i class="fab fa-telegram-plane"></i> Join
             </a>
+            <div class="clock-widget">
+                <div class="clock-time" id="mobTime">00:00</div>
+                <div class="clock-date" id="mobDate">...</div>
+            </div>
         </div>
     </div>
 
     <div class="hero" id="heroSection">
         <div class="search-wrap">
-            <input type="text" class="search-inp" id="search" placeholder="বই খুঁজুন..." oninput="handleSearch()">
+            <input type="text" class="search-inp" id="search" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
             <div class="search-icon"><i class="fas fa-search"></i></div>
         </div>
     </div>
 
     <div class="container" id="app">
-        <div class="loading">লাইব্রেরি লোড হচ্ছে...</div>
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> লাইব্রেরি লোড হচ্ছে...</div>
     </div>
 
     <div class="modal" id="modal">
@@ -230,28 +274,28 @@
             <div class="modal-auth" id="mAuth"></div>
             
             <div class="btn-stack">
-                <a href="#" target="_blank" class="btn-1" id="mRead"><i class="fas fa-book-open"></i> &nbsp; বইটি পড়ুন</a>
-                <button class="btn-2" onclick="shareBook()"><i class="fas fa-share-alt"></i> &nbsp; বইটি শেয়ার করুন</button>
-                <button class="btn-3" onclick="joinGroup()"><i class="fas fa-comment-dots"></i> &nbsp; মন্তব্য জানান</button>
+                <a href="#" target="_blank" class="btn-1" id="mRead"><i class="fas fa-book-open"></i> বইটি পড়ুন</a>
+                <button class="btn-2" onclick="shareBook()"><i class="fas fa-share-alt"></i> বইটি শেয়ার করুন</button>
+                <button class="btn-3" onclick="joinGroup()"><i class="fas fa-comment-dots"></i> মন্তব্য জানান</button>
             </div>
         </div>
     </div>
 
     <div class="bot-nav">
         <button class="nav-item active" onclick="setTab('home')" id="mob-home">
-            <i class="fas fa-home"></i> <span>হোম</span>
+            <i class="fas fa-home"></i> <span style="font-size:0.6rem">হোম</span>
         </button>
         <button class="nav-item" onclick="setTab('auth')" id="mob-auth">
-            <i class="fas fa-pen-nib"></i> <span>লেখক</span>
+            <i class="fas fa-pen-nib"></i> <span style="font-size:0.6rem">লেখক</span>
         </button>
         <button class="nav-item" onclick="setTab('cat')" id="mob-cat">
-            <i class="fas fa-layer-group"></i> <span>বিষয়</span>
+            <i class="fas fa-layer-group"></i> <span style="font-size:0.6rem">বিষয়</span>
         </button>
         <button class="nav-item" onclick="setTab('az')" id="mob-az">
-            <i class="fas fa-font"></i> <span>A-Z</span>
+            <i class="fas fa-font"></i> <span style="font-size:0.6rem">A-Z</span>
         </button>
         <button class="nav-item" onclick="setTab('save')" id="mob-save">
-            <i class="fas fa-bookmark"></i> <span>সেভ</span>
+            <i class="fas fa-bookmark"></i> <span style="font-size:0.6rem">সেভ</span>
         </button>
     </div>
 
@@ -263,28 +307,47 @@
         let displayLimit = 24;
         let currentList = [];
         let currentLink = "";
+        let historyStack = [];
 
+        // STARTUP
         fetch('books_data.json?t=' + Date.now())
             .then(res => res.json())
             .then(data => {
                 db = data.sort((a, b) => b.id - a.id);
                 setTab('home');
+                startClock();
                 updateViewIcon();
             })
             .catch(() => document.getElementById('app').innerHTML = "লোড হয়নি।");
 
-        function setTab(tab) {
+        function startClock() {
+            setInterval(() => {
+                const d = new Date();
+                const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                const date = d.toLocaleDateString('bn-BD');
+                document.getElementById('mobTime').innerText = t;
+                document.getElementById('mobDate').innerText = date;
+                document.getElementById('pcTime').innerText = t;
+                document.getElementById('pcDate').innerText = date;
+            }, 1000);
+        }
+
+        // NAVIGATION ENGINE
+        function setTab(tab, pushHist = true) {
+            if(pushHist) historyStack.push(currentTab);
             currentTab = tab;
             displayLimit = 24;
             
-            // Highlight
+            // Highlight Mobile & PC Nav
             document.querySelectorAll('.pc-link, .nav-item').forEach(el => el.classList.remove('active'));
             if(document.getElementById('pc-'+tab)) document.getElementById('pc-'+tab).classList.add('active');
             if(document.getElementById('mob-'+tab)) document.getElementById('mob-'+tab).classList.add('active');
             
+            // Show/Hide Search Bar (Hero)
             const hero = document.getElementById('heroSection');
             if(tab === 'home') hero.style.display = 'block';
             else hero.style.display = 'none';
+            
             window.scrollTo(0, 0);
 
             if (tab === 'home') {
@@ -298,9 +361,19 @@
             else if (tab === 'cat') renderFolders('category');
         }
 
+        function goBack() {
+            if(historyStack.length > 0) {
+                const prev = historyStack.pop();
+                setTab(prev, false);
+            } else {
+                setTab('home', false);
+            }
+        }
+
+        // RENDERERS
         function renderBooks(list, title = '') {
             const app = document.getElementById('app');
-            if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই নেই</div>"; return; }
+            if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
 
             let html = title ? `<h2>${title}</h2>` : '';
             html += viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
@@ -310,6 +383,7 @@
                 const isSaved = saved.includes(b.id) ? 'active' : '';
                 
                 if (viewMode === 'grid') {
+                    // GRID CARD
                     html += `
                     <div class="card" onclick="openModal(${b.id})">
                         <div class="save-btn ${isSaved}" onclick="toggleSave(event, ${b.id})"><i class="fas fa-bookmark"></i></div>
@@ -320,6 +394,7 @@
                         </div>
                     </div>`;
                 } else {
+                    // LIST ITEM
                     html += `
                     <div class="list-item" onclick="openModal(${b.id})">
                         <img src="${img}" class="list-thumb" loading="lazy">
@@ -331,6 +406,7 @@
                 }
             });
             html += '</div>';
+            
             if(currentTab === 'home' && list.length < db.length) {
                 html += `<button class="load-more" onclick="loadMore()">আরও দেখুন</button>`;
             }
@@ -378,10 +454,11 @@
                 list = db.filter(b => b[type] === key);
             }
             
-            const backBtn = `<div class="back-bar" onclick="setTab('${currentTab}')"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
+            const backBtn = `<div class="back-bar" onclick="goBack()"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
             renderBooks(list, `${backBtn}<br>${key}`);
         }
 
+        // ACTIONS
         function loadMore() {
             displayLimit += 24;
             renderBooks(db.slice(0, displayLimit));
@@ -407,14 +484,18 @@
             viewMode = viewMode === 'grid' ? 'list' : 'grid';
             localStorage.setItem('viewMode', viewMode);
             updateViewIcon();
-            if (currentTab === 'home' && !document.getElementById('search').value) renderBooks(db.slice(0, displayLimit));
-            else if (currentTab === 'save') setTab('save');
+            if(document.querySelector('.grid') || document.querySelector('.list-view')) {
+                const title = document.querySelector('h2')?.innerText || '';
+                renderBooks(currentList.slice(0, displayLimit), title);
+            }
         }
 
         function updateViewIcon() {
-            document.getElementById('headerViewBtn').innerHTML = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
+            const icon = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
+            document.getElementById('headerViewBtn').innerHTML = icon;
         }
 
+        // POPUP LOGIC
         function openModal(id) {
             const b = db.find(x => x.id === id);
             if(!b) return;
@@ -425,12 +506,25 @@
             document.getElementById('mAuth').innerText = b.author || 'অজ্ঞাত';
             document.getElementById('mRead').href = b.link;
             
+            // Mobile History Hack to support Back Button closing modal
+            window.history.pushState({modal: true}, null, "");
             document.getElementById('modal').classList.add('active');
         }
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
+            // If history state was pushed, go back
+            if(history.state && history.state.modal) history.back();
         }
+
+        // Handle Browser Back Button
+        window.onpopstate = function(e) {
+            if(document.getElementById('modal').classList.contains('active')) {
+                document.getElementById('modal').classList.remove('active');
+            } else {
+                goBack();
+            }
+        };
 
         function shareBook() {
             navigator.clipboard.writeText(currentLink);
