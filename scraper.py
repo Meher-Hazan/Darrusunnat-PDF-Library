@@ -7,15 +7,11 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 from PIL import Image, ImageDraw
 
-# --- SECRETS ---
-if 'API_ID' not in os.environ or 'SESSION_STRING' not in os.environ:
-    print("Error: Secrets missing.")
-    exit(1)
-
-API_ID = int(os.environ['API_ID'])
-API_HASH = os.environ['API_HASH']
-SESSION_STRING = os.environ['SESSION_STRING']
-CHANNEL_ID = int(os.environ['CHANNEL_ID'])
+# --- CONFIGURATION ---
+API_ID = int(os.environ.get('API_ID', 0))
+API_HASH = os.environ.get('API_HASH', '')
+SESSION_STRING = os.environ.get('SESSION_STRING', '')
+CHANNEL_ID = int(os.environ.get('CHANNEL_ID', 0))
 
 DATA_FILE = 'books_data.json'
 IMAGES_DIR = 'images'
@@ -23,37 +19,126 @@ IMAGES_DIR = 'images'
 if not os.path.exists(IMAGES_DIR):
     os.makedirs(IMAGES_DIR)
 
-CATEGORIES = {
-    'hadith': ['hadith', 'bukhari', 'muslim', 'হাদিস', 'বুখারী', 'মুসলিম', 'তিরমিযী'],
-    'aqeedah': ['aqeedah', 'tawheed', 'iman', 'আকিদা', 'ঈমান', 'তাওহীদ'],
-    'fiqh': ['fiqh', 'salah', 'namaz', 'zakat', 'ফিকহ', 'নামাজ', 'মাসায়েল', 'ফতোয়া'],
-    'history': ['history', 'seerah', 'biography', 'ইতিহাস', 'সিরাত', 'জীবনী', 'খেলাফত'],
-    'quran': ['quran', 'tafsir', 'কুরআন', 'তাফসির', 'সুরা'],
-    'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'সমগ্র', 'natok']
+# --- 🧠 LAYER 1: DIRECT KNOWLEDGE BASE ---
+# The robot checks this list FIRST. If it finds these words, it knows the writer instantly.
+AI_KNOWLEDGE = {
+    # HADITH & TAFSIR
+    'bukhari': 'ইমাম বুখারী (রহ.)',
+    'muslim': 'ইমাম মুসলিম (রহ.)',
+    'tirmidhi': 'ইমাম তিরমিযী (রহ.)',
+    'nasai': 'ইমাম নাসাঈ (রহ.)',
+    'abu daud': 'ইমাম আবু দাউদ (রহ.)',
+    'ibn majah': 'ইমাম ইবনে মাজাহ (রহ.)',
+    'ryadus': 'ইমাম নববী (রহ.)',
+    'riyadus': 'ইমাম নববী (রহ.)',
+    'mishkat': 'ওয়ালীউদ্দীন আল-খাতীব (রহ.)',
+    'ibn kathir': 'হাফেজ ইবনে কাসীর (রহ.)',
+    'jalalain': 'জালালুদ্দিন সুয়ুতী (রহ.)',
+    'mareful': 'মুফতি শফি উসমানী (রহ.)',
+    'fi zilalil': 'সাইয়েদ কুতুব (রহ.)',
+    'tafhimul': 'সাইয়েদ আবুল আ\'লা মওদুদী (রহ.)',
+    
+    # POPULAR WRITERS
+    'ariff azad': 'আরিফ আজাদ',
+    'paradoxical': 'আরিফ আজাদ',
+    'bela furabar': 'আরিফ আজাদ',
+    'mizanur rahman': 'মিজানুর রহমান আজহারী',
+    'azhari': 'মিজানুর রহমান আজহারী',
+    'ahmadullah': 'শায়খ আহমাদুল্লাহ',
+    'nasiruddin': 'নাসিরুদ্দিন আলবানী (রহ.)',
+    'albani': 'নাসিরুদ্দিন আলবানী (রহ.)',
+    'zakariya': 'শায়খ জাকারিয়া (রহ.)',
+    'iqbal': 'আল্লামা ইকবাল',
+    'rahe belayat': 'ড. খন্দকার আব্দুল্লাহ জাহাঙ্গীর',
+    'jannat': 'ড. খন্দকার আব্দুল্লাহ জাহাঙ্গীর',
+    'himu': 'হুমায়ূন আহমেদ',
+    'misir ali': 'হুমায়ূন আহমেদ',
+    'sharat': 'শরৎচন্দ্র চট্টোপাধ্যায়',
+    'rabindra': 'রবীন্দ্রনাথ ঠাকুর'
 }
 
-COVER_COLORS = [(15, 76, 58), (22, 160, 133), (44, 62, 80), (142, 68, 173), (127, 140, 141)]
+# --- 🧠 LAYER 2: HONORIFICS (Smart Guessing) ---
+# If the robot sees these titles in a name, it assumes it is a writer.
+HONORIFICS = [
+    'dr.', 'dr ', 'prof.', 'sheikh', 'shaykh', 'imam', 'mufti', 'maulana', 
+    'moulana', 'allama', 'hafez', 'qari', 'ustadh', 'writer', 'author',
+    'ড.', 'অধ্যাপক', 'শায়খ', 'ইমাম', 'মুফতি', 'মাওলানা', 'আল্লামা', 'হাফেজ'
+]
 
-def clean_title(text):
-    """Smart Cleaner: Removes 01., 02-, _final, .pdf"""
-    # 1. Remove extension
-    text = os.path.splitext(text)[0]
-    # 2. Remove starting numbers/symbols (e.g. "01. ", "02-", "#")
-    text = re.sub(r'^[\d\.\-\_\#\s]+', '', text)
-    # 3. Remove typical junk at end
-    text = re.sub(r'(_final|_v\d|\(1\))$', '', text, flags=re.IGNORECASE)
+# --- CATEGORY RULES ---
+CATEGORIES = {
+    'hadith': ['hadith', 'bukhari', 'muslim', 'হাদিস', 'বুখারী', 'মুসলিম', 'তিরমিযী', 'সুনান'],
+    'aqeedah': ['aqeedah', 'tawheed', 'iman', 'shirk', 'আকিদা', 'ঈমান', 'তাওহীদ', 'শিরক'],
+    'fiqh': ['fiqh', 'salah', 'namaz', 'zakat', 'hajj', 'ফিকহ', 'নামাজ', 'রোজা', 'ফতোয়া', 'মাসায়েল'],
+    'history': ['history', 'seerah', 'biography', 'battle', 'ইতিহাস', 'সিরাত', 'জীবনী', 'যুদ্ধ', 'খেলাফত'],
+    'quran': ['quran', 'tafsir', 'tajweed', 'ayat', 'কুরআন', 'তাফসির', 'তাজবীদ', 'সুরা'],
+    'novel': ['novel', 'story', 'উপন্যাস', 'গল্প', 'কাহিনি', 'ভ্রমণ', 'সমগ্র', 'নাটক'],
+    'dua': ['dua', 'zikr', 'azkar', 'munajat', 'দোয়া', 'জিকির', 'আমল', 'মুনাজাত']
+}
+
+def clean_text(text):
+    """Deep cleaning of filenames"""
+    if not text: return ""
+    text = str(text)
+    text = os.path.splitext(text)[0] # Remove .pdf
+    # Remove things like "01. ", "02-", "[PDF]", website links
+    text = re.sub(r'^[\d\.\-\_\(\)\[\]\s]+', '', text)
+    text = re.sub(r'\[.*?\]', '', text)
+    text = re.sub(r'\(.*?\)', '', text)
+    text = re.sub(r'www\.[a-zA-Z0-9-]+\.[a-z]+', '', text)
     return text.strip()
 
+def detect_writer_smart(title, raw_text=""):
+    """
+    THE SUPER BRAIN 🧠
+    1. Checks Knowledge Base.
+    2. Checks Pattern Matching (Separators).
+    3. Checks Honorifics.
+    """
+    search_text = (title + " " + raw_text).lower()
+    
+    # 1. Check AI Knowledge Base
+    for keyword, writer in AI_KNOWLEDGE.items():
+        if keyword in search_text:
+            return writer
+
+    # 2. Try Pattern Matching (Splitting by ' - ' or ' | ')
+    # Looks for: "Book Name - Writer Name"
+    separators = [r'\s+-\s+', r'\s+\|\s+', r'\s+–\s+', r'\s+by\s+', r'\s+_\s+']
+    for sep in separators:
+        parts = re.split(sep, title, 1)
+        if len(parts) == 2:
+            part1 = parts[0].strip()
+            part2 = parts[1].strip()
+            
+            # Sub-logic: Which part is the writer?
+            # If Part 2 has an honorific, it's the writer.
+            if any(h in part2.lower() for h in HONORIFICS):
+                return part2
+            # If Part 1 has an honorific, it's the writer (Rare: "Imam Bukhari - Sahih")
+            if any(h in part1.lower() for h in HONORIFICS):
+                return part1
+            
+            # If no honorific, assume Part 2 is writer if it's short enough
+            if len(part2) < 40 and not re.search(r'\d', part2):
+                return part2
+
+    return "অজ্ঞাত" # Bangla for Unknown
+
+def detect_category(text):
+    text = text.lower()
+    for cat, keywords in CATEGORIES.items():
+        if any(k in text for k in keywords):
+            return cat.capitalize()
+    return "General"
+
 def generate_cover(book_id):
-    """Paint a generic cover if missing"""
     try:
         width, height = 400, 600
-        color = random.choice(COVER_COLORS)
+        color = (15, 76, 58)
         img = Image.new('RGB', (width, height), color=color)
         d = ImageDraw.Draw(img)
-        # Gold Border
         d.rectangle([20, 20, width-20, height-20], outline="#FFD700", width=5)
-        # Save
         filename = f"{book_id}_gen.jpg"
         path = os.path.join(IMAGES_DIR, filename)
         img.save(path)
@@ -62,104 +147,101 @@ def generate_cover(book_id):
         return ""
 
 async def main():
-    print("--- Connecting to Telegram ---")
-    client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
-    await client.start()
-
-    books = []
-    processed_ids = set()
+    print("--- 🤖 STARTING INTELLIGENT ROBOT ---")
     
-    # Load existing to prevent re-processing
+    try:
+        client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
+        await client.start()
+    except Exception as e:
+        print(f"Login Error: {e}")
+        return
+
+    # 1. LOAD EXISTING DATABASE
+    all_books = []
+    existing_ids = set()
+    
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                books = json.load(f)
-                processed_ids = {b['id'] for b in books}
+                all_books = json.load(f)
+                for b in all_books:
+                    existing_ids.add(b['id'])
         except: pass
+
+    # 2. SCAN FOR NEW BOOKS (Last 200)
+    print("Scanning Telegram for NEW books...")
+    messages = await client.get_messages(CHANNEL_ID, limit=200)
+    new_books_count = 0
     
-    print("Scanning last 100 messages...")
-    messages = await client.get_messages(CHANNEL_ID, limit=100)
-    
-    new_count = 0
-    pending_cover = "" 
-    
-    # Process Oldest -> Newest to keep order
     for message in reversed(messages):
-        
-        # 1. Grab Cover
-        if message.photo:
-            filename = f"{message.id}.jpg"
-            file_path = os.path.join(IMAGES_DIR, filename)
-            if not os.path.exists(file_path):
-                await message.download_media(file=file_path)
-            pending_cover = f"images/{filename}"
-            continue
+        if message.id in existing_ids: continue
 
-        # 2. Grab Book
         if message.document and message.document.mime_type == 'application/pdf':
-            current_cover = pending_cover
-            pending_cover = "" # Reset immediately logic
-
-            # Extract raw name from file attribute or text
+            # Get Name
             raw_name = ""
-            if message.file and message.file.name:
-                raw_name = message.file.name
-            elif message.text:
-                raw_name = message.text.split('\n')[0]
-            else:
-                raw_name = f"Book {message.id}"
-
-            # --- SMART AUTHOR EXTRACTION ---
-            # Looks for "Author - Title" format
-            title = clean_title(raw_name)
-            author = ""
+            if message.file and message.file.name: raw_name = message.file.name
+            elif message.text: raw_name = message.text.split('\n')[0]
             
-            if " - " in raw_name:
-                parts = raw_name.split(" - ")
-                if len(parts) >= 2:
-                    author = parts[0].strip() # Author is usually first
-                    title = clean_title(parts[1])
+            if not raw_name: continue
             
-            # Determine Category
-            category = "General"
-            check_text = (title + " " + (message.text or "")).lower()
-            for cat, keywords in CATEGORIES.items():
-                if any(k in check_text for k in keywords):
-                    category = cat.capitalize()
-                    break
+            title = clean_text(raw_name)
+            caption = message.text or ""
+            
+            # Intelligent Detection
+            author = detect_writer_smart(title, caption)
+            category = detect_category(title + " " + caption)
+            
+            # Cover
+            cover_path = generate_cover(message.id)
+            
+            # Link
+            clean_chan_id = str(CHANNEL_ID).replace("-100", "")
+            link = f"https://t.me/c/{clean_chan_id}/{message.id}"
 
-            # If no cover, generate one
-            if not current_cover:
-                current_cover = generate_cover(message.id)
-
-            # Skip duplicates
-            if message.id in processed_ids:
-                continue
-
-            # Build Link
-            clean_id = str(CHANNEL_ID).replace("-100", "")
-            post_link = f"https://t.me/c/{clean_id}/{message.id}"
-
-            books.append({
+            book = {
                 "id": message.id,
                 "title": title,
                 "author": author,
                 "category": category,
-                "link": post_link,
-                "image": current_cover
-            })
-            processed_ids.add(message.id)
-            new_count += 1
-            print(f" + Added: {title}")
+                "link": link,
+                "image": cover_path
+            }
+            
+            all_books.append(book)
+            existing_ids.add(message.id)
+            new_books_count += 1
+            print(f" + New: {title} | {author}")
 
-    # 3. Save
-    if new_count > 0:
-        books.sort(key=lambda x: x['id'], reverse=True)
+    # 3. RE-SCAN OLD BOOKS (The Fix)
+    # The robot now checks every single book in your database to see if it can fix "Unknown" authors
+    print("Re-scanning OLD books for missing authors...")
+    fixed_count = 0
+    
+    for book in all_books:
+        # If author is missing, empty, or 'Unknown'/'অজ্ঞাত'
+        if not book.get('author') or book['author'] in ["অজ্ঞাত", "Unknown", "", "অজ্ঞাত লেখক"]:
+            
+            # Try to detect again using the smart logic on the title
+            new_author = detect_writer_smart(book['title'])
+            
+            if new_author != "অজ্ঞাত":
+                book['author'] = new_author
+                fixed_count += 1
+                # Also clean the title (remove the author name from title if it was found there)
+                # This keeps titles clean: "Sajid - Arif Azad" -> Title: "Sajid", Author: "Arif Azad"
+                if new_author in book['title']:
+                    book['title'] = book['title'].replace(new_author, "").replace("-", "").replace("|", "").strip()
+                
+                print(f" 🛠 Fixed: {book['title']} | ✍️ {new_author}")
+
+    # 4. SAVE EVERYTHING
+    if new_books_count > 0 or fixed_count > 0:
+        all_books.sort(key=lambda x: x['id'], reverse=True)
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
-            json.dump(books, f, indent=4, ensure_ascii=False)
-        print(f"--- SUCCESS: Added {new_count} books ---")
+            json.dump(all_books, f, indent=4, ensure_ascii=False)
+        print(f"--- ✅ DONE: Added {new_books_count} new, Fixed {fixed_count} old ---")
     else:
-        print("--- No new books ---")
+        print("--- Database up to date ---")
 
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()
