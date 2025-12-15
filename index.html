@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -38,14 +39,14 @@
             padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid rgba(255,215,0,0.15); backdrop-filter: blur(20px);
         }
-        .brand { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); font-weight: 800; }
+        .brand { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--gold); font-weight: 800; letter-spacing: 1px; }
         .clock { font-size: 0.8rem; text-align: right; color: var(--text-gray); }
         .time { color: var(--gold); font-weight: bold; font-size: 1rem; font-family: 'Amiri'; }
 
         /* HERO */
         .hero { text-align: center; padding: 30px 15px 15px; }
         .hero h1 { 
-            font-family: 'Amiri', serif; font-size: 2.5rem; margin: 0 0 20px 0;
+            font-family: 'Amiri', serif; font-size: 2.2rem; margin: 0 0 20px 0;
             background: linear-gradient(to bottom, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
@@ -55,7 +56,7 @@
             border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
             color: #fff; font-size: 1rem; backdrop-filter: blur(10px); transition: 0.3s;
         }
-        .search-inp:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+        .search-inp:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
         .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--gold-dim); }
 
         /* TABS */
@@ -72,40 +73,48 @@
 
         /* CONTENT */
         .container { max-width: 1200px; margin: 0 auto; padding: 15px; min-height: 60vh; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        
+        /* IMPROVED GRID SYSTEM */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 15px; 
+        }
         .list-view { display: flex; flex-direction: column; gap: 12px; }
         
         /* CARD DESIGN */
         .card {
-            background: var(--glass-card); border-radius: 16px; overflow: hidden;
+            background: var(--glass-card); border-radius: 12px; overflow: hidden;
             display: flex; flex-direction: column; position: relative; border: 1px solid rgba(255,255,255,0.1);
-            height: 100%; cursor: pointer;
+            height: 100%; cursor: pointer; transition: transform 0.2s;
         }
-        .card-img-box { position: relative; padding-top: 145%; background: rgba(0,0,0,0.2); }
+        .card:active { transform: scale(0.98); }
+        .card-img-box { position: relative; padding-top: 140%; background: rgba(0,0,0,0.2); }
         .card-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         
-        /* SAVE BUTTON (Only button on card) */
+        /* SAVE BUTTON */
         .save-btn {
-            position: absolute; top: 8px; right: 8px; width: 32px; height: 32px;
+            position: absolute; top: 5px; right: 5px; width: 30px; height: 30px;
             background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #fff; z-index: 5; font-size: 1rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; z-index: 5; font-size: 0.9rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
         }
         .save-btn.active { color: #3498db; background: rgba(255,255,255,0.9); }
 
         .card-info { padding: 10px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-cat { font-size: 0.65rem; color: var(--gold-dim); font-weight: 800; text-transform: uppercase; margin-top: auto; }
+        .card-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-cat { font-size: 0.65rem; color: var(--gold-dim); font-weight: 700; text-transform: uppercase; margin-top: auto; letter-spacing: 0.5px; }
 
-        /* LIST ITEM FIX */
+        /* LIST ITEM */
         .list-item { 
             display: flex; align-items: center; background: var(--glass-card); 
             padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); gap: 15px; cursor: pointer;
         }
         .list-thumb { width: 50px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-        .list-data { flex-grow: 1; min-width: 0; /* FIXES OVERFLOW */ }
+        .list-data { flex-grow: 1; min-width: 0; }
         .list-title { 
             font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #fff; line-height: 1.3;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* TEXT WRAPPING FIX */
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
         }
         .list-cat { font-size: 0.75rem; color: var(--gold); }
 
@@ -114,25 +123,30 @@
         .folder {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer;
+            transition: 0.2s;
         }
-        .folder-icon { font-family: 'Amiri', serif; font-size: 2rem; color: var(--gold); font-weight: 700; display: block; line-height: 1; }
-        .folder-label { font-size: 0.75rem; color: var(--text-gray); margin-top: 5px; display: block; }
+        .folder:active { background: rgba(255,255,255,0.08); }
+        .folder-icon { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--gold); font-weight: 700; display: block; line-height: 1; margin-bottom: 5px; }
+        .folder-label { font-size: 0.75rem; color: var(--text-gray); display: block; word-break: break-word; }
 
-        /* POPUP MODAL (FIXED) */
+        /* MODAL */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000;
             display: none; align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(5px);
         }
-        .modal.active { display: flex; }
+        .modal.active { display: flex; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .modal-box {
             background: #0a1f18; width: 100%; max-width: 350px; border-radius: 20px;
             padding: 25px; text-align: center; border: 1px solid var(--gold);
             position: relative; max-height: 90vh; overflow-y: auto;
             box-shadow: 0 0 50px rgba(15,76,58,0.5);
         }
-        .modal-img { width: 140px; height: 210px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); }
-        .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
+        .modal-img { width: 120px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; line-height: 1.4; }
         .modal-auth { color: var(--text-gray); font-size: 0.9rem; display: block; margin-bottom: 25px; }
         
         .btn-stack { display: flex; flex-direction: column; gap: 12px; }
@@ -141,6 +155,7 @@
             width: 100%; padding: 14px; border-radius: 50px;
             background: linear-gradient(135deg, var(--gold), #F39C12);
             color: #000; font-weight: 800; font-size: 1rem; text-decoration: none; display: block;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
         }
         .btn-2 {
             width: 100%; padding: 12px; border-radius: 50px;
@@ -162,7 +177,7 @@
         }
         .nav-btn { 
             width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; 
-            border-radius: 50%; color: var(--text-gray); transition: 0.3s; font-size: 1.4rem;
+            border-radius: 50%; color: var(--text-gray); transition: 0.3s; font-size: 1.3rem;
         }
         .nav-btn.active { color: var(--gold); background: rgba(212,172,13,0.15); box-shadow: 0 0 15px rgba(255,215,0,0.2); transform: translateY(-5px); }
 
@@ -171,7 +186,11 @@
             display: block; margin: 30px auto; padding: 10px 30px; 
             background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 30px; font-weight: bold; 
         }
-        .back-bar { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin-bottom: 20px; cursor: pointer; color: var(--gold); border: 1px solid rgba(255,255,255,0.1); }
+        .back-bar { 
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; 
+            background: rgba(255,255,255,0.1); border-radius: 30px; margin-bottom: 20px; cursor: pointer; 
+            color: var(--gold); border: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem;
+        }
         .loading { text-align: center; padding: 60px; color: var(--text-gray); }
     </style>
 </head>
@@ -188,15 +207,15 @@
     <div class="hero" id="heroSection">
         <h1>দারুচ্ছুন্নাত লাইব্রেরি</h1>
         <div class="search-wrap">
-            <input type="text" class="search-inp" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
+            <input type="text" class="search-inp" id="searchInput" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
             <div class="search-icon"><i class="fas fa-search"></i></div>
         </div>
         <div class="tabs">
             <button class="tab-btn active" onclick="setTab('home')" id="btn-home">সর্বশেষ</button>
             <button class="tab-btn" onclick="setTab('az')" id="btn-az">বর্ণানুক্রমিক</button>
             <button class="tab-btn" onclick="setTab('auth')" id="btn-auth">লেখক</button>
-            <button class="tab-btn" onclick="setTab('cat')" id="btn-cat">বিষয়</button>
-            <button class="tab-btn" onclick="setTab('save')" id="btn-save" style="color:#3498db"><i class="fas fa-bookmark"></i> সংরক্ষিত</button>
+            <button class="tab-btn" onclick="setTab('cat')" id="btn-cat">বিষয়</button>
+            <button class="tab-btn" onclick="setTab('save')" id="btn-save" style="color:#3498db"><i class="fas fa-bookmark"></i></button>
         </div>
     </div>
 
@@ -206,17 +225,15 @@
 
     <div class="modal" id="bookModal">
         <div class="modal-box">
-            <div onclick="closeModal()" style="position:absolute; top:15px; right:15px; font-size:2rem; color:#fff; cursor:pointer; z-index:10;">&times;</div>
+            <div onclick="closeModal()" style="position:absolute; top:15px; right:15px; font-size:1.8rem; color:#fff; cursor:pointer; z-index:10; background:rgba(0,0,0,0.3); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</div>
             <img src="" class="modal-img" id="mImg">
             <div class="modal-title" id="mTitle"></div>
             <div class="modal-auth" id="mAuth"></div>
             
             <div class="btn-stack">
-                <a href="#" target="_blank" class="btn-1" id="mRead">বইটি পড়ুন</a>
-                
-                <button class="btn-2" onclick="shareBook()">বইটি শেয়ার করুন</button>
-                
-                <button class="btn-3" onclick="commentBook()">মন্তব্য জানান</button>
+                <a href="#" target="_blank" class="btn-1" id="mRead"><i class="fas fa-book-open"></i> বইটি পড়ুন</a>
+                <button class="btn-2" onclick="shareBook()"><i class="fas fa-share-alt"></i> শেয়ার করুন</button>
+                <button class="btn-3" onclick="commentBook()"><i class="far fa-comment"></i> মন্তব্য জানান</button>
             </div>
         </div>
     </div>
@@ -235,27 +252,54 @@
         let currentTab = 'home';
         let displayCount = 24;
         let currentFilterList = [];
-        let currentBookLink = ""; // To store link for sharing
+        let currentBookLink = "";
 
-        // START
-        fetch('books_data.json?t=' + Date.now())
-            .then(res => res.json())
-            .then(data => {
-                db = data.sort((a, b) => b.id - a.id);
-                setTab('home');
-                startClock();
-            })
-            .catch(() => document.getElementById('content').innerHTML = "Failed to load.");
+        // --- SAMPLE DATA (DUMMY) START ---
+        // আপনার কাছে আসল json ফাইল না থাকলে এটি ব্যবহার করুন
+        const sampleData = [
+            { id: 1, title: "সহীহ বুখারী", author: "ইমাম বুখারী (রঃ)", category: "হাদিস", image: "https://via.placeholder.com/300x450/1a4d3e/ffffff?text=Bukhari", link: "#" },
+            { id: 2, title: "রিয়াদুস সালিহীন", author: "ইমাম নববী (রঃ)", category: "হাদিস", image: "https://via.placeholder.com/300x450/2c3e50/ffffff?text=Riyad", link: "#" },
+            { id: 3, title: "তাফসীরে ইবনে কাসীর", author: "হাফিজ ইবনে কাসীর", category: "তাফসীর", image: "https://via.placeholder.com/300x450/8e44ad/ffffff?text=Tafsir", link: "#" },
+            { id: 4, title: "নবীজির জীবনী", author: "মাওলানা কাসেম", category: "সিরাত", image: "https://via.placeholder.com/300x450/d35400/ffffff?text=Sirat", link: "#" },
+            { id: 5, title: "ফাজায়েলে আমল", author: "শাইখুল হাদিস জাকারিয়া", category: "আমল", image: "https://via.placeholder.com/300x450/c0392b/ffffff?text=Fazail", link: "#" },
+            { id: 6, title: "জান্নাতের বর্ণনা", author: "আব্দুল মালিক", category: "আখেরাত", image: "https://via.placeholder.com/300x450/27ae60/ffffff?text=Jannat", link: "#" },
+            { id: 7, title: "আদর্শ পরিবার", author: "মুফতি তক্বী উসমানী", category: "পারিবারিক", image: "https://via.placeholder.com/300x450/16a085/ffffff?text=Family", link: "#" },
+            { id: 8, title: "কুরআনের গল্প", author: "সংকলিত", category: "শিশুতোষ", image: "https://via.placeholder.com/300x450/f39c12/000000?text=Stories", link: "#" }
+        ];
+        
+        // আরও ডেটা জেনারেট করা (শুধুমাত্র ডেমোর জন্য)
+        for(let i=9; i<=50; i++) {
+            sampleData.push({
+                id: i,
+                title: `ইসলামিক বই ${i}`,
+                author: i % 2 === 0 ? "মাওলানা আব্দুল্লাহ" : "শায়খ আহমাদ",
+                category: i % 3 === 0 ? "ফিকহ" : "ইতিহাস",
+                image: `https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book+${i}`,
+                link: "#"
+            });
+        }
+        // --- SAMPLE DATA END ---
+
+        // Initialize
+        setTimeout(() => {
+            // যদি আসল ফাইল থাকে তবে নিচের লাইনটি আন-কমেন্ট করুন এবং sampleData বাদ দিন
+            // fetch('books_data.json?t=' + Date.now()).then(res => res.json()).then(data => { ... })
+            
+            db = sampleData.sort((a, b) => b.id - a.id);
+            setTab('home');
+            startClock();
+        }, 500); // Fake network delay
 
         function startClock() {
             setInterval(() => {
                 const d = new Date();
-                document.getElementById('clockTime').innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                // Bengali Numerals conversion could be added here
+                document.getElementById('clockTime').innerText = d.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
                 document.getElementById('clockDate').innerText = d.toLocaleDateString('bn-BD');
             }, 1000);
         }
 
-        // TABS
+        // TABS Logic
         function setTab(tab) {
             currentTab = tab;
             displayCount = 24;
@@ -281,9 +325,9 @@
         // RENDER BOOKS
         function renderBooks(list, title = '') {
             const con = document.getElementById('content');
-            if (!list || list.length === 0) { con.innerHTML = "<div style='text-align:center; padding:50px;'>কিছু পাওয়া যায়নি</div>"; return; }
+            if (!list || list.length === 0) { con.innerHTML = "<div style='text-align:center; padding:50px; color:#aaa;'>কিছু পাওয়া যায়নি</div>"; return; }
 
-            let html = title ? `<h2 style="color:var(--gold); margin-bottom:15px;">${title}</h2>` : '';
+            let html = title ? `<h2 style="color:var(--gold); margin-bottom:15px; font-size:1.3rem;">${title}</h2>` : '';
             
             html += viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
             
@@ -292,7 +336,6 @@
                 const isSaved = saved.includes(b.id) ? 'active' : '';
                 
                 if (viewMode === 'grid') {
-                    // ONCLICK IS HERE ON THE CARD
                     html += `
                     <div class="card" onclick="openModal(${b.id})">
                         <div class="save-btn ${isSaved}" onclick="toggleSave(event, ${b.id})"><i class="fas fa-bookmark"></i></div>
@@ -312,6 +355,7 @@
                             <div class="list-title">${b.title}</div>
                             <div class="list-cat">${b.category}</div>
                         </div>
+                        <div class="save-btn ${isSaved}" style="position:static; width:35px; height:35px;" onclick="toggleSave(event, ${b.id})"><i class="fas fa-bookmark"></i></div>
                     </div>`;
                 }
             });
@@ -323,14 +367,14 @@
             con.innerHTML = html;
         }
 
-        // RENDER FOLDERS (Strict A-Z)
+        // RENDER FOLDERS
         function renderFolders(type) {
             const groups = {};
             db.forEach(b => {
                 let key = 'Other';
                 if (type === 'az') {
                     const clean = b.title.replace(/^[\d\s\.\-\_\#\(\)\[\]\:\>]+/, '').trim();
-                    const match = clean.match(/^[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/); // Added Arabic range
+                    const match = clean.match(/^[a-zA-Z\u0980-\u09FF\u0600-\u06FF]/);
                     key = match ? match[0].toUpperCase() : '#';
                 } else {
                     key = b[type] || 'Unknown';
@@ -365,7 +409,9 @@
                 list = db.filter(b => b[type] === key);
             }
             currentFilterList = list;
-            const backBtn = `<div class="back-bar" onclick="setTab('${currentTab}')">⬅ পেছনে যান</div>`;
+            // Back logic sends user back to the correct tab
+            const backTab = type === 'az' ? 'az' : (type === 'author' ? 'auth' : 'cat');
+            const backBtn = `<div class="back-bar" onclick="setTab('${backTab}')"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
             renderBooks(list, `${backBtn}<br>${key}`);
         }
 
@@ -375,8 +421,14 @@
             if (saved.includes(id)) saved = saved.filter(x => x !== id);
             else saved.push(id);
             localStorage.setItem('saved', JSON.stringify(saved));
-            if (currentTab === 'save') setTab('save');
-            else e.target.classList.toggle('active');
+            
+            if (currentTab === 'save') {
+                // Refresh list if in saved tab
+                setTab('save');
+            } else {
+                // Just toggle class visually
+                e.target.classList.toggle('active');
+            }
         }
 
         function loadMore() {
@@ -388,11 +440,14 @@
             viewMode = viewMode === 'grid' ? 'list' : 'grid';
             localStorage.setItem('viewMode', viewMode);
             document.getElementById('nav-view').innerHTML = viewMode === 'grid' ? '<i class="fas fa-th-large"></i>' : '<i class="fas fa-list"></i>';
-            if (currentTab === 'az' || currentTab === 'auth' || currentTab === 'cat') {
-                if (currentFilterList.length > 0) renderBooks(currentFilterList, document.querySelector('h2')?.innerHTML);
-            } else {
-                setTab(currentTab);
-            }
+            
+            // Re-render current view
+            const heading = document.querySelector('h2')?.innerHTML || '';
+            const isFolder = heading.includes('পেছনে যান') || heading.includes('অনুসন্ধান');
+            
+            if(currentTab === 'save') renderBooks(currentFilterList, "সংরক্ষিত বই");
+            else if(isFolder) renderBooks(currentFilterList, heading); 
+            else if(currentTab === 'home') renderBooks(db.slice(0, displayCount));
         }
 
         function handleSearch() {
@@ -404,17 +459,15 @@
             renderBooks(res, `অনুসন্ধান: "${q}"`);
         }
 
-        // --- MODAL FUNCTIONS (FIXED) ---
+        // MODAL
         function openModal(id) {
             const b = db.find(x => x.id === id);
             if(!b) return;
             
-            currentBookLink = b.link; // Save link for sharing
+            currentBookLink = b.link;
             document.getElementById('mImg').src = b.image || 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book';
             document.getElementById('mTitle').innerText = b.title;
-            document.getElementById('mAuth').innerText = b.author || '';
-            
-            // BUTTON 1: Read
+            document.getElementById('mAuth').innerText = b.author || 'লেখক অজ্ঞাত';
             document.getElementById('mRead').href = b.link;
             
             document.getElementById('bookModal').classList.add('active');
@@ -426,7 +479,7 @@
 
         function shareBook() {
             navigator.clipboard.writeText(currentBookLink);
-            alert("লিংক কপি হয়েছে!");
+            alert("লিংক কপি হয়েছে!");
         }
 
         function commentBook() {
@@ -437,7 +490,5 @@
             if(db.length) openModal(db[Math.floor(Math.random() * db.length)].id);
         }
     </script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>
