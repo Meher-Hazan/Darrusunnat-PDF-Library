@@ -1,28 +1,28 @@
 :root {
-    /* --- ROYAL ISLAMIC THEME (Fixed) --- */
-    --primary: #0f4c3a;       /* Deep Royal Green */
-    --primary-light: #1a6b54;
+    /* --- ROYAL ISLAMIC THEME (Lighter & Richer) --- */
+    --primary: #145A48;       /* Lighter Royal Green */
+    --primary-light: #1E7E66;
     --gold: #FFD700;          /* Bright Gold */
     --gold-dim: #D4AC0D;      /* Muted Gold */
     
-    /* Backgrounds */
-    --bg-body: #020504;       /* Deepest Black-Green */
-    --bg-nav: rgba(5, 20, 15, 0.98); /* Glassy Green */
-    --bg-card: rgba(20, 35, 30, 0.6); /* Transparent Card */
+    /* Backgrounds (Fixed: Not too dark) */
+    --bg-body: #0D2620;       /* Deep Green (Not Black) */
+    --bg-nav: rgba(10, 35, 30, 0.95); 
+    --bg-card: rgba(20, 50, 40, 0.7); 
     
     /* Text */
     --text-white: #ffffff;
-    --text-main: #eeeeee;
-    --text-mute: #b0b0b0;
+    --text-main: #f0f0f0;
+    --text-mute: #cccccc;
     
     /* UI Elements */
-    --glass-input: rgba(255, 255, 255, 0.1);
-    --border-color: rgba(255, 255, 255, 0.1);
-    --shadow-color: rgba(0, 0, 0, 0.5);
+    --glass-input: rgba(255, 255, 255, 0.15);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --shadow-color: rgba(0, 0, 0, 0.3);
 
-    /* Animation Gradients (Subtle Dark Breathing) */
-    --anim-color-1: #020504;
-    --anim-color-2: #051410;
+    /* Animation Gradients */
+    --anim-color-1: #0D2620;
+    --anim-color-2: #143830;
 
     /* Fonts */
     --font-main: 'Hind Siliguri', sans-serif;
@@ -33,7 +33,8 @@
 
 body { 
     margin: 0; font-family: var(--font-main);
-    background: linear-gradient(160deg, #020504 0%, #0f4c3a 80%, #000000 100%);
+    background-color: var(--bg-body);
+    background-image: radial-gradient(circle at top, #1a4d40 0%, #0D2620 100%);
     background-attachment: fixed;
     color: var(--text-white); 
     padding-bottom: 120px; 
