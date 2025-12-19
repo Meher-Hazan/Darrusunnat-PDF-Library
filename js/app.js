@@ -6,20 +6,48 @@ fetch(CONFIG.dbUrl)
         setTab('home');
         startClock();
         updateViewIcon();
+        renderChips(); // New: Show Category Chips
     })
-    .catch(() => document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি।</div>");
+    .catch(() => {
+        document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি।</div>";
+    });
 
 function startClock() {
     setInterval(() => {
         const d = new Date();
         const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
         const date = d.toLocaleDateString('bn-BD');
-        
         if(document.getElementById('mobTime')) document.getElementById('mobTime').innerText = t;
         if(document.getElementById('mobDate')) document.getElementById('mobDate').innerText = date;
         if(document.getElementById('pcTime')) document.getElementById('pcTime').innerText = t;
         if(document.getElementById('pcDate')) document.getElementById('pcDate').innerText = date;
     }, 1000);
+}
+
+// --- NEW: CATEGORY CHIPS ---
+function renderChips() {
+    const chips = ['সব বই', 'তাফসির', 'হাদিস', 'আকিদা', 'ফিকহ', 'ইতিহাস', 'সিরাত', 'উপন্যাস', 'অন্যান্য'];
+    const container = document.getElementById('chipContainer');
+    if(!container) return;
+    
+    let html = '';
+    chips.forEach(c => {
+        html += `<div class="chip" onclick="filterByChip('${c}')">${c}</div>`;
+    });
+    container.innerHTML = html;
+}
+
+function filterByChip(cat) {
+    window.scrollTo(0, 0);
+    if(cat === 'সব বই') {
+        currentList = db;
+        renderBooks(db.slice(0, CONFIG.displayLimit), "সব বই");
+    } else {
+        const fuse = new Fuse(db, { keys: ['category'], threshold: 0.3 });
+        const results = fuse.search(cat).map(r => r.item);
+        currentList = results;
+        renderBooks(results, `${cat} বিভাগের বই`);
+    }
 }
 
 function setTab(tab, pushHist = true) {
@@ -32,11 +60,15 @@ function setTab(tab, pushHist = true) {
     if(document.getElementById('mob-'+tab)) document.getElementById('mob-'+tab).classList.add('active');
     
     const hero = document.getElementById('heroSection');
+    const chips = document.getElementById('chipContainer');
+    
     if(tab === 'home') {
         hero.style.display = 'flex';
+        if(chips) chips.style.display = 'flex';
         document.getElementById('search').value = "";
     } else {
         hero.style.display = 'none';
+        if(chips) chips.style.display = 'none';
     }
     
     window.scrollTo(0, 0);
@@ -53,11 +85,8 @@ function setTab(tab, pushHist = true) {
 }
 
 function goBack() {
-    if(historyStack.length > 0) {
-        setTab(historyStack.pop(), false);
-    } else {
-        setTab('home', false);
-    }
+    if(historyStack.length > 0) setTab(historyStack.pop(), false);
+    else setTab('home', false);
 }
 
 function handleSearch() {
@@ -68,12 +97,13 @@ function handleSearch() {
         const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
         const results = fuse.search(q).map(r => r.item);
         currentList = results;
-        renderBooks(results, `অনুসন্ধান ফলাফল: "${q}"`);
+        renderBooks(results, `অনুসন্ধান: "${q}"`);
     }, 300);
 }
 
 function renderBooks(list, title = '') {
     const app = document.getElementById('app');
+    // REMOVED SKELETON HERE, SHOW REAL DATA
     if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
 
     let html = title ? `<h2 class='sec-title'>${title}</h2>` : '';
@@ -153,10 +183,7 @@ function toggleSave(e, id) {
 function toggleView() {
     viewMode = viewMode === 'grid' ? 'list' : 'grid';
     localStorage.setItem('viewMode', viewMode);
-    // Update icons
-    const icon = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
-    if(document.getElementById('headerViewBtn')) document.getElementById('headerViewBtn').innerHTML = icon;
-    
+    updateViewIcon();
     if(document.querySelector('.grid') || document.querySelector('.list-view')) {
         if(document.getElementById('search').value) handleSearch();
         else if(currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit));
@@ -190,16 +217,24 @@ window.onpopstate = function(e) {
     else goBack();
 };
 
-function shareBook() { navigator.clipboard.writeText(currentLink); alert("লিংক কপি হয়েছে!"); }
+function shareBook() { 
+    navigator.clipboard.writeText(currentLink); 
+    showToast(); // NEW TOAST FUNCTION
+}
+
+function showToast() {
+    const x = document.getElementById("toast");
+    x.className = "toast show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
 function joinGroup() { window.open(CONFIG.groupLink); }
 
 function openRandom() {
     if(db.length) openModal(db[Math.floor(Math.random() * db.length)].id);
 }
 
-// --- BACK TO TOP LOGIC ---
 const backToTopBtn = document.getElementById("backToTopBtn");
-
 window.onscroll = function() {
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
         backToTopBtn.style.display = "block";
@@ -207,7 +242,6 @@ window.onscroll = function() {
         backToTopBtn.style.display = "none";
     }
 };
-
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
