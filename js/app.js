@@ -3,14 +3,15 @@ fetch(CONFIG.dbUrl)
     .then(res => res.json())
     .then(data => {
         db = data.sort((a, b) => b.id - a.id);
-        setTab('home');
+        
+        // Initialize History State
+        window.history.replaceState({view: 'home'}, '', '');
+        
+        setTab('home', false); // Don't push duplicates on load
         startClock();
         updateViewIcon();
-        renderChips(); // New: Show Category Chips
     })
-    .catch(() => {
-        document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি।</div>";
-    });
+    .catch(() => document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি।</div>");
 
 function startClock() {
     setInterval(() => {
@@ -24,55 +25,32 @@ function startClock() {
     }, 1000);
 }
 
-// --- NEW: CATEGORY CHIPS ---
-function renderChips() {
-    const chips = ['সব বই', 'তাফসির', 'হাদিস', 'আকিদা', 'ফিকহ', 'ইতিহাস', 'সিরাত', 'উপন্যাস', 'অন্যান্য'];
-    const container = document.getElementById('chipContainer');
-    if(!container) return;
-    
-    let html = '';
-    chips.forEach(c => {
-        html += `<div class="chip" onclick="filterByChip('${c}')">${c}</div>`;
-    });
-    container.innerHTML = html;
-}
-
-function filterByChip(cat) {
-    window.scrollTo(0, 0);
-    if(cat === 'সব বই') {
-        currentList = db;
-        renderBooks(db.slice(0, CONFIG.displayLimit), "সব বই");
-    } else {
-        const fuse = new Fuse(db, { keys: ['category'], threshold: 0.3 });
-        const results = fuse.search(cat).map(r => r.item);
-        currentList = results;
-        renderBooks(results, `${cat} বিভাগের বই`);
-    }
-}
-
-function setTab(tab, pushHist = true) {
-    if(pushHist) historyStack.push(currentTab);
+// --- NAVIGATION ENGINE (FIXED) ---
+function setTab(tab, pushToHistory = true) {
     currentTab = tab;
     CONFIG.displayLimit = 24;
     
+    // Update Browser History (The Magic Fix)
+    if(pushToHistory) {
+        window.history.pushState({view: tab}, '', '');
+    }
+    
+    // UI Updates
     document.querySelectorAll('.pc-link, .nav-item').forEach(el => el.classList.remove('active'));
     if(document.getElementById('pc-'+tab)) document.getElementById('pc-'+tab).classList.add('active');
     if(document.getElementById('mob-'+tab)) document.getElementById('mob-'+tab).classList.add('active');
     
     const hero = document.getElementById('heroSection');
-    const chips = document.getElementById('chipContainer');
-    
     if(tab === 'home') {
         hero.style.display = 'flex';
-        if(chips) chips.style.display = 'flex';
         document.getElementById('search').value = "";
     } else {
         hero.style.display = 'none';
-        if(chips) chips.style.display = 'none';
     }
     
     window.scrollTo(0, 0);
 
+    // Logic
     if (tab === 'home') {
         currentList = db;
         renderBooks(db.slice(0, CONFIG.displayLimit));
@@ -84,10 +62,28 @@ function setTab(tab, pushHist = true) {
     else if (tab === 'cat') renderFolders('category');
 }
 
-function goBack() {
-    if(historyStack.length > 0) setTab(historyStack.pop(), false);
-    else setTab('home', false);
-}
+// Handle Browser Back Button
+window.onpopstate = function(event) {
+    if (event.state) {
+        // If modal was open, it's already closed by history.back(), 
+        // now we just need to ensure UI is correct.
+        if (document.getElementById('modal').classList.contains('active')) {
+            document.getElementById('modal').classList.remove('active');
+            return; // Don't reload tab if we just closed modal
+        }
+
+        if(event.state.view === 'folder') {
+            // Restore folder view
+            openFolder(event.state.type, event.state.key, false);
+        } else if (event.state.view) {
+            // Restore tab view
+            setTab(event.state.view, false);
+        } else {
+            // Default to home
+            setTab('home', false);
+        }
+    }
+};
 
 function handleSearch() {
     const q = document.getElementById('search').value;
@@ -103,7 +99,6 @@ function handleSearch() {
 
 function renderBooks(list, title = '') {
     const app = document.getElementById('app');
-    // REMOVED SKELETON HERE, SHOW REAL DATA
     if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
 
     let html = title ? `<h2 class='sec-title'>${title}</h2>` : '';
@@ -152,13 +147,26 @@ function renderFolders(type) {
         if(!groups[key]) groups[key] = 0; groups[key]++;
     });
     const keys = Object.keys(groups).sort();
+    
     let html = '<div class="folder-grid">';
-    keys.forEach(k => html += `<div class="folder" onclick="openFolder('${type}', '${k}')"><div class="folder-icon">${k}</div><div class="folder-label">${groups[k]} টি বই</div></div>`);
+    keys.forEach(k => {
+        html += `
+        <div class="folder" onclick="openFolder('${type}', '${k}')">
+            <div class="folder-icon">${k}</div>
+            <div class="folder-label">${k}</div>
+            <div class="folder-count">${groups[k]} টি বই</div>
+        </div>`;
+    });
     html += '</div>';
     document.getElementById('app').innerHTML = html;
 }
 
-function openFolder(type, key) {
+function openFolder(type, key, pushHist = true) {
+    // Add History State for Folder
+    if(pushHist) {
+        window.history.pushState({view: 'folder', type: type, key: key}, '', '');
+    }
+
     let list = [];
     if(type === 'az') {
         list = db.filter(b => {
@@ -167,8 +175,11 @@ function openFolder(type, key) {
             return match && match[0].toUpperCase() === key;
         });
     } else { list = db.filter(b => b[type] === key); }
-    const backBtn = `<div class="back-bar" onclick="goBack()"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
+    
+    // We use history.back() for the back button now
+    const backBtn = `<div class="back-bar" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
     renderBooks(list, `${backBtn}<br>${key}`);
+    window.scrollTo(0,0);
 }
 
 function loadMore() { CONFIG.displayLimit += 24; renderBooks(db.slice(0, CONFIG.displayLimit)); }
@@ -177,17 +188,25 @@ function toggleSave(e, id) {
     e.stopPropagation();
     if(saved.includes(id)) saved = saved.filter(x => x !== id); else saved.push(id);
     localStorage.setItem('saved', JSON.stringify(saved));
-    if(currentTab === 'save') setTab('save'); else e.target.classList.toggle('active');
+    
+    // Don't change tab logic here, just update UI
+    if(currentTab === 'save') {
+        // If we are in saved tab and unsave, we might want to refresh, but let's keep it simple
+        renderBooks(db.filter(b => saved.includes(b.id)), "সংরক্ষিত বই");
+    } else {
+        e.target.classList.toggle('active');
+    }
 }
 
 function toggleView() {
     viewMode = viewMode === 'grid' ? 'list' : 'grid';
     localStorage.setItem('viewMode', viewMode);
     updateViewIcon();
+    
     if(document.querySelector('.grid') || document.querySelector('.list-view')) {
         if(document.getElementById('search').value) handleSearch();
         else if(currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit));
-        else if(currentTab === 'save') setTab('save');
+        else if(currentTab === 'save') renderBooks(db.filter(b => saved.includes(b.id)), "সংরক্ষিত বই");
     }
 }
 
@@ -203,31 +222,19 @@ function openModal(id) {
     document.getElementById('mTitle').innerText = b.title;
     document.getElementById('mAuth').innerText = b.author || 'অজ্ঞাত';
     document.getElementById('mRead').href = b.link;
+    
+    // Push Modal State
     window.history.pushState({modal: true}, null, "");
     document.getElementById('modal').classList.add('active');
 }
 
 function closeModal() {
     document.getElementById('modal').classList.remove('active');
+    // Important: Go back in history to remove the modal state
     if(history.state && history.state.modal) history.back();
 }
 
-window.onpopstate = function(e) {
-    if(document.getElementById('modal').classList.contains('active')) closeModal();
-    else goBack();
-};
-
-function shareBook() { 
-    navigator.clipboard.writeText(currentLink); 
-    showToast(); // NEW TOAST FUNCTION
-}
-
-function showToast() {
-    const x = document.getElementById("toast");
-    x.className = "toast show";
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-}
-
+function shareBook() { navigator.clipboard.writeText(currentLink); alert("লিংক কপি হয়েছে!"); }
 function joinGroup() { window.open(CONFIG.groupLink); }
 
 function openRandom() {
