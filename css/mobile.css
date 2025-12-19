@@ -1,1 +1,55 @@
+/* --- MOBILE & TABLET STYLES (< 1024px) --- */
+@media (max-width: 1023px) {
+    body { padding-bottom: 120px; } /* Space for bottom nav */
+    .pc-sidebar { display: none; }
+    
+    /* Layout */
+    .grid { display: grid; gap: 15px; }
+    .list-view { display: flex; flex-direction: column; gap: 10px; }
 
+    /* Header */
+    .top-nav {
+        background: var(--glass-nav); position: sticky; top: 0; z-index: 1000;
+        padding: 10px 15px; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid rgba(255,215,0,0.15); backdrop-filter: blur(20px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex;
+    }
+    .brand { font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold); font-weight: 800; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .header-icon { color: var(--text-gray); font-size: 1.3rem; padding: 5px; cursor: pointer; }
+    
+    /* Bottom Nav */
+    .bot-nav {
+        position: fixed; bottom: 0; left: 0; width: 100%;
+        background: #051410; border-top: 1px solid rgba(255,255,255,0.1);
+        justify-content: space-around; padding: 12px 0; z-index: 2000;
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.5); display: flex;
+    }
+    .nav-item { 
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: none; border: none; color: #666; font-size: 0.75rem; gap: 4px; cursor: pointer;
+    }
+    .nav-item.active { color: var(--gold); transform: translateY(-5px); }
+    
+    .clock-widget { text-align: right; line-height: 1.1; margin-left: 10px; }
+    .clock-time { color: var(--gold); font-weight: bold; font-size: 0.95rem; font-family: var(--font-serif); }
+    .clock-date { font-size: 0.7rem; color: var(--text-gray); }
+    
+    .join-btn {
+        background: linear-gradient(135deg, var(--gold), #F39C12);
+        color: #000; padding: 6px 15px; border-radius: 50px;
+        font-weight: 800; font-size: 0.8rem; text-decoration: none;
+        display: flex; align-items: center; gap: 6px; 
+    }
+}
+
+/* Specific Phone Grid */
+@media (max-width: 599px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .container { padding: 10px 10px 100px 10px; }
+}
+/* Specific Tablet Grid */
+@media (min-width: 600px) and (max-width: 1023px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .container { padding: 20px 20px 120px 20px; }
+}
