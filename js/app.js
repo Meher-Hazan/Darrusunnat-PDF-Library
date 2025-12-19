@@ -6,6 +6,7 @@ let displayLimit = 24;
 let currentList = [];
 let currentLink = "";
 let historyStack = [];
+let searchTimeout = null; // Variable for Debouncing
 
 // STARTUP
 fetch('books_data.json?t=' + Date.now())
@@ -16,17 +17,19 @@ fetch('books_data.json?t=' + Date.now())
         startClock();
         updateViewIcon();
     })
-    .catch(() => document.getElementById('app').innerHTML = "লোড হয়নি।");
+    .catch(() => document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি। দয়া করে পেজটি রিফ্রেশ করুন।</div>");
 
 function startClock() {
     setInterval(() => {
         const d = new Date();
         const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
         const date = d.toLocaleDateString('bn-BD');
-        document.getElementById('mobTime').innerText = t;
-        document.getElementById('mobDate').innerText = date;
-        document.getElementById('pcTime').innerText = t;
-        document.getElementById('pcDate').innerText = date;
+        
+        // Update Mobile & PC Clocks safely
+        if(document.getElementById('mobTime')) document.getElementById('mobTime').innerText = t;
+        if(document.getElementById('mobDate')) document.getElementById('mobDate').innerText = date;
+        if(document.getElementById('pcTime')) document.getElementById('pcTime').innerText = t;
+        if(document.getElementById('pcDate')) document.getElementById('pcDate').innerText = date;
     }, 1000);
 }
 
@@ -40,10 +43,15 @@ function setTab(tab, pushHist = true) {
     if(document.getElementById('pc-'+tab)) document.getElementById('pc-'+tab).classList.add('active');
     if(document.getElementById('mob-'+tab)) document.getElementById('mob-'+tab).classList.add('active');
     
-    // Show/Hide Hero Search
+    // Show/Hide Hero Section (Only on Home)
     const hero = document.getElementById('heroSection');
-    if(tab === 'home') hero.style.display = 'block';
-    else hero.style.display = 'none';
+    if(tab === 'home') {
+        hero.style.display = 'flex'; // Changed to flex for centering
+        // Clear search if switching back to home
+        document.getElementById('search').value = "";
+    } else {
+        hero.style.display = 'none';
+    }
     
     window.scrollTo(0, 0);
 
@@ -67,11 +75,33 @@ function goBack() {
     }
 }
 
+// --- SEARCH ENGINE (OPTIMIZED) ---
+function handleSearch() {
+    const q = document.getElementById('search').value;
+    
+    // Clear previous timeout (Debouncing)
+    clearTimeout(searchTimeout);
+
+    // Wait 300ms before searching (Fixes Lag)
+    searchTimeout = setTimeout(() => {
+        if(!q) { 
+            if(currentTab === 'home') renderBooks(db.slice(0, displayLimit));
+            return; 
+        }
+        
+        const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+        const results = fuse.search(q).map(r => r.item);
+        
+        currentList = results;
+        renderBooks(results, `অনুসন্ধান ফলাফল: "${q}"`);
+    }, 300); 
+}
+
 function renderBooks(list, title = '') {
     const app = document.getElementById('app');
-    if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি</div>"; return; }
+    if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি 😔</div>"; return; }
 
-    let html = title ? `<h2>${title}</h2>` : '';
+    let html = title ? `<h2 class='sec-title'>${title}</h2>` : '';
     html += viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
     
     list.forEach(b => {
@@ -101,7 +131,7 @@ function renderBooks(list, title = '') {
     });
     html += '</div>';
     
-    if(currentTab === 'home' && list.length < db.length) {
+    if(currentTab === 'home' && list.length < db.length && !document.getElementById('search').value) {
         html += `<button class="load-more" onclick="loadMore()">আরও দেখুন</button>`;
     }
     app.innerHTML = html;
@@ -166,21 +196,14 @@ function toggleSave(e, id) {
     else e.target.classList.toggle('active');
 }
 
-function handleSearch() {
-    const q = document.getElementById('search').value;
-    if(!q) { setTab('home'); return; }
-    const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
-    renderBooks(fuse.search(q).map(r => r.item), `অনুসন্ধান: "${q}"`);
-}
-
 function toggleView() {
     viewMode = viewMode === 'grid' ? 'list' : 'grid';
     localStorage.setItem('viewMode', viewMode);
     updateViewIcon();
     
     if(document.querySelector('.grid') || document.querySelector('.list-view')) {
-        const title = document.querySelector('h2')?.innerText || '';
-        // If searching, redraw search results; else assume home or saved.
+        const title = document.querySelector('.sec-title')?.innerText || '';
+        // Re-render based on current state
         if(document.getElementById('search').value) handleSearch();
         else if(currentTab === 'home') renderBooks(db.slice(0, displayLimit));
         else if(currentTab === 'save') setTab('save');
@@ -188,14 +211,18 @@ function toggleView() {
 }
 
 function updateViewIcon() {
-    document.getElementById('headerViewBtn').innerHTML = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
+    const icon = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
+    if(document.getElementById('headerViewBtn')) document.getElementById('headerViewBtn').innerHTML = icon;
+    if(document.getElementById('mob-view')) document.getElementById('mob-view').innerHTML = icon;
 }
 
+// MODAL
+let currentBookLink = "";
 function openModal(id) {
     const b = db.find(x => x.id === id);
     if(!b) return;
     
-    currentLink = b.link;
+    currentBookLink = b.link;
     document.getElementById('mImg').src = b.image || '';
     document.getElementById('mTitle').innerText = b.title;
     document.getElementById('mAuth').innerText = b.author || 'অজ্ঞাত';
@@ -219,7 +246,7 @@ window.onpopstate = function(e) {
 };
 
 function shareBook() {
-    navigator.clipboard.writeText(currentLink);
+    navigator.clipboard.writeText(currentBookLink);
     alert("লিংক কপি হয়েছে!");
 }
 
