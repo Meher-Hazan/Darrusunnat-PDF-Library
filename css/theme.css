@@ -1,23 +1,44 @@
 :root {
-    --primary: #0f4c3a;
-    --gold: #FFD700;
-    --gold-dim: #D4AC0D;
-    --bg-deep: #020504;
-    --glass-nav: rgba(5, 20, 15, 0.95);
-    --glass-card: rgba(20, 35, 30, 0.6);
-    --glass-input: rgba(255, 255, 255, 0.15);
+    /* --- ROYAL ISLAMIC THEME (Fixed) --- */
+    --primary: #0f4c3a;       /* Deep Royal Green */
+    --primary-light: #1a6b54;
+    --gold: #FFD700;          /* Bright Gold */
+    --gold-dim: #D4AC0D;      /* Muted Gold */
+    
+    /* Backgrounds */
+    --bg-body: #020504;       /* Deepest Black-Green */
+    --bg-nav: rgba(5, 20, 15, 0.98); /* Glassy Green */
+    --bg-card: rgba(20, 35, 30, 0.6); /* Transparent Card */
+    
+    /* Text */
     --text-white: #ffffff;
-    --text-gray: #b0b0b0;
+    --text-main: #eeeeee;
+    --text-mute: #b0b0b0;
+    
+    /* UI Elements */
+    --glass-input: rgba(255, 255, 255, 0.1);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.5);
+
+    /* Animation Gradients (Subtle Dark Breathing) */
+    --anim-color-1: #020504;
+    --anim-color-2: #051410;
+
+    /* Fonts */
     --font-main: 'Hind Siliguri', sans-serif;
     --font-serif: 'Amiri', serif;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
 body { 
     margin: 0; font-family: var(--font-main);
-    background: linear-gradient(160deg, #020504 0%, #0f4c3a 60%, #000000 100%);
-    color: var(--text-white); min-height: 100vh;
+    background: linear-gradient(160deg, #020504 0%, #0f4c3a 80%, #000000 100%);
     background-attachment: fixed;
+    color: var(--text-white); 
+    padding-bottom: 120px; 
+    min-height: 100vh;
 }
+
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; font-family: inherit; background: none; }
