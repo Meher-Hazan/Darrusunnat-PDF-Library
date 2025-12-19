@@ -19,17 +19,20 @@
 
     <div class="pc-sidebar">
         <div class="pc-brand">দারুচ্ছুন্নাত লাইব্রেরি</div>
+        
         <div class="pc-link active" onclick="setTab('home')" id="pc-home"><i class="fas fa-home"></i> হোম</div>
         <div class="pc-link" onclick="setTab('az')" id="pc-az"><i class="fas fa-sort-alpha-down"></i> বর্ণানুক্রমিক</div>
         <div class="pc-link" onclick="setTab('auth')" id="pc-auth"><i class="fas fa-pen-nib"></i> লেখক</div>
         <div class="pc-link" onclick="setTab('cat')" id="pc-cat"><i class="fas fa-layer-group"></i> বিষয়</div>
         <div class="pc-link" onclick="setTab('save')" id="pc-save"><i class="fas fa-bookmark"></i> সংরক্ষিত</div>
         
+        <div class="pc-link" onclick="openRandom()" id="pc-random"><i class="fas fa-dice"></i> র‍্যান্ডম বই</div>
+        
         <div class="pc-footer">
             <div class="clock-time" id="pcTime">00:00</div>
             <div class="clock-date" id="pcDate">...</div>
             <br>
-            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn" style="justify-content:center; width:100%; padding:12px;">
                 <i class="fab fa-telegram-plane"></i> Join Telegram
             </a>
         </div>
@@ -40,11 +43,16 @@
             <div class="header-icon" onclick="toggleView()" id="headerViewBtn"><i class="fas fa-th-large"></i></div>
             <div class="brand">দারুচ্ছুন্নাত</div>
         </div>
+        
         <div class="nav-right">
-            <div class="header-icon" onclick="openRandom()" title="Random Book"><i class="fas fa-dice"></i></div>
+            <div class="header-icon" onclick="openRandom()"><i class="fas fa-dice"></i></div>
+            
+            <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn-mob">
+                <i class="fab fa-telegram-plane"></i> <span class="join-text">Join</span>
+            </a>
+            
             <div class="clock-widget">
                 <div class="clock-time" id="mobTime">00:00</div>
-                <div class="clock-date" id="mobDate">...</div>
             </div>
         </div>
     </div>
@@ -57,15 +65,10 @@
         </div>
     </div>
 
-    <div class="chip-container" id="chipContainer">
-        </div>
+    <div class="chip-container" id="chipContainer"></div>
 
     <div class="container" id="app">
-        <div class="skeleton-grid">
-            <div class="skeleton-card"></div><div class="skeleton-card"></div>
-            <div class="skeleton-card"></div><div class="skeleton-card"></div>
-            <div class="skeleton-card"></div><div class="skeleton-card"></div>
-        </div>
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> লাইব্রেরি লোড হচ্ছে...</div>
     </div>
 
     <div class="modal" id="modal">
