@@ -15,7 +15,6 @@ function startClock() {
         const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
         const date = d.toLocaleDateString('bn-BD');
         
-        // Update both clocks (Mobile/PC) safe check
         if(document.getElementById('mobTime')) document.getElementById('mobTime').innerText = t;
         if(document.getElementById('mobDate')) document.getElementById('mobDate').innerText = date;
         if(document.getElementById('pcTime')) document.getElementById('pcTime').innerText = t;
@@ -26,7 +25,7 @@ function startClock() {
 function setTab(tab, pushHist = true) {
     if(pushHist) historyStack.push(currentTab);
     currentTab = tab;
-    CONFIG.displayLimit = 24; // Reset limit
+    CONFIG.displayLimit = 24;
     
     document.querySelectorAll('.pc-link, .nav-item').forEach(el => el.classList.remove('active'));
     if(document.getElementById('pc-'+tab)) document.getElementById('pc-'+tab).classList.add('active');
@@ -35,7 +34,7 @@ function setTab(tab, pushHist = true) {
     const hero = document.getElementById('heroSection');
     if(tab === 'home') {
         hero.style.display = 'flex';
-        document.getElementById('search').value = ""; // Clear search
+        document.getElementById('search').value = "";
     } else {
         hero.style.display = 'none';
     }
@@ -165,6 +164,11 @@ function toggleView() {
     }
 }
 
+function updateViewIcon() {
+    const icon = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
+    if(document.getElementById('headerViewBtn')) document.getElementById('headerViewBtn').innerHTML = icon;
+}
+
 function openModal(id) {
     const b = db.find(x => x.id === id); if(!b) return;
     currentLink = b.link;
@@ -188,3 +192,22 @@ window.onpopstate = function(e) {
 
 function shareBook() { navigator.clipboard.writeText(currentLink); alert("লিংক কপি হয়েছে!"); }
 function joinGroup() { window.open(CONFIG.groupLink); }
+
+function openRandom() {
+    if(db.length) openModal(db[Math.floor(Math.random() * db.length)].id);
+}
+
+// --- BACK TO TOP LOGIC ---
+const backToTopBtn = document.getElementById("backToTopBtn");
+
+window.onscroll = function() {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        backToTopBtn.style.display = "block";
+    } else {
+        backToTopBtn.style.display = "none";
+    }
+};
+
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
