@@ -5,7 +5,7 @@
     --bg-deep: #020504;
     --glass-nav: rgba(5, 20, 15, 0.95);
     --glass-card: rgba(20, 35, 30, 0.6);
-    --glass-input: rgba(255, 255, 255, 0.1);
+    --glass-input: rgba(255, 255, 255, 0.15);
     --text-white: #ffffff;
     --text-gray: #b0b0b0;
     --font-main: 'Hind Siliguri', sans-serif;
@@ -55,8 +55,8 @@ button { cursor: pointer; border: none; font-family: inherit; background: none; 
 
 /* --- HERO SECTION (THE DASHBOARD) --- */
 .hero {
-    /* Library Background Image */
-    background: linear-gradient(rgba(2, 5, 4, 0.7), rgba(15, 76, 58, 0.8)), 
+    /* FIXED: Made the overlay more transparent so the image is visible */
+    background: linear-gradient(rgba(2, 5, 4, 0.6), rgba(15, 76, 58, 0.7)), 
                 url('https://images.unsplash.com/photo-1507842217121-9e93c8aaf27c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
     background-size: cover;
     background-position: center;
@@ -65,20 +65,27 @@ button { cursor: pointer; border: none; font-family: inherit; background: none; 
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     border-bottom: 1px solid rgba(255,215,0,0.2);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    min-height: 220px;
+    min-height: 250px; /* Increased height for the new title */
 }
 
+/* STYLE FOR THE NEW BENGALI TITLE */
 .hero h1 { 
-    font-family: var(--font-serif); font-size: 2.2rem; margin: 0 0 25px 0;
-    color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.8);
-    font-weight: 700; letter-spacing: 1px;
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin: 0 0 25px 0;
+    color: var(--gold);
+    text-shadow: 0 3px 8px rgba(0,0,0,0.8);
+    font-weight: 700;
+    line-height: 1.3;
 }
+/* Adjust title size for smaller screens */
+@media (max-width: 400px) { .hero h1 { font-size: 1.5rem; } }
 
 /* SEARCH BAR (PREMIUM LOOK) */
 .search-wrap { position: relative; width: 100%; max-width: 600px; }
 .search-inp {
     width: 100%; padding: 16px 50px 16px 25px; border-radius: 50px;
-    background: rgba(255, 255, 255, 0.15); 
+    background: var(--glass-input); 
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: #fff; font-size: 1.1rem; 
     backdrop-filter: blur(15px); 
@@ -143,7 +150,7 @@ button { cursor: pointer; border: none; font-family: inherit; background: none; 
     border-bottom: 1px solid rgba(255,215,0,0.15); backdrop-filter: blur(20px);
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
-.brand { font-family: var(--font-serif); font-size: 1.3rem; color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.brand { font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold); font-weight: 800; display: flex; align-items: center; gap: 8px; }
 
 .header-icon { color: var(--text-gray); font-size: 1.3rem; padding: 5px 10px; cursor: pointer; transition: 0.3s; }
 .header-icon:active { transform: scale(0.9); color: var(--gold); }
@@ -165,7 +172,7 @@ button { cursor: pointer; border: none; font-family: inherit; background: none; 
     box-shadow: 5px 0 30px rgba(0,0,0,0.5);
 }
 .pc-brand { 
-    font-family: var(--font-serif); font-size: 1.8rem; color: var(--gold); 
+    font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold); 
     margin-bottom: 40px; font-weight: bold; text-align: center;
     border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
