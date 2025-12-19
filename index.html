@@ -8,11 +8,9 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    <link rel="stylesheet" href="css/theme.css">     <link rel="stylesheet" href="css/main.css">      <link rel="stylesheet" href="css/mobile.css">    <link rel="stylesheet" href="css/desktop.css">   </head>
 <body>
 
     <div class="pc-sidebar">
@@ -23,8 +21,8 @@
         <div class="pc-link" onclick="setTab('cat')" id="pc-cat"><i class="fas fa-layer-group"></i> বিষয়</div>
         <div class="pc-link" onclick="setTab('save')" id="pc-save"><i class="fas fa-bookmark"></i> সংরক্ষিত</div>
         
-        <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1); text-align:center;">
-            <div class="clock-time" id="pcTime" style="font-size:1.2rem; margin-bottom:5px;">00:00</div>
+        <div class="pc-footer">
+            <div class="clock-time" id="pcTime">00:00</div>
             <div class="clock-date" id="pcDate">...</div>
             <br>
             <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn" style="justify-content:center; width:100%; padding:12px;">
@@ -35,7 +33,7 @@
 
     <div class="top-nav">
         <div class="brand">দারুচ্ছুন্নাত লাইব্রেরি</div>
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div class="nav-right">
             <div class="header-icon" onclick="toggleView()" id="headerViewBtn"><i class="fas fa-th-large"></i></div>
             <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
                 <i class="fab fa-telegram-plane"></i> Join
@@ -61,7 +59,7 @@
 
     <div class="modal" id="modal">
         <div class="modal-box">
-            <div onclick="closeModal()" style="position:absolute; top:15px; right:15px; font-size:2rem; color:#fff; cursor:pointer; z-index:10;">&times;</div>
+            <div onclick="closeModal()" class="close-icon">&times;</div>
             <img src="" class="modal-img" id="mImg">
             <h3 class="modal-title" id="mTitle"></h3>
             <div class="modal-auth" id="mAuth"></div>
@@ -76,23 +74,24 @@
 
     <div class="bot-nav">
         <button class="nav-item active" onclick="setTab('home')" id="mob-home">
-            <i class="fas fa-home"></i> <span style="font-size:0.6rem">হোম</span>
+            <i class="fas fa-home"></i> <span>হোম</span>
         </button>
         <button class="nav-item" onclick="setTab('auth')" id="mob-auth">
-            <i class="fas fa-pen-nib"></i> <span style="font-size:0.6rem">লেখক</span>
+            <i class="fas fa-pen-nib"></i> <span>লেখক</span>
         </button>
         <button class="nav-item" onclick="setTab('cat')" id="mob-cat">
-            <i class="fas fa-layer-group"></i> <span style="font-size:0.6rem">বিষয়</span>
+            <i class="fas fa-layer-group"></i> <span>বিষয়</span>
         </button>
         <button class="nav-item" onclick="setTab('az')" id="mob-az">
-            <i class="fas fa-font"></i> <span style="font-size:0.6rem">A-Z</span>
+            <i class="fas fa-font"></i> <span>A-Z</span>
         </button>
         <button class="nav-item" onclick="setTab('save')" id="mob-save">
-            <i class="fas fa-bookmark"></i> <span style="font-size:0.6rem">সেভ</span>
+            <i class="fas fa-bookmark"></i> <span>সেভ</span>
         </button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <script src="js/settings.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
