@@ -10,7 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="css/theme.css">     <link rel="stylesheet" href="css/main.css">      <link rel="stylesheet" href="css/mobile.css">    <link rel="stylesheet" href="css/desktop.css">   </head>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/desktop.css">
+</head>
 <body>
 
     <div class="pc-sidebar">
@@ -32,9 +36,13 @@
     </div>
 
     <div class="top-nav">
-        <div class="brand">দারুচ্ছুন্নাত লাইব্রেরি</div>
-        <div class="nav-right">
+        <div class="nav-left">
             <div class="header-icon" onclick="toggleView()" id="headerViewBtn"><i class="fas fa-th-large"></i></div>
+            <div class="brand">দারুচ্ছুন্নাত</div>
+        </div>
+        <div class="nav-right">
+            <div class="header-icon" onclick="openRandom()" title="Random Book"><i class="fas fa-dice"></i></div>
+            
             <a href="https://t.me/SobBoiErPdf" target="_blank" class="join-btn">
                 <i class="fab fa-telegram-plane"></i> Join
             </a>
@@ -89,6 +97,8 @@
             <i class="fas fa-bookmark"></i> <span>সেভ</span>
         </button>
     </div>
+
+    <button id="backToTopBtn" title="উপরে যান"><i class="fas fa-arrow-up"></i></button>
 
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script src="js/settings.js"></script>
