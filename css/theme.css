@@ -1,12 +1,12 @@
 :root {
-    /* --- ROYAL ISLAMIC THEME (Lighter & Richer) --- */
-    --primary: #145A48;       /* Lighter Royal Green */
+    /* --- ROYAL ISLAMIC THEME --- */
+    --primary: #145A48;       
     --primary-light: #1E7E66;
-    --gold: #FFD700;          /* Bright Gold */
-    --gold-dim: #D4AC0D;      /* Muted Gold */
+    --gold: #FFD700;          
+    --gold-dim: #D4AC0D;      
     
-    /* Backgrounds (Fixed: Not too dark) */
-    --bg-body: #0D2620;       /* Deep Green (Not Black) */
+    /* Backgrounds */
+    --bg-body: #0D2620;       
     --bg-nav: rgba(10, 35, 30, 0.95); 
     --bg-card: rgba(20, 50, 40, 0.7); 
     
