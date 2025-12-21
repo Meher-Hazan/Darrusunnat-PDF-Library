@@ -1,15 +1,6 @@
-// CONFIGURATION
-const CONFIG = {
-    dbUrl: 'books_data.json?t=' + Date.now(),
-    displayLimit: 24
-};
-
-// STATE
-let db = [];
-let saved = JSON.parse(localStorage.getItem('saved')) || [];
-let currentLang = localStorage.getItem('lang') || 'bn'; // 'bn' or 'en'
-let currentTab = 'home';
-let searchTimeout;
+// =========================================
+//  DARRUSUNNAT LIBRARY - LOGIC
+// =========================================
 
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,9 +31,8 @@ function setTab(tab) {
     CONFIG.displayLimit = 24;
     window.scrollTo(0, 0);
     
-    // Update Active Link UI
+    // Update UI Active State
     document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-    // (Simple logic to highlight active link would go here if IDs matched exactly)
     
     // Manage Hero Visibility
     const hero = document.getElementById('heroSection');
@@ -53,7 +43,7 @@ function setTab(tab) {
     if (tab === 'home') {
         renderBooks(db.slice(0, CONFIG.displayLimit));
     } else if (tab === 'save') {
-        renderBooks(db.filter(b => saved.includes(b.id)), getText('Saved Books', 'সংরক্ষিত বই'));
+        renderBooks(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত বই'));
     } else if (tab === 'az') {
         renderFolders('az');
     } else if (tab === 'auth') {
@@ -68,7 +58,7 @@ function renderBooks(list, title = '') {
     const app = document.getElementById('app');
     
     if (list.length === 0) {
-        app.innerHTML = `<div class="loading-state">${getText('No books found.', 'কোনো বই পাওয়া যায়নি।')}</div>`;
+        app.innerHTML = `<div class="loading-state">${getText('noBooks', 'কোনো বই পাওয়া যায়নি।')}</div>`;
         return;
     }
 
@@ -89,19 +79,18 @@ function renderBooks(list, title = '') {
             </div>
             <div class="card-meta">
                 <h3 class="card-title">${b.title}</h3>
-                <p class="card-author">${b.author || getText('Unknown', 'অজ্ঞাত')}</p>
-                <span class="card-category">${b.category || getText('General', 'সাধারণ')}</span>
+                <p class="card-author">${b.author || getText('unknown', 'অজ্ঞাত')}</p>
+                <span class="card-category">${b.category || getText('general', 'সাধারণ')}</span>
             </div>
         </div>`;
     });
     
     html += '</div>';
     
-    // Load More Button
     if (currentTab === 'home' && list.length < db.length && !document.getElementById('search').value) {
         html += `<div style="text-align:center; margin-top:40px;">
             <button onclick="loadMore()" class="action-btn secondary-btn" style="margin:0 auto;">
-                ${getText('Load More', 'আরও দেখুন')}
+                ${getText('loadMore', 'আরও দেখুন')}
             </button>
         </div>`;
     }
@@ -112,8 +101,8 @@ function renderBooks(list, title = '') {
 function renderFolders(type) {
     const groups = {};
     db.forEach(b => {
-        let key = b[type] || getText('Others', 'অন্যান্য');
-        if (type === 'az') key = b.title.charAt(0).toUpperCase(); // First letter
+        let key = b[type] || getText('others', 'অন্যান্য');
+        if (type === 'az') key = b.title.charAt(0).toUpperCase();
         if (!groups[key]) groups[key] = 0;
         groups[key]++;
     });
@@ -122,7 +111,6 @@ function renderFolders(type) {
     let html = `<div class="book-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">`;
     
     keys.forEach(k => {
-        // Icon logic
         let icon = 'fas fa-folder';
         if (type === 'auth') icon = 'fas fa-user-edit';
         if (type === 'cat') icon = 'fas fa-layer-group';
@@ -131,7 +119,7 @@ function renderFolders(type) {
         <div class="folder-item" onclick="openFolder('${type}', '${k}')">
             <div class="folder-icon"><i class="${icon}"></i></div>
             <div class="folder-name">${k}</div>
-            <div class="folder-count">${groups[k]} ${getText('Books', 'টি বই')}</div>
+            <div class="folder-count">${groups[k]} ${getText('booksCount', 'টি বই')}</div>
         </div>`;
     });
     
@@ -160,15 +148,14 @@ function handleSearch() {
         
         const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
         const results = fuse.search(q).map(r => r.item);
-        renderBooks(results, `${getText('Search Results', 'অনুসন্ধান ফলাফল')}: "${q}"`);
+        renderBooks(results, `${getText('results', 'অনুসন্ধান ফলাফল')}: "${q}"`);
     }, 300);
 }
 
 function renderChips() {
-    // Collect unique categories dynamically or use static list
-    const categories = [...new Set(db.map(b => b.category))].filter(Boolean).slice(0, 8); // Top 8
+    const categories = [...new Set(db.map(b => b.category))].filter(Boolean).slice(0, 8);
     const container = document.getElementById('chipContainer');
-    let html = `<button class="chip active" onclick="setTab('home')">${getText('All', 'সব')}</button>`;
+    let html = `<button class="chip active" onclick="setTab('home')">All</button>`;
     
     categories.forEach(c => {
         html += `<button class="chip" onclick="openFolder('category', '${c}')">${c}</button>`;
@@ -183,7 +170,7 @@ function openModal(id) {
     
     document.getElementById('mImg').src = b.image || '';
     document.getElementById('mTitle').innerText = b.title;
-    document.getElementById('mAuth').innerText = b.author || getText('Unknown', 'অজ্ঞাত');
+    document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
     document.getElementById('mCat').innerText = b.category;
     document.getElementById('mRead').href = b.link;
     
@@ -191,7 +178,6 @@ function openModal(id) {
 }
 
 function closeModal(e) {
-    // Close if clicked on backdrop or button
     if (!e || e.target === document.getElementById('modal') || e.target.classList.contains('modal-close')) {
         document.getElementById('modal').classList.remove('active');
     }
@@ -205,15 +191,13 @@ function toggleSave(e, id) {
     localStorage.setItem('saved', JSON.stringify(saved));
     
     if (currentTab === 'save') {
-        renderBooks(db.filter(b => saved.includes(b.id)), getText('Saved Books', 'সংরক্ষিত বই'));
+        renderBooks(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত বই'));
     } else {
-        // Re-render to update icon state
         e.target.classList.toggle('active');
     }
 }
 
 function shareBook() {
-    // In a real app, copy link. For now just toast.
     const msg = document.getElementById('toast');
     msg.classList.add('show');
     setTimeout(() => msg.classList.remove('show'), 3000);
@@ -239,27 +223,20 @@ function scrollToTop() {
 function toggleLanguage() {
     currentLang = currentLang === 'bn' ? 'en' : 'bn';
     localStorage.setItem('lang', currentLang);
-    location.reload(); // Simple reload to apply changes globally
+    location.reload(); 
 }
 
 function applyLanguage() {
     document.documentElement.lang = currentLang;
     
-    // Find all elements with data-en and data-bn attributes
     document.querySelectorAll('[data-en]').forEach(el => {
         el.innerText = el.getAttribute(`data-${currentLang}`);
     });
     
-    // Update Placeholder
     const searchInput = document.getElementById('search');
     if (searchInput) {
-        searchInput.placeholder = currentLang === 'en' ? 'Search books, authors...' : 'বই, লেখক বা বিষয় খুঁজুন...';
+        searchInput.placeholder = getText('searchPlaceholder', 'বই, লেখক বা বিষয় খুঁজুন...');
     }
-}
-
-// Helper to get text based on current lang
-function getText(en, bn) {
-    return currentLang === 'en' ? en : bn;
 }
 
 // Mobile Menu
