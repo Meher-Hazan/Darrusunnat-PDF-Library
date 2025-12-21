@@ -1,10 +1,7 @@
-// =========================================
-//  DARRUSUNNAT LIBRARY - LOGIC
-// =========================================
-
 document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(); 
-    
+    applyViewMode(); // Restore Grid/List view preference
+
     fetch(CONFIG.dbUrl)
         .then(res => res.json())
         .then(data => {
@@ -24,10 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onpopstate = function(event) {
-    if (document.querySelector('.modal-backdrop.active')) {
-        closeModal();
-        return;
-    }
+    if (document.querySelector('.modal-backdrop.active')) { closeModal(); return; }
     if (event.state) {
         if (event.state.page === 'folder') openFolder(event.state.type, event.state.key, false);
         else setTab(event.state.page, false);
@@ -47,49 +41,53 @@ function setTab(tab, pushToHistory = true) {
     if (tab === 'home') hero.style.display = 'block';
     else hero.style.display = 'none';
 
-    if (tab === 'home') {
-        renderHomePage();
-    } else if (tab === 'save') {
-        renderGrid(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত'));
-    } else if (tab === 'az') renderFolders('az');
+    if (tab === 'home') renderHomePage();
+    else if (tab === 'save') renderGrid(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত'));
+    else if (tab === 'az') renderFolders('az');
     else if (tab === 'auth') renderFolders('author');
     else if (tab === 'cat') renderFolders('category');
 }
 
-// --- HOME PAGE (SHELF + GRID) ---
+// --- VIEW TOGGLE LOGIC ---
+function toggleView() {
+    viewMode = viewMode === 'grid' ? 'list' : 'grid';
+    localStorage.setItem('viewMode', viewMode);
+    applyViewMode();
+}
+
+function applyViewMode() {
+    const icon = document.getElementById('viewIcon');
+    const text = document.getElementById('viewText');
+    const grid = document.querySelector('.book-grid');
+
+    if (viewMode === 'list') {
+        if(icon) icon.className = 'fas fa-th';
+        if(text) text.innerText = getText('viewGrid', 'গ্রিড ভিউ');
+        if(grid) grid.classList.add('list-view');
+    } else {
+        if(icon) icon.className = 'fas fa-list';
+        if(text) text.innerText = getText('viewList', 'লিস্ট ভিউ');
+        if(grid) grid.classList.remove('list-view');
+    }
+}
+
 function renderHomePage() {
     const app = document.getElementById('app');
-    
-    // 1. Featured (Random 10)
     const featured = [...db].sort(() => 0.5 - Math.random()).slice(0, 10);
-    // 2. Recent (Grid)
     const recent = db.slice(0, CONFIG.displayLimit);
 
     let html = `
-        <div class="section-header">
-            <h3>🔥 ${getText('featured', 'জনপ্রিয় কিতাব')}</h3>
-        </div>
-        <div class="horizontal-shelf">
-            ${generateCards(featured, true)}
-        </div>
-
-        <div class="section-header">
-            <h3>📚 ${getText('recent', 'নতুন সংযোজন')}</h3>
-        </div>
-        <div class="book-grid">
-            ${generateCards(recent, false)}
-        </div>
-        
+        <div class="section-header"><h3>🔥 ${getText('featured', 'জনপ্রিয় কিতাব')}</h3></div>
+        <div class="horizontal-shelf">${generateCards(featured, true)}</div>
+        <div class="section-header"><h3>📚 ${getText('recent', 'নতুন সংযোজন')}</h3></div>
+        <div class="book-grid ${viewMode === 'list' ? 'list-view' : ''}">${generateCards(recent, false)}</div>
         <button onclick="loadMore()" class="load-more">${getText('loadMore', 'আরও দেখুন')}</button>
     `;
-    
     app.innerHTML = html;
 }
 
-// Helper
 function generateCards(list, isHorizontal) {
     if (!list.length) return `<div style="padding:10px;">${getText('noBooks', 'বই নেই')}</div>`;
-    
     return list.map(b => {
         const img = b.image || 'https://via.placeholder.com/300x450?text=No+Cover';
         const isSaved = saved.includes(b.id) ? 'active' : '';
@@ -97,23 +95,16 @@ function generateCards(list, isHorizontal) {
         
         return `
         <div class="${cardClass}" onclick="openModal(${b.id})">
-            <div class="save-badge ${isSaved}" onclick="toggleSave(event, ${b.id})">
-                <i class="fas fa-bookmark"></i>
-            </div>
-            <div class="card-image-wrap">
-                <img src="${img}" class="card-image" loading="lazy">
-            </div>
-            <div class="card-meta">
-                <div class="card-title">${b.title}</div>
-                <div class="card-author">${b.author || getText('unknown', 'অজ্ঞাত')}</div>
-            </div>
+            <div class="save-badge ${isSaved}" onclick="toggleSave(event, ${b.id})"><i class="fas fa-bookmark"></i></div>
+            <div class="card-image-wrap"><img src="${img}" class="card-image" loading="lazy"></div>
+            <div class="card-meta"><div class="card-title">${b.title}</div></div>
         </div>`;
     }).join('');
 }
 
 function renderGrid(list, title) {
     const app = document.getElementById('app');
-    let html = `<h3 class="section-title">${title}</h3><div class="book-grid">${generateCards(list, false)}</div>`;
+    let html = `<h3 class="section-title">${title}</h3><div class="book-grid ${viewMode === 'list' ? 'list-view' : ''}">${generateCards(list, false)}</div>`;
     app.innerHTML = html;
 }
 
@@ -139,12 +130,7 @@ function renderFolders(type) {
     const keys = Object.keys(groups).sort();
     let html = `<div class="folder-grid">`;
     keys.forEach(k => {
-        html += `
-        <div class="folder-item" onclick="openFolder('${type}', '${k}')">
-            <div class="folder-icon"><i class="fas fa-folder"></i></div>
-            <div class="folder-name">${k}</div>
-            <div class="folder-count">${groups[k]} ${getText('booksCount', 'টি বই')}</div>
-        </div>`;
+        html += `<div class="folder-item" onclick="openFolder('${type}', '${k}')"><div class="folder-icon"><i class="fas fa-folder"></i></div><div class="folder-name">${k}</div><div class="folder-count">${groups[k]} ${getText('booksCount', 'টি বই')}</div></div>`;
     });
     html += '</div>';
     document.getElementById('app').innerHTML = html;
@@ -168,7 +154,6 @@ function openModal(id) {
     document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
     document.getElementById('mCat').innerText = b.category;
     document.getElementById('mRead').href = b.link;
-    // ✅ CORRECT LINK IS PULLED FROM CONFIG
     document.getElementById('mComment').href = CONFIG.groupLink; 
     document.querySelector('.modal-backdrop').classList.add('active');
 }
@@ -206,6 +191,8 @@ function applyLanguage() {
     document.querySelectorAll('[data-en]').forEach(el => el.innerText = el.getAttribute(`data-${currentLang}`));
     const s = document.getElementById('search');
     if(s) s.placeholder = getText('searchPlaceholder', '...');
+    const vt = document.getElementById('viewText');
+    if(vt) vt.innerText = viewMode === 'list' ? getText('viewGrid', 'গ্রিড ভিউ') : getText('viewList', 'লিস্ট ভিউ');
 }
 function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
 function shareBook() { document.getElementById('toast').classList.add('show'); setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3000); }

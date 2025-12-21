@@ -1,9 +1,9 @@
 :root {
-    --bg-main: #fdfdfd;
+    --bg-main: #fdfbf7; /* Warm Paper Color */
     --bg-card: #ffffff;
     --text-primary: #1a1a1a;
     --text-muted: #666666;
-    --accent: #145A48;        /* Islamic Green */
+    --accent: #145A48;        
     --accent-light: #E8F5E9;
     --border-soft: #e0e0e0;
     --font-bengali: 'Hind Siliguri', sans-serif;
@@ -20,23 +20,22 @@ body {
     overflow-x: hidden;
     padding-bottom: 80px;
 
-    /* --- BACKGROUND DESIGN --- */
-    /* 1. Subtle Pattern */
+    /* --- BACKGROUND DESIGN (PATTERN + GRADIENT) --- */
     background-image: 
-        radial-gradient(#145A48 0.5px, transparent 0.5px), 
-        /* 2. Bottom Corner Gradients */
-        radial-gradient(circle at 0% 100%, rgba(20, 90, 72, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(197, 160, 89, 0.2) 0%, transparent 50%);
+        /* 1. Dotted Geometric Pattern */
+        radial-gradient(#145A48 0.7px, transparent 0.7px), 
+        radial-gradient(#145A48 0.7px, transparent 0.7px),
+        /* 2. Soft Green Glow Top Right */
+        radial-gradient(circle at 100% 0%, rgba(20, 90, 72, 0.08) 0%, transparent 40%),
+        /* 3. Soft Gold Glow Bottom Left */
+        radial-gradient(circle at 0% 100%, rgba(197, 160, 89, 0.1) 0%, transparent 40%);
     
-    background-size: 20px 20px, 100% 100%, 100% 100%;
-    background-attachment: fixed;
+    /* Pattern Size settings */
+    background-size: 24px 24px, 24px 24px, 100% 100%, 100% 100%;
+    background-position: 0 0, 12px 12px, 0 0, 0 0;
+    background-attachment: fixed; /* Keeps pattern still while scrolling */
 }
 
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 button { border: none; background: none; cursor: pointer; }
-
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }

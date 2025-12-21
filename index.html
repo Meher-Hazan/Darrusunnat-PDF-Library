@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>দারুচ্ছুন্নাত ইসলামিক (PDF) লাইব্রেরি</title>
-    <meta name="description" content="একটি আধুনিক এবং সহজ ইসলামিক পিডিএফ লাইব্রেরি।">
-    <meta name="theme-color" content="#faf9f7">
-    
+    <meta name="theme-color" content="#fdfbf7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@300;400;500;600&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,37 +15,25 @@
     <link rel="stylesheet" href="css/desktop.css">
 </head>
 <body>
-
     <div class="floating-controls">
-        <button id="langToggle" class="float-btn" onclick="toggleLanguage()">
-            <i class="fas fa-globe"></i> EN / বাং
-        </button>
-        <button id="randomBtn" class="float-btn" onclick="openRandom()">
-            <i class="fas fa-dice"></i> <span data-en="Random" data-bn="র‍্যান্ডম">র‍্যান্ডম</span>
-        </button>
+        <button id="langToggle" class="float-btn" onclick="toggleLanguage()"><i class="fas fa-globe"></i> EN / বাং</button>
+        <button id="randomBtn" class="float-btn" onclick="openRandom()"><i class="fas fa-dice"></i> <span data-en="Random" data-bn="র‍্যান্ডম">র‍্যান্ডম</span></button>
     </div>
 
     <header class="site-header">
         <div class="header-inner">
             <div class="logo-area" onclick="setTab('home')">
                 <div class="logo-icon"><i class="fas fa-book-open"></i></div>
-                <div class="logo-text">
-                    <h1 class="site-title" data-en="Darus Sunnat Library" data-bn="দারুচ্ছুন্নাত লাইব্রেরি">দারুচ্ছুন্নাত লাইব্রেরি</h1>
-                </div>
+                <div class="logo-text"><h1 class="site-title" data-en="Darus Sunnat" data-bn="দারুচ্ছুন্নাত">দারুচ্ছুন্নাত</h1></div>
             </div>
-            
             <nav class="desktop-nav">
-                <a href="#" onclick="setTab('home')" class="nav-link active" data-en="Home" data-bn="হোম">হোম</a>
-                <a href="#" onclick="setTab('az')" class="nav-link" data-en="A-Z" data-bn="বর্ণানুক্রমিক">বর্ণানুক্রমিক</a>
-                <a href="#" onclick="setTab('auth')" class="nav-link" data-en="Authors" data-bn="লেখক">লেখক</a>
-                <a href="#" onclick="setTab('cat')" class="nav-link" data-en="Subjects" data-bn="বিষয়">বিষয়</a>
-                <a href="#" onclick="setTab('save')" class="nav-link" data-en="Saved" data-bn="সংরক্ষিত">সংরক্ষিত</a>
-                <a href="https://t.me/SobBoiErPdf" target="_blank" class="nav-cta" data-en="Join Telegram" data-bn="টেলিগ্রামে যুক্ত হোন">টেলিগ্রামে যুক্ত হোন</a>
+                <a href="javascript:void(0)" onclick="setTab('home')" class="nav-link" data-en="Home" data-bn="হোম">হোম</a>
+                <a href="javascript:void(0)" onclick="setTab('az')" class="nav-link" data-en="A-Z" data-bn="বর্ণানুক্রমিক">বর্ণানুক্রমিক</a>
+                <a href="javascript:void(0)" onclick="setTab('cat')" class="nav-link" data-en="Subjects" data-bn="বিষয়">বিষয়</a>
+                <a href="javascript:void(0)" onclick="setTab('save')" class="nav-link" data-en="Saved" data-bn="সংরক্ষিত">সংরক্ষিত</a>
+                <a href="https://t.me/islamicbooks_us" target="_blank" class="nav-cta" data-en="Join Telegram" data-bn="টেলিগ্রাম">টেলিগ্রাম</a>
             </nav>
-
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
@@ -55,21 +41,19 @@
         <div class="mobile-menu-content">
             <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
             <nav class="mobile-nav-links">
-                <a href="#" onclick="setTab('home'); toggleMobileMenu()" data-en="Home" data-bn="হোম">হোম</a>
-                <a href="#" onclick="setTab('az'); toggleMobileMenu()" data-en="A-Z Index" data-bn="বর্ণানুক্রমিক তালিকা">বর্ণানুক্রমিক তালিকা</a>
-                <a href="#" onclick="setTab('auth'); toggleMobileMenu()" data-en="Authors" data-bn="লেখকবৃন্দ">লেখকবৃন্দ</a>
-                <a href="#" onclick="setTab('cat'); toggleMobileMenu()" data-en="Subjects" data-bn="বিষয়ভিত্তি">বিষয়ভিত্তি</a>
-                <a href="#" onclick="setTab('save'); toggleMobileMenu()" data-en="Saved Books" data-bn="সংরক্ষিত বই">সংরক্ষিত বই</a>
+                <a href="javascript:void(0)" onclick="setTab('home'); toggleMobileMenu()" data-en="Home" data-bn="হোম">হোম</a>
+                <a href="javascript:void(0)" onclick="setTab('az'); toggleMobileMenu()" data-en="A-Z Index" data-bn="বর্ণানুক্রমিক তালিকা">বর্ণানুক্রমিক তালিকা</a>
+                <a href="javascript:void(0)" onclick="setTab('cat'); toggleMobileMenu()" data-en="Subjects" data-bn="বিষয়ভিত্তি">বিষয়ভিত্তি</a>
+                <a href="javascript:void(0)" onclick="setTab('save'); toggleMobileMenu()" data-en="Saved Books" data-bn="সংরক্ষিত বই">সংরক্ষিত বই</a>
                 <hr>
-                <a href="https://t.me/SobBoiErPdf" target="_blank" class="highlight-link" data-en="Join Telegram Channel" data-bn="টেলিগ্রাম চ্যানেলে যুক্ত হোন">টেলিগ্রাম চ্যানেলে যুক্ত হোন</a>
+                <a href="https://t.me/islamicbooks_us" target="_blank" class="highlight-link" data-en="Join Telegram" data-bn="টেলিগ্রাম">টেলিগ্রাম</a>
             </nav>
         </div>
     </div>
 
     <section class="hero-section" id="heroSection">
         <div class="hero-content">
-            <h2 class="hero-title" data-en="Find Your Next Islamic Book" data-bn="আপনার প্রয়োজনীয় ইসলামিক বই খুঁজুন">আপনার প্রয়োজনীয় ইসলামিক বই খুঁজুন</h2>
-            
+            <h2 class="hero-title" data-en="Islamic PDF Library" data-bn="দারুচ্ছুন্নাত লাইব্রেরি">দারুচ্ছুন্নাত লাইব্রেরি</h2>
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="search" class="search-input" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
@@ -77,7 +61,7 @@
             
             <button class="view-toggle-btn" onclick="toggleView()">
                 <i class="fas fa-list" id="viewIcon"></i> 
-                <span id="viewText" data-en="Switch View" data-bn="ভিউ পরিবর্তন">ভিউ পরিবর্তন</span>
+                <span id="viewText" data-en="Change View" data-bn="ভিউ পরিবর্তন">ভিউ পরিবর্তন</span>
             </button>
 
             <div class="chip-scroll" id="chipContainer"></div>
@@ -85,42 +69,22 @@
     </section>
 
     <main class="main-container" id="app">
-        <div class="loading-state">
-            <p data-en="Loading Library..." data-bn="লাইব্রেরি লোড হচ্ছে...">লাইব্রেরি লোড হচ্ছে...</p>
-        </div>
+        <div class="loading-state"><p data-en="Loading..." data-bn="লোড হচ্ছে...">লোড হচ্ছে...</p></div>
     </main>
-
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-book-open"></i>
-                <span data-en="Darus Sunnat" data-bn="দারুচ্ছুন্নাত">দারুচ্ছুন্নাত</span>
-            </div>
-            <p class="copyright" data-en="© 2024 Darus Sunnat Library." data-bn="© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি।">© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি।</p>
-        </div>
-    </footer>
 
     <div class="modal-backdrop" id="modal" onclick="closeModal(event)">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-body">
-                <div class="modal-image-col">
-                    <img src="" alt="Book Cover" class="modal-cover" id="mImg">
-                </div>
+                <div class="modal-image-col"><img src="" alt="Book Cover" class="modal-cover" id="mImg"></div>
                 <div class="modal-info-col">
                     <span class="modal-category" id="mCat">Category</span>
                     <h2 class="modal-title" id="mTitle">Book Title</h2>
                     <p class="modal-author" id="mAuth">Author Name</p>
                     <div class="modal-actions">
-                        <a href="#" target="_blank" class="action-btn primary-btn" id="mRead">
-                            <i class="fas fa-book-reader"></i> <span data-en="Read Now" data-bn="পড়ুন">পড়ুন</span>
-                        </a>
-                        <a href="#" target="_blank" class="action-btn comment-btn" id="mComment">
-                            <i class="fas fa-comment-dots"></i> <span data-en="Comment" data-bn="মন্তব্য করুন">মন্তব্য করুন</span>
-                        </a>
-                        <button class="action-btn secondary-btn" onclick="shareBook()">
-                            <i class="fas fa-share-alt"></i> <span data-en="Share" data-bn="শেয়ার">শেয়ার</span>
-                        </button>
+                        <a href="#" target="_blank" class="action-btn primary-btn" id="mRead"><i class="fas fa-book-reader"></i> <span data-en="Read Now" data-bn="পড়ুন">পড়ুন</span></a>
+                        <a href="#" target="_blank" class="action-btn comment-btn" id="mComment"><i class="fas fa-comment-dots"></i> <span data-en="Comment" data-bn="মন্তব্য করুন">মন্তব্য করুন</span></a>
+                        <button class="action-btn secondary-btn" onclick="shareBook()"><i class="fas fa-share-alt"></i> <span data-en="Share" data-bn="শেয়ার">শেয়ার</span></button>
                     </div>
                 </div>
             </div>
@@ -128,10 +92,7 @@
     </div>
 
     <div id="toast" class="toast-message">Link Copied!</div>
-
-    <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
 
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script src="js/settings.js"></script>
