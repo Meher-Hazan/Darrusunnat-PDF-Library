@@ -1,316 +1,269 @@
-// =========================================
-//  DARRUSUNNAT LIBRARY - FINAL LOGIC
-// =========================================
-
-fetch(CONFIG.dbUrl)
-    .then(res => res.json())
-    .then(data => {
-        // Sort books by ID (Newest first)
-        db = data.sort((a, b) => b.id - a.id);
-        
-        // Initialize View
-        window.history.replaceState({view: 'home'}, '', '');
-        setTab('home', false);
-        startClock();
-        updateViewIcon();
-        renderChips();
-    })
-    .catch(() => {
-        document.getElementById('app').innerHTML = "<div class='loading'>ডেটা লোড হয়নি। দয়া করে পেজটি রিফ্রেশ করুন।</div>";
-    });
-
-// --- CLOCK WIDGET ---
-function startClock() {
-    setInterval(() => {
-        const d = new Date();
-        const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        const date = d.toLocaleDateString('bn-BD');
-        
-        if(document.getElementById('mobTime')) document.getElementById('mobTime').innerText = t;
-        if(document.getElementById('pcTime')) document.getElementById('pcTime').innerText = t;
-    }, 1000);
-}
-
-// --- CATEGORY CHIPS ---
-function renderChips() {
-    // These names match the 'EXTRA_CHANNELS' map in your Python script
-    const chips = [
-        'সব বই', 
-        'তাফসির ও কুরআন', 
-        'হাদিস ও সুন্নাহ', 
-        'সিরাতুন্নবী (সা.)', 
-        'ফিকহ ও ফতোয়া', 
-        'ইতিহাস ও ঐতিহ্য', 
-        'উপন্যাস ও সাহিত্য', 
-        'নারী ও পর্দা', 
-        'আকিদা ও বিশ্বাস',
-        'বিজ্ঞান ও ইসলাম',
-        'হোমিওপ্যাথিক চিকিৎসা',
-        'ফুরফুরা শরীফ লাইব্রেরি',
-        'ইলমে তাসাওউফ',
-        'সালাত (নামায)',
-        'সাওম (রোযা)',
-        'দরূদ শরীফ',
-        'আরবি ভাষা ও সাহিত্য'
-    ];
-    
-    const container = document.getElementById('chipContainer');
-    if(!container) return;
-    
-    let html = '';
-    chips.forEach(c => {
-        html += `<div class="chip" onclick="filterByChip('${c}')">${c}</div>`;
-    });
-    container.innerHTML = html;
-}
-
-function filterByChip(cat) {
-    window.scrollTo(0, 0);
-    if(cat === 'সব বই') {
-        currentList = db;
-        renderBooks(db.slice(0, CONFIG.displayLimit), "সব বই");
-    } else {
-        // Use Fuzzy Search to match category names accurately
-        const fuse = new Fuse(db, { keys: ['category'], threshold: 0.3 });
-        const results = fuse.search(cat).map(r => r.item);
-        currentList = results;
-        renderBooks(results, `${cat}`);
-    }
-}
-
-// --- NAVIGATION ENGINE ---
-function setTab(tab, pushHist = true) {
-    if(pushHist) window.history.pushState({view: tab}, '', '');
-    currentTab = tab;
-    CONFIG.displayLimit = 24;
-    
-    // Update Menu Highlights
-    document.querySelectorAll('.pc-link, .nav-item').forEach(el => el.classList.remove('active'));
-    if(document.getElementById('pc-'+tab)) document.getElementById('pc-'+tab).classList.add('active');
-    if(document.getElementById('mob-'+tab)) document.getElementById('mob-'+tab).classList.add('active');
-    
-    // Show/Hide Dashboard & Chips
-    const hero = document.getElementById('heroSection');
-    const chips = document.getElementById('chipContainer');
-    
-    if(tab === 'home') {
-        hero.style.display = 'flex';
-        if(chips) chips.style.display = 'flex';
-        document.getElementById('search').value = "";
-    } else {
-        hero.style.display = 'none';
-        if(chips) chips.style.display = 'none';
-    }
-    
-    window.scrollTo(0, 0);
-
-    // Route Logic
-    if (tab === 'home') {
-        currentList = db;
-        renderBooks(db.slice(0, CONFIG.displayLimit));
-    } else if (tab === 'save') {
-        renderBooks(db.filter(b => saved.includes(b.id)), "সংরক্ষিত বই");
-    } else if (tab === 'az') renderFolders('az');
-    else if (tab === 'auth') renderFolders('author');
-    else if (tab === 'cat') renderFolders('category'); // Displays Channel Names as Folders
-}
-
-// Browser Back Button Handler
-window.onpopstate = function(event) {
-    if (event.state) {
-        // Close Modal if Open
-        if (document.getElementById('modal').classList.contains('active')) {
-            document.getElementById('modal').classList.remove('active');
-            return;
-        }
-        // Navigate Back
-        if(event.state.view === 'folder') openFolder(event.state.type, event.state.key, false);
-        else if (event.state.view) setTab(event.state.view, false);
-        else setTab('home', false);
-    }
+// CONFIGURATION
+const CONFIG = {
+    dbUrl: 'books_data.json?t=' + Date.now(),
+    displayLimit: 24
 };
 
-function handleSearch() {
-    const q = document.getElementById('search').value;
-    clearTimeout(searchTimeout);
+// STATE
+let db = [];
+let saved = JSON.parse(localStorage.getItem('saved')) || [];
+let currentLang = localStorage.getItem('lang') || 'bn'; // 'bn' or 'en'
+let currentTab = 'home';
+let searchTimeout;
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+    applyLanguage(); // Apply saved language
     
-    // Debounce to prevent lag
-    searchTimeout = setTimeout(() => {
-        if(!q) { 
-            if(currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit)); 
-            return; 
-        }
-        const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
-        const results = fuse.search(q).map(r => r.item);
-        currentList = results;
-        renderBooks(results, `অনুসন্ধান: "${q}"`);
-    }, 300);
+    fetch(CONFIG.dbUrl)
+        .then(res => res.json())
+        .then(data => {
+            db = data.sort((a, b) => b.id - a.id);
+            setTab('home');
+            renderChips();
+        })
+        .catch(() => {
+            document.getElementById('app').innerHTML = `<div class="loading-state">Error loading library. Please refresh.</div>`;
+        });
+        
+    // Scroll listener for Back to Top
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 300) btn.classList.add('show');
+        else btn.classList.remove('show');
+    });
+});
+
+// --- NAVIGATION ---
+function setTab(tab) {
+    currentTab = tab;
+    CONFIG.displayLimit = 24;
+    window.scrollTo(0, 0);
+    
+    // Update Active Link UI
+    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+    // (Simple logic to highlight active link would go here if IDs matched exactly)
+    
+    // Manage Hero Visibility
+    const hero = document.getElementById('heroSection');
+    if (tab === 'home') hero.style.display = 'block';
+    else hero.style.display = 'none';
+
+    // Route
+    if (tab === 'home') {
+        renderBooks(db.slice(0, CONFIG.displayLimit));
+    } else if (tab === 'save') {
+        renderBooks(db.filter(b => saved.includes(b.id)), getText('Saved Books', 'সংরক্ষিত বই'));
+    } else if (tab === 'az') {
+        renderFolders('az');
+    } else if (tab === 'auth') {
+        renderFolders('author');
+    } else if (tab === 'cat') {
+        renderFolders('category');
+    }
 }
 
-// --- BOOK RENDERER ---
+// --- RENDERERS ---
 function renderBooks(list, title = '') {
     const app = document.getElementById('app');
-    if(!list.length) { app.innerHTML = "<div class='loading'>কোনো বই পাওয়া যায়নি 😕</div>"; return; }
+    
+    if (list.length === 0) {
+        app.innerHTML = `<div class="loading-state">${getText('No books found.', 'কোনো বই পাওয়া যায়নি।')}</div>`;
+        return;
+    }
 
-    let html = title ? `<h2 class='sec-title'>${title}</h2>` : '';
-    html += viewMode === 'grid' ? '<div class="grid">' : '<div class="list-view">';
+    let html = title ? `<h3 class="section-title" style="margin-bottom:24px; font-family:var(--font-serif); font-size:1.5rem;">${title}</h3>` : '';
+    html += '<div class="book-grid">';
     
     list.forEach(b => {
-        const img = b.image || 'https://via.placeholder.com/300x450/0f4c3a/ffffff?text=Book';
+        const img = b.image || 'https://via.placeholder.com/300x450?text=No+Cover';
         const isSaved = saved.includes(b.id) ? 'active' : '';
-        const clickFn = `openModal(${b.id})`;
-        const saveFn = `toggleSave(event, ${b.id})`;
         
-        // Show Channel/Category Badge
-        const categoryBadge = `<span style="font-size:0.65rem; color:#aaa; display:block; margin-top:3px;">📁 ${b.category}</span>`;
-        
-        if (viewMode === 'grid') {
-            html += `
-            <div class="card" onclick="${clickFn}">
-                <div class="save-btn ${isSaved}" onclick="${saveFn}"><i class="fas fa-bookmark"></i></div>
-                <div class="card-img-wrap"><img src="${img}" class="card-img" loading="lazy"></div>
-                <div class="card-info">
-                    <div class="card-title">${b.title}</div>
-                    <div class="card-cat">${b.author || 'অজ্ঞাত'}</div>
-                    ${categoryBadge}
-                </div>
-            </div>`;
-        } else {
-            html += `
-            <div class="list-item" onclick="${clickFn}">
-                <img src="${img}" class="list-thumb" loading="lazy">
-                <div class="list-data">
-                    <div class="list-title">${b.title}</div>
-                    <div class="list-cat">${b.author || 'অজ্ঞাত'}</div>
-                    ${categoryBadge}
-                </div>
-            </div>`;
-        }
+        html += `
+        <div class="book-card" onclick="openModal(${b.id})">
+            <div class="save-badge ${isSaved}" onclick="toggleSave(event, ${b.id})">
+                <i class="fas fa-bookmark"></i>
+            </div>
+            <div class="card-image-wrap">
+                <img src="${img}" class="card-image" loading="lazy" alt="${b.title}">
+            </div>
+            <div class="card-meta">
+                <h3 class="card-title">${b.title}</h3>
+                <p class="card-author">${b.author || getText('Unknown', 'অজ্ঞাত')}</p>
+                <span class="card-category">${b.category || getText('General', 'সাধারণ')}</span>
+            </div>
+        </div>`;
     });
+    
     html += '</div>';
     
-    if(currentTab === 'home' && list.length < db.length && !document.getElementById('search').value) {
-        html += `<button class="load-more" onclick="loadMore()">আরও দেখুন</button>`;
+    // Load More Button
+    if (currentTab === 'home' && list.length < db.length && !document.getElementById('search').value) {
+        html += `<div style="text-align:center; margin-top:40px;">
+            <button onclick="loadMore()" class="action-btn secondary-btn" style="margin:0 auto;">
+                ${getText('Load More', 'আরও দেখুন')}
+            </button>
+        </div>`;
     }
+    
     app.innerHTML = html;
 }
 
-// --- FOLDER SYSTEM ---
 function renderFolders(type) {
     const groups = {};
     db.forEach(b => {
-        let key = b[type] || 'অন্যান্য';
-        if(type === 'az') key = b.title.charAt(0).toUpperCase();
-        if(!groups[key]) groups[key] = 0; groups[key]++;
+        let key = b[type] || getText('Others', 'অন্যান্য');
+        if (type === 'az') key = b.title.charAt(0).toUpperCase(); // First letter
+        if (!groups[key]) groups[key] = 0;
+        groups[key]++;
     });
     
     const keys = Object.keys(groups).sort();
-    let html = '<div class="folder-grid">';
+    let html = `<div class="book-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">`;
     
     keys.forEach(k => {
-        let icon = k.charAt(0);
-        if(type === 'cat') icon = '📁';
-        if(type === 'auth') icon = '✒️';
-        if(type === 'az') icon = k;
-
-        html += `<div class="folder" onclick="openFolder('${type}', '${k}')">
-            <div class="folder-icon">${icon}</div>
-            <div class="folder-label">${k}</div>
-            <div class="folder-count">${groups[k]} টি বই</div>
+        // Icon logic
+        let icon = 'fas fa-folder';
+        if (type === 'auth') icon = 'fas fa-user-edit';
+        if (type === 'cat') icon = 'fas fa-layer-group';
+        
+        html += `
+        <div class="folder-item" onclick="openFolder('${type}', '${k}')">
+            <div class="folder-icon"><i class="${icon}"></i></div>
+            <div class="folder-name">${k}</div>
+            <div class="folder-count">${groups[k]} ${getText('Books', 'টি বই')}</div>
         </div>`;
     });
+    
     html += '</div>';
     document.getElementById('app').innerHTML = html;
 }
 
-function openFolder(type, key, pushHist = true) {
-    if(pushHist) window.history.pushState({view: 'folder', type: type, key: key}, '', '');
-    
+function openFolder(type, key) {
     let list = db.filter(b => {
-        if(type === 'az') return b.title.charAt(0).toUpperCase() === key;
+        if (type === 'az') return b.title.charAt(0).toUpperCase() === key;
         return b[type] === key;
     });
+    renderBooks(list, `${key}`);
+}
+
+// --- SEARCH & CHIPS ---
+function handleSearch() {
+    const q = document.getElementById('search').value;
+    clearTimeout(searchTimeout);
     
-    const backBtn = `<div class="back-bar" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> পেছনে যান</div>`;
-    renderBooks(list, `${backBtn}<br>${key}`);
-    window.scrollTo(0,0);
+    searchTimeout = setTimeout(() => {
+        if (!q) {
+            if (currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit));
+            return;
+        }
+        
+        const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+        const results = fuse.search(q).map(r => r.item);
+        renderBooks(results, `${getText('Search Results', 'অনুসন্ধান ফলাফল')}: "${q}"`);
+    }, 300);
 }
 
-// --- UTILITIES ---
-function loadMore() { 
-    CONFIG.displayLimit += 24; 
-    renderBooks(db.slice(0, CONFIG.displayLimit)); 
-}
-
-function toggleSave(e, id) {
-    e.stopPropagation();
-    if(saved.includes(id)) saved = saved.filter(x => x !== id);
-    else saved.push(id);
-    localStorage.setItem('saved', JSON.stringify(saved));
+function renderChips() {
+    // Collect unique categories dynamically or use static list
+    const categories = [...new Set(db.map(b => b.category))].filter(Boolean).slice(0, 8); // Top 8
+    const container = document.getElementById('chipContainer');
+    let html = `<button class="chip active" onclick="setTab('home')">${getText('All', 'সব')}</button>`;
     
-    if(currentTab === 'save') renderBooks(db.filter(b => saved.includes(b.id)), "সংরক্ষিত বই");
-    else e.target.classList.toggle('active');
+    categories.forEach(c => {
+        html += `<button class="chip" onclick="openFolder('category', '${c}')">${c}</button>`;
+    });
+    container.innerHTML = html;
 }
 
-function toggleView() {
-    viewMode = viewMode === 'grid' ? 'list' : 'grid';
-    localStorage.setItem('viewMode', viewMode);
-    updateViewIcon();
-    
-    if(document.querySelector('.grid') || document.querySelector('.list-view')) {
-        if(document.getElementById('search').value) handleSearch();
-        else if(currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit));
-        else if(currentTab === 'save') renderBooks(db.filter(b => saved.includes(b.id)), "সংরক্ষিত বই");
-    }
-}
-
-function updateViewIcon() {
-    const icon = viewMode === 'grid' ? '<i class="fas fa-list"></i>' : '<i class="fas fa-th-large"></i>';
-    if(document.getElementById('headerViewBtn')) document.getElementById('headerViewBtn').innerHTML = icon;
-}
-
+// --- MODAL ---
 function openModal(id) {
     const b = db.find(x => x.id === id);
-    if(!b) return;
-    currentLink = b.link;
+    if (!b) return;
+    
     document.getElementById('mImg').src = b.image || '';
     document.getElementById('mTitle').innerText = b.title;
-    document.getElementById('mAuth').innerText = b.author || 'অজ্ঞাত';
+    document.getElementById('mAuth').innerText = b.author || getText('Unknown', 'অজ্ঞাত');
+    document.getElementById('mCat').innerText = b.category;
     document.getElementById('mRead').href = b.link;
-    window.history.pushState({modal: true}, null, "");
+    
     document.getElementById('modal').classList.add('active');
 }
 
-function closeModal() {
-    document.getElementById('modal').classList.remove('active');
-    if(history.state && history.state.modal) history.back();
-}
-
-function shareBook() { 
-    navigator.clipboard.writeText(currentLink); 
-    showToast(); 
-}
-
-function showToast() { 
-    const x = document.getElementById("toast"); 
-    x.className = "toast show"; 
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000); 
-}
-
-function joinGroup() { window.open(CONFIG.groupLink); }
-
-function openRandom() { 
-    if(db.length) openModal(db[Math.floor(Math.random() * db.length)].id); 
-}
-
-const backToTopBtn = document.getElementById("backToTopBtn");
-window.onscroll = function() {
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-        backToTopBtn.style.display = "block";
-    } else {
-        backToTopBtn.style.display = "none";
+function closeModal(e) {
+    // Close if clicked on backdrop or button
+    if (!e || e.target === document.getElementById('modal') || e.target.classList.contains('modal-close')) {
+        document.getElementById('modal').classList.remove('active');
     }
-};
-backToTopBtn.addEventListener('click', () => {
+}
+
+// --- UTILITIES ---
+function toggleSave(e, id) {
+    e.stopPropagation();
+    if (saved.includes(id)) saved = saved.filter(x => x !== id);
+    else saved.push(id);
+    localStorage.setItem('saved', JSON.stringify(saved));
+    
+    if (currentTab === 'save') {
+        renderBooks(db.filter(b => saved.includes(b.id)), getText('Saved Books', 'সংরক্ষিত বই'));
+    } else {
+        // Re-render to update icon state
+        e.target.classList.toggle('active');
+    }
+}
+
+function shareBook() {
+    // In a real app, copy link. For now just toast.
+    const msg = document.getElementById('toast');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 3000);
+}
+
+function openRandom() {
+    if (db.length > 0) {
+        const randomId = db[Math.floor(Math.random() * db.length)].id;
+        openModal(randomId);
+    }
+}
+
+function loadMore() {
+    CONFIG.displayLimit += 24;
+    renderBooks(db.slice(0, CONFIG.displayLimit));
+}
+
+function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+}
+
+// --- LANGUAGE TOGGLE SYSTEM ---
+function toggleLanguage() {
+    currentLang = currentLang === 'bn' ? 'en' : 'bn';
+    localStorage.setItem('lang', currentLang);
+    location.reload(); // Simple reload to apply changes globally
+}
+
+function applyLanguage() {
+    document.documentElement.lang = currentLang;
+    
+    // Find all elements with data-en and data-bn attributes
+    document.querySelectorAll('[data-en]').forEach(el => {
+        el.innerText = el.getAttribute(`data-${currentLang}`);
+    });
+    
+    // Update Placeholder
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        searchInput.placeholder = currentLang === 'en' ? 'Search books, authors...' : 'বই, লেখক বা বিষয় খুঁজুন...';
+    }
+}
+
+// Helper to get text based on current lang
+function getText(en, bn) {
+    return currentLang === 'en' ? en : bn;
+}
+
+// Mobile Menu
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('active');
+}

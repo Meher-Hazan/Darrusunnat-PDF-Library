@@ -1,45 +1,57 @@
 :root {
-    /* --- ROYAL ISLAMIC THEME --- */
-    --primary: #145A48;       
-    --primary-light: #1E7E66;
-    --gold: #FFD700;          
-    --gold-dim: #D4AC0D;      
+    /* --- COLOR SYSTEM --- */
+    --bg-main: #faf9f7;       /* Warm off-white background */
+    --bg-card: #ffffff;       /* Pure white for cards */
+    --bg-header: #ffffff;     /* White header */
     
-    /* Backgrounds */
-    --bg-body: #0D2620;       
-    --bg-nav: rgba(10, 35, 30, 0.95); 
-    --bg-card: rgba(20, 50, 40, 0.7); 
+    --text-primary: #2e2e2e;  /* Soft black for headings */
+    --text-body: #4a4a4a;     /* Dark gray for readability */
+    --text-muted: #6b6b6b;    /* Light gray for meta info */
+    --text-inverse: #ffffff;  /* White text on dark buttons */
     
-    /* Text */
-    --text-white: #ffffff;
-    --text-main: #f0f0f0;
-    --text-mute: #cccccc;
+    --accent: #5f7f6a;        /* Calm, scholarly green */
+    --accent-hover: #4a6652;  /* Darker green for hover */
+    --accent-light: #eef2f0;  /* Very light green for backgrounds */
     
-    /* UI Elements */
-    --glass-input: rgba(255, 255, 255, 0.15);
-    --border-color: rgba(255, 255, 255, 0.15);
-    --shadow-color: rgba(0, 0, 0, 0.3);
-
-    /* Animation Gradients */
-    --anim-color-1: #0D2620;
-    --anim-color-2: #143830;
-
-    /* Fonts */
-    --font-main: 'Hind Siliguri', sans-serif;
-    --font-serif: 'Amiri', serif;
+    --border-soft: #e6e4e1;   /* Subtle borders */
+    --border-focus: #5f7f6a;  /* Focus state color */
+    
+    /* --- SHADOWS --- */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 8px 20px rgba(0,0,0,0.06);
+    --shadow-lg: 0 12px 28px rgba(0,0,0,0.1);
+    
+    /* --- TYPOGRAPHY --- */
+    --font-serif: 'Merriweather', serif;       /* For Headings */
+    --font-sans: 'Inter', sans-serif;          /* For UI English */
+    --font-bengali: 'Hind Siliguri', sans-serif; /* For Bengali text */
+    
+    /* --- SPACING --- */
+    --container-width: 1200px;
+    --header-height: 70px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-pill: 999px;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+/* GLOBAL RESET */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-body { 
-    margin: 0; font-family: var(--font-main);
-    background-color: var(--bg-body);
-    background-image: radial-gradient(circle at top, #1a4d40 0%, #0D2620 100%);
-    background-attachment: fixed;
-    color: var(--text-white); 
-    padding-bottom: 120px; 
-    min-height: 100vh;
+body {
+    font-family: var(--font-bengali); /* Default to Bengali font */
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; }
-button { cursor: pointer; border: none; font-family: inherit; background: none; }
+/* English text should use Inter */
+[lang="en"] body { font-family: var(--font-sans); }
+
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; color: var(--text-primary); }
+p, span, a, button, input { font-family: inherit; }
+
+a { text-decoration: none; color: inherit; transition: 0.2s ease; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
