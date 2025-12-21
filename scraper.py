@@ -13,25 +13,24 @@ API_HASH = os.environ.get('API_HASH', '')
 SESSION_STRING = os.environ.get('SESSION_STRING', '')
 MAIN_CHANNEL_ID = int(os.environ.get('CHANNEL_ID', 0))
 
-# --- 📢 CONFIGURE EXTRA CHANNELS HERE ---
-# Logic: 'Channel ID': 'Forced Category Name'
-# If you set category to None, it will use AI to guess.
+# --- 📢 CHANNEL MAPPING (Channel Name = Category Name) ---
+# Books from these channels will be categorized under these specific names
 EXTRA_CHANNELS = {
-    -1002165064274: 'অন্যান্য (General)', # ফুরফুরা শরীফ - adjust category if needed
-    -1002586470798: 'বিজ্ঞান ও ইসলাম', # হোমিওপ্যাথিক চিকিৎসা - Science/Medical
-    -1002605692104: 'সিরাত ও জীবনী', # সিরাতুন্নবী
-    -1002691091110: 'আত্মশুদ্ধি ও তাসাউফ', # ইলমে তাসাওউফ
-    -1002524811470: 'তাফসীর ও কুরআন', # তাফসীরুল কুরআন
-    -1002641268515: 'বিজ্ঞান ও ইসলাম', # ইসলাম ও বিজ্ঞান
-    -1002581644796: 'ফিকহ ও ফতোয়া', # সালাত (নামায) - Fiqh/Salah
-    -1002529113609: 'আকিদা ও বিশ্বাস', # ফিতনা, কিয়ামত... - Aqeedah
-    -1002613122395: 'হাদিস ও সুন্নাহ', # হাদিসে রাসুল
-    -1002511418534: 'নারী ও পর্দা', # নারী, বিবাহ...
-    -1002685255937: 'ফিকহ ও ফতোয়া', # সাওম (রোযা) - Fiqh
-    -1002619728556: 'আকিদা ও বিশ্বাস', # আকিদা
-    -1002506980140: 'ফিকহ ও ফতোয়া', # ফাতাওয়া, মাসায়েল...
-    -1002653136384: 'দোয়া ও আমল', # দরূদ শরীফ - Dua/Amal
-    -1002972117271: 'শিক্ষা ও ভাষা', # আরবি ভাষা ও সাহিত্য
+    -1002165064274: 'ফুরফুরা শরীফ লাইব্রেরি',
+    -1002586470798: 'হোমিওপ্যাথিক চিকিৎসা',
+    -1002605692104: 'সিরাতুন্নবী (সা.)',
+    -1002691091110: 'ইলমে তাসাওউফ',
+    -1002524811470: 'তাফসীরুল কুরআন',
+    -1002641268515: 'ইসলাম ও বিজ্ঞান',
+    -1002581644796: 'সালাত (নামায)',
+    -1002529113609: 'ফিতনা ও কিয়ামত',
+    -1002613122395: 'হাদিসে রাসুল (সা.)',
+    -1002511418534: 'নারী ও পর্দা',
+    -1002685255937: 'সাওম (রোযা)',
+    -1002619728556: 'আকিদা',
+    -1002506980140: 'ফাতাওয়া ও মাসায়েল',
+    -1002653136384: 'দরূদ শরীফ',
+    -1002972117271: 'আরবি ভাষা ও সাহিত্য',
 }
 
 DATA_FILE = 'books_data.json'
@@ -40,15 +39,15 @@ IMAGES_DIR = 'images'
 if not os.path.exists(IMAGES_DIR):
     os.makedirs(IMAGES_DIR)
 
-# --- 🧠 AI KNOWLEDGE BASE ---
+# --- 🧠 AI KNOWLEDGE BASE (Fallback for Main Channel) ---
 AI_KNOWLEDGE = {
     'bukhari': 'ইমাম বুখারী (রহ.)', 'muslim': 'ইমাম মুসলিম (রহ.)',
     'ariff azad': 'আরিফ আজাদ', 'mizanur': 'মিজানুর রহমান আজহারী',
     'iqbal': 'আল্লামা ইকবাল', 'paradoxical': 'আরিফ আজাদ',
     'taki': 'মুফতি তাকি উসমানী', 'shofi': 'মুফতি শফি উসমানী (রহ.)'
 }
-HONORIFICS = ['dr.', 'prof.', 'sheikh', 'shaykh', 'imam', 'mufti', 'maulana']
 
+# Standard Categories (Used only for Main Channel now)
 CATEGORIES = {
     'তাফসির ও কুরআন': ['quran', 'tafsir', 'tajweed', 'ayat', 'surah', 'কুরআন', 'তাফসির'],
     'হাদিস ও সুন্নাহ': ['hadith', 'bukhari', 'muslim', 'tirmidhi', 'sunan', 'sahih', 'হাদিস', 'বুখারী'],
@@ -63,6 +62,7 @@ CATEGORIES = {
     'দাওয়াত ও তাবলীগ': ['dawah', 'tabligh', 'mission', 'দাওয়াত', 'তাবলীগ', 'মিশন'],
     'বিজ্ঞান ও ইসলাম': ['science', 'medical', 'creation', 'বিজ্ঞান', 'মেডিকেল', 'সৃষ্টিতত্ত্ব'],
     'উপন্যাস ও সাহিত্য': ['novel', 'story', 'literature', 'poem', 'উপন্যাস', 'গল্প', 'কাহিনি', 'কবিতা'],
+    'শিক্ষা ও ভাষা': ['learning', 'arabic', 'grammar', 'language', 'শিক্ষা', 'ভাষা', 'আরবি'],
     'দোয়া ও আমল': ['dua', 'zikr', 'azkar', 'munajat', 'দোয়া', 'জিকির', 'আমল'],
     'সমসাময়িক ও বিবিধ': ['contemporary', 'article', 'others', 'সমসাময়িক', 'প্রবন্ধ', 'বিবিধ']
 }
@@ -71,7 +71,6 @@ def clean_text(text):
     if not text: return ""
     text = str(text)
     text = os.path.splitext(text)[0]
-    # Removes starting numbers like "01. " but KEEPS volume info at the end
     text = re.sub(r'^[\d\.\-\_\(\)\[\]\s]+', '', text)
     return text.strip()
 
@@ -103,7 +102,7 @@ def generate_cover(book_id):
     except: return ""
 
 async def main():
-    print("--- 🤖 STARTING SMART MERGE ROBOT ---")
+    print("--- 🤖 STARTING CHANNEL-AS-CATEGORY ROBOT ---")
     try:
         client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
         await client.start()
@@ -111,9 +110,8 @@ async def main():
         print(f"Login Error: {e}")
         return
 
-    # 1. LOAD DB & PREPARE FOR DEDUPLICATION
+    # 1. LOAD DB
     all_books = []
-    # We use this set to remember titles we have already processed
     seen_titles = set()
     existing_ids = set()
 
@@ -123,79 +121,85 @@ async def main():
                 all_books = json.load(f)
                 for b in all_books: 
                     existing_ids.add(b['id'])
-                    # Add existing books to seen list so we don't add them again
                     seen_titles.add(b['title'].lower().strip())
         except: pass
 
-    # List of all channels to scan (Main + Extras)
-    # Format: (Channel_ID, Forced_Category_Name_Or_None)
+    # Scan Main Channel First (ID, ForcedName=None)
     channels_to_scan = [(MAIN_CHANNEL_ID, None)] 
-    for cid, cat in EXTRA_CHANNELS.items():
-        channels_to_scan.append((cid, cat))
+    # Add Extra Channels (ID, ForcedName=ChannelName)
+    for cid, name in EXTRA_CHANNELS.items():
+        channels_to_scan.append((cid, name))
 
     # 2. SCANNING PROCESS
     new_count = 0
     
-    for chat_id, forced_category in channels_to_scan:
+    for chat_id, channel_name in channels_to_scan:
         is_main = (chat_id == MAIN_CHANNEL_ID)
-        print(f"📡 Scanning Channel ID: {chat_id} (Main: {is_main})")
+        print(f"📡 Scanning: {channel_name if channel_name else 'Main Channel'} ({chat_id})")
         
         try:
             clean_chan_id = str(chat_id).replace("-100", "")
             messages = await client.get_messages(chat_id, limit=100)
-            pending_cover = None
+            pending_cover_path = None
             
             for message in reversed(messages):
-                # Generate a unique ID: ChannelID + MessageID
                 unique_id = int(f"{clean_chan_id}{message.id}")
                 
-                # Check if this specific file ID exists
                 if unique_id in existing_ids:
-                    pending_cover = None
+                    pending_cover_path = None
                     continue
 
-                # Handle Image (Context Aware)
+                # --- IMAGE HANDLING ---
                 if message.photo:
                     try:
-                        path = await message.download_media(file=os.path.join(IMAGES_DIR, f"{unique_id}.jpg"))
-                        pending_cover = path
-                    except: pending_cover = None
+                        temp_filename = f"temp_{unique_id}.jpg"
+                        temp_path = os.path.join(IMAGES_DIR, temp_filename)
+                        await message.download_media(file=temp_path)
+                        pending_cover_path = temp_path
+                        print(f"   📸 Found cover in msg {message.id}")
+                    except: pending_cover_path = None
                     continue
 
-                # Handle PDF
+                # --- PDF HANDLING ---
                 if message.document and message.document.mime_type == 'application/pdf':
                     raw_name = message.file.name if message.file else ""
                     if not raw_name and message.text: raw_name = message.text.split('\n')[0]
                     if not raw_name: 
-                        pending_cover = None
+                        pending_cover_path = None
                         continue
                     
                     title = clean_text(raw_name)
                     
-                    # --- 🛑 DEDUPLICATION LOGIC ---
-                    # Check if we already have this book title in our library
-                    # BUT ONLY skip if it's from an EXTRA channel.
-                    # We always trust the Main Channel.
+                    # DEDUPLICATION: Skip if book exists in Main Channel
                     if not is_main and title.lower().strip() in seen_titles:
-                        print(f"   ⚠️ Duplicate ignored: {title}")
-                        pending_cover = None
+                        print(f"   ⚠️ Duplicate skipped: {title}")
+                        if pending_cover_path and os.path.exists(pending_cover_path):
+                            os.remove(pending_cover_path)
+                        pending_cover_path = None
                         continue
                     
                     caption = message.text or ""
                     author = detect_writer_smart(title, caption)
                     
-                    # Category Logic: Use forced category if provided, else detect
-                    if forced_category:
-                        cat = forced_category
+                    # CATEGORY LOGIC: If extra channel, use Channel Name. Else use AI.
+                    if channel_name:
+                        cat = channel_name
                     else:
                         cat = detect_category_smart(title + " " + caption)
                     
-                    # Cover Logic
-                    final_cover = ""
-                    if pending_cover:
-                        final_cover = f"images/{unique_id}.jpg"
+                    # COVER ASSIGNMENT
+                    final_cover_rel_path = ""
+                    if pending_cover_path and os.path.exists(pending_cover_path):
+                        new_filename = f"{unique_id}.jpg"
+                        new_path = os.path.join(IMAGES_DIR, new_filename)
+                        try:
+                            if os.path.exists(new_path): os.remove(new_path)
+                            os.rename(pending_cover_path, new_path)
+                            final_cover_rel_path = f"images/{new_filename}"
+                        except: 
+                            final_cover_rel_path = generate_cover(unique_id)
                     else:
-                        final_cover = generate_cover(unique_id)
+                        final_cover_rel_path = generate_cover(unique_id)
                     
                     link = f"https://t.me/c/{clean_chan_id}/{message.id}"
 
@@ -203,17 +207,17 @@ async def main():
                         "id": unique_id,
                         "title": title,
                         "author": author,
-                        "category": cat,
+                        "category": cat, # This will now be the Channel Name
                         "link": link,
-                        "image": final_cover
+                        "image": final_cover_rel_path
                     }
                     
                     all_books.append(book)
                     existing_ids.add(unique_id)
-                    seen_titles.add(title.lower().strip()) # Mark as seen
+                    seen_titles.add(title.lower().strip())
                     new_count += 1
                     print(f"   + Added: {title} -> {cat}")
-                    pending_cover = None
+                    pending_cover_path = None
 
         except Exception as e:
             print(f"Error scanning {chat_id}: {e}")
@@ -224,14 +228,14 @@ async def main():
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(all_books, f, indent=4, ensure_ascii=False)
         
-        print(f"--- ✅ SUCCESS: Added {new_count} new books ---")
+        print(f"--- ✅ SUCCESS: Added {new_count} books ---")
         
         try:
             print("--- 🚀 PUSHING TO GITHUB ---")
             os.system('git config --global user.email "bot@library.com"')
             os.system('git config --global user.name "Smart Bot"')
             os.system('git add .')
-            os.system('git commit -m "Auto: Smart merge update"')
+            os.system('git commit -m "Auto: Added channel books"')
             os.system('git push')
         except: pass
     else:
