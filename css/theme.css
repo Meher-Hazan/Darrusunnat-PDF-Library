@@ -1,20 +1,20 @@
 :root {
     /* --- COLOR SYSTEM --- */
-    --bg-main: #faf9f7;       /* Warm off-white background */
-    --bg-card: #ffffff;       /* Pure white for cards */
-    --bg-header: #ffffff;     /* White header */
+    --bg-main: #faf9f7;
+    --bg-card: #ffffff;
+    --bg-header: rgba(255, 255, 255, 0.95);
     
-    --text-primary: #2e2e2e;  /* Soft black for headings */
-    --text-body: #4a4a4a;     /* Dark gray for readability */
-    --text-muted: #6b6b6b;    /* Light gray for meta info */
-    --text-inverse: #ffffff;  /* White text on dark buttons */
+    --text-primary: #2e2e2e;
+    --text-body: #4a4a4a;
+    --text-muted: #6b6b6b;
+    --text-inverse: #ffffff;
     
-    --accent: #5f7f6a;        /* Calm, scholarly green */
-    --accent-hover: #4a6652;  /* Darker green for hover */
-    --accent-light: #eef2f0;  /* Very light green for backgrounds */
+    --accent: #145A48;        /* Deep Islamic Green */
+    --accent-hover: #0f4c3a;
+    --accent-light: #e8f5e9;
     
-    --border-soft: #e6e4e1;   /* Subtle borders */
-    --border-focus: #5f7f6a;  /* Focus state color */
+    --border-soft: #e6e4e1;
+    --border-focus: #145A48;
     
     /* --- SHADOWS --- */
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
@@ -22,9 +22,9 @@
     --shadow-lg: 0 12px 28px rgba(0,0,0,0.1);
     
     /* --- TYPOGRAPHY --- */
-    --font-serif: 'Merriweather', serif;       /* For Headings */
-    --font-sans: 'Inter', sans-serif;          /* For UI English */
-    --font-bengali: 'Hind Siliguri', sans-serif; /* For Bengali text */
+    --font-serif: 'Merriweather', serif;
+    --font-sans: 'Inter', sans-serif;
+    --font-bengali: 'Hind Siliguri', sans-serif;
     
     /* --- SPACING --- */
     --container-width: 1200px;
@@ -34,18 +34,22 @@
     --radius-pill: 999px;
 }
 
-/* GLOBAL RESET */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-    font-family: var(--font-bengali); /* Default to Bengali font */
+    font-family: var(--font-bengali);
     background-color: var(--bg-main);
+    /* THE REQUESTED GRADIENT BACKGROUND */
+    background-image: 
+        radial-gradient(circle at bottom left, rgba(20, 90, 72, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at bottom right, rgba(197, 160, 89, 0.15) 0%, transparent 40%);
+    background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* English text should use Inter */
 [lang="en"] body { font-family: var(--font-sans); }
 
 h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; color: var(--text-primary); }

@@ -2,22 +2,27 @@
 //  DARRUSUNNAT LIBRARY - LOGIC
 // =========================================
 
-// INIT
 document.addEventListener('DOMContentLoaded', () => {
-    applyLanguage(); // Apply saved language
-    
+    applyLanguage(); 
+    applyViewMode(); // Set initial Grid/List
+
     fetch(CONFIG.dbUrl)
         .then(res => res.json())
         .then(data => {
             db = data.sort((a, b) => b.id - a.id);
-            setTab('home');
+            
+            // Initial History State
+            if (!history.state) {
+                history.replaceState({ page: 'home' }, '', '');
+            }
+            
+            setTab('home', false); // Don't push history on initial load
             renderChips();
         })
         .catch(() => {
             document.getElementById('app').innerHTML = `<div class="loading-state">Error loading library. Please refresh.</div>`;
         });
         
-    // Scroll listener for Back to Top
     window.addEventListener('scroll', () => {
         const btn = document.getElementById('backToTop');
         if (window.scrollY > 300) btn.classList.add('show');
@@ -25,31 +30,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// --- BACK BUTTON LOGIC (Fixed) ---
+window.onpopstate = function(event) {
+    // If modal is open, just close it and stay on page
+    if (document.getElementById('modal').classList.contains('active')) {
+        document.getElementById('modal').classList.remove('active');
+        document.querySelector('.modal-backdrop').classList.remove('active');
+        return;
+    }
+    
+    // If we have state, restore it
+    if (event.state) {
+        if (event.state.page === 'folder') {
+            openFolder(event.state.type, event.state.key, false);
+        } else if (event.state.page === 'home' || event.state.page === 'save') {
+            setTab(event.state.page, false);
+        }
+    } else {
+        setTab('home', false);
+    }
+};
+
 // --- NAVIGATION ---
-function setTab(tab) {
+function setTab(tab, pushToHistory = true) {
     currentTab = tab;
     CONFIG.displayLimit = 24;
     window.scrollTo(0, 0);
     
-    // Update UI Active State
+    // Update History
+    if (pushToHistory) {
+        history.pushState({ page: tab }, '', '');
+    }
+    
     document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
     
-    // Manage Hero Visibility
     const hero = document.getElementById('heroSection');
     if (tab === 'home') hero.style.display = 'block';
     else hero.style.display = 'none';
 
-    // Route
     if (tab === 'home') {
         renderBooks(db.slice(0, CONFIG.displayLimit));
     } else if (tab === 'save') {
         renderBooks(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত বই'));
-    } else if (tab === 'az') {
-        renderFolders('az');
-    } else if (tab === 'auth') {
-        renderFolders('author');
-    } else if (tab === 'cat') {
-        renderFolders('category');
+    } else if (tab === 'az') renderFolders('az');
+    else if (tab === 'auth') renderFolders('author');
+    else if (tab === 'cat') renderFolders('category');
+}
+
+// --- VIEW TOGGLE ---
+function toggleView() {
+    viewMode = viewMode === 'grid' ? 'list' : 'grid';
+    localStorage.setItem('viewMode', viewMode);
+    applyViewMode();
+}
+
+function applyViewMode() {
+    const icon = document.getElementById('viewIcon');
+    if (viewMode === 'list') {
+        if(icon) icon.className = 'fas fa-th-large';
+    } else {
+        if(icon) icon.className = 'fas fa-list';
+    }
+    // Re-render current view if active
+    if (document.querySelector('.book-grid')) {
+        const grid = document.querySelector('.book-grid');
+        if (viewMode === 'list') grid.classList.add('list-view');
+        else grid.classList.remove('list-view');
     }
 }
 
@@ -63,7 +109,9 @@ function renderBooks(list, title = '') {
     }
 
     let html = title ? `<h3 class="section-title" style="margin-bottom:24px; font-family:var(--font-serif); font-size:1.5rem;">${title}</h3>` : '';
-    html += '<div class="book-grid">';
+    // Apply View Mode Class
+    const viewClass = viewMode === 'list' ? 'list-view' : '';
+    html += `<div class="book-grid ${viewClass}">`;
     
     list.forEach(b => {
         const img = b.image || 'https://via.placeholder.com/300x450?text=No+Cover';
@@ -94,7 +142,6 @@ function renderBooks(list, title = '') {
             </button>
         </div>`;
     }
-    
     app.innerHTML = html;
 }
 
@@ -127,12 +174,17 @@ function renderFolders(type) {
     document.getElementById('app').innerHTML = html;
 }
 
-function openFolder(type, key) {
+function openFolder(type, key, pushToHistory = true) {
+    if (pushToHistory) {
+        history.pushState({ page: 'folder', type: type, key: key }, '', '');
+    }
+    
     let list = db.filter(b => {
         if (type === 'az') return b.title.charAt(0).toUpperCase() === key;
         return b[type] === key;
     });
     renderBooks(list, `${key}`);
+    window.scrollTo(0,0);
 }
 
 // --- SEARCH & CHIPS ---
@@ -168,18 +220,27 @@ function openModal(id) {
     const b = db.find(x => x.id === id);
     if (!b) return;
     
+    // Push Modal State to history so Back Button closes it
+    history.pushState({ modal: true, id: id }, '', '');
+
     document.getElementById('mImg').src = b.image || '';
     document.getElementById('mTitle').innerText = b.title;
     document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
     document.getElementById('mCat').innerText = b.category;
     document.getElementById('mRead').href = b.link;
+    // Set Comment Link (Group Link)
+    document.getElementById('mComment').href = CONFIG.groupLink;
     
-    document.getElementById('modal').classList.add('active');
+    document.querySelector('.modal-backdrop').classList.add('active');
 }
 
 function closeModal(e) {
     if (!e || e.target === document.getElementById('modal') || e.target.classList.contains('modal-close')) {
-        document.getElementById('modal').classList.remove('active');
+        document.querySelector('.modal-backdrop').classList.remove('active');
+        // Go back in history to remove the modal state
+        if (history.state && history.state.modal) {
+            history.back();
+        }
     }
 }
 
@@ -219,7 +280,6 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- LANGUAGE TOGGLE SYSTEM ---
 function toggleLanguage() {
     currentLang = currentLang === 'bn' ? 'en' : 'bn';
     localStorage.setItem('lang', currentLang);
@@ -228,18 +288,15 @@ function toggleLanguage() {
 
 function applyLanguage() {
     document.documentElement.lang = currentLang;
-    
     document.querySelectorAll('[data-en]').forEach(el => {
         el.innerText = el.getAttribute(`data-${currentLang}`);
     });
-    
     const searchInput = document.getElementById('search');
     if (searchInput) {
         searchInput.placeholder = getText('searchPlaceholder', 'বই, লেখক বা বিষয় খুঁজুন...');
     }
 }
 
-// Mobile Menu
 function toggleMobileMenu() {
     const menu = document.getElementById('mobileMenu');
     menu.classList.toggle('active');

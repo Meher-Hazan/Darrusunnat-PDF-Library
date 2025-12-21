@@ -20,30 +20,42 @@
     .mobile-nav-links a { font-size: 1.1rem; font-weight: 500; color: var(--text-primary); }
     .close-menu { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; }
     
-    /* Layout */
-    .hero-title { font-size: 1.5rem; }
-    .book-grid { grid-template-columns: 1fr; gap: 16px; } /* Single column list */
+    /* Hero */
+    .hero-title { font-size: 1.6rem; }
+    .chip-scroll { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-left: 10px; padding-right: 10px; }
     
-    /* Better Mobile Card (Horizontal) */
-    .book-card { flex-direction: row; align-items: center; gap: 16px; }
-    .card-image-wrap { width: 70px; height: 100px; margin-bottom: 0; flex-shrink: 0; }
-    .card-meta { justify-content: center; }
-    .card-category { padding-top: 4px; }
+    /* Layout Logic */
+    .book-grid { 
+        /* Default mobile view: 2 Columns (Grid) */
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 12px; 
+    }
+    
+    .card-meta { padding: 8px; }
+    .card-title { font-size: 0.95rem; }
     .save-badge { top: 8px; right: 8px; width: 28px; height: 28px; font-size: 0.8rem; }
+    
+    /* List View Override */
+    .book-grid.list-view {
+        display: flex; flex-direction: column; gap: 16px;
+    }
+    .book-grid.list-view .book-card {
+        flex-direction: row; align-items: center; gap: 16px; padding: 12px;
+    }
+    .book-grid.list-view .card-image-wrap {
+        width: 60px; margin-bottom: 0;
+    }
     
     /* Modal Mobile */
     .modal-body { grid-template-columns: 1fr; gap: 20px; text-align: center; }
     .modal-image-col { width: 140px; margin: 0 auto; }
-    .modal-actions { justify-content: center; }
-    .modal-title { font-size: 1.5rem; }
+    .modal-actions { flex-direction: column; }
+    .modal-title { font-size: 1.4rem; }
     
     /* Footer */
     .footer-content { text-align: center; }
     .footer-links { flex-direction: column; gap: 12px; }
     
-    /* Chips */
-    .chip-scroll { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-left: 20px; padding-right: 20px; }
-    
-    /* Hide desktop-only things */
-    .mobile-menu-btn { display: block; }
+    /* Floating Controls Stack */
+    .floating-controls { flex-direction: column; gap: 8px; bottom: 15px; left: 15px; }
 }

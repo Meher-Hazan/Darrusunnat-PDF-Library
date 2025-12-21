@@ -9,7 +9,6 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@300;400;500;600&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/theme.css">
@@ -19,9 +18,14 @@
 </head>
 <body>
 
-    <button id="langToggle" class="lang-btn" onclick="toggleLanguage()">
-        EN / বাং
-    </button>
+    <div class="floating-controls">
+        <button id="langToggle" class="float-btn" onclick="toggleLanguage()">
+            <i class="fas fa-globe"></i> EN / বাং
+        </button>
+        <button id="randomBtn" class="float-btn" onclick="openRandom()">
+            <i class="fas fa-dice"></i> <span data-en="Random" data-bn="র‍্যান্ডম">র‍্যান্ডম</span>
+        </button>
+    </div>
 
     <header class="site-header">
         <div class="header-inner">
@@ -65,19 +69,23 @@
     <section class="hero-section" id="heroSection">
         <div class="hero-content">
             <h2 class="hero-title" data-en="Find Your Next Islamic Book" data-bn="আপনার প্রয়োজনীয় ইসলামিক বই খুঁজুন">আপনার প্রয়োজনীয় ইসলামিক বই খুঁজুন</h2>
+            
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="search" class="search-input" placeholder="বই, লেখক বা বিষয় খুঁজুন..." oninput="handleSearch()">
             </div>
             
-            <div class="chip-scroll" id="chipContainer">
-                </div>
+            <button class="view-toggle-btn" onclick="toggleView()">
+                <i class="fas fa-list" id="viewIcon"></i> 
+                <span id="viewText" data-en="Switch View" data-bn="ভিউ পরিবর্তন">ভিউ পরিবর্তন</span>
+            </button>
+
+            <div class="chip-scroll" id="chipContainer"></div>
         </div>
     </section>
 
     <main class="main-container" id="app">
         <div class="loading-state">
-            <div class="spinner"></div>
             <p data-en="Loading Library..." data-bn="লাইব্রেরি লোড হচ্ছে...">লাইব্রেরি লোড হচ্ছে...</p>
         </div>
     </main>
@@ -88,18 +96,13 @@
                 <i class="fas fa-book-open"></i>
                 <span data-en="Darus Sunnat" data-bn="দারুচ্ছুন্নাত">দারুচ্ছুন্নাত</span>
             </div>
-            <div class="footer-links">
-                <a href="#" onclick="openRandom()" data-en="Random Book" data-bn="র‍্যান্ডম বই">র‍্যান্ডম বই</a>
-                <a href="https://t.me/SobBoiErPdf" target="_blank" data-en="Telegram" data-bn="টেলিগ্রাম">টেলিগ্রাম</a>
-            </div>
-            <p class="copyright" data-en="© 2024 Darus Sunnat Library. All rights reserved." data-bn="© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।">© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি। সর্বস্বত্ব সংরক্ষিত।</p>
+            <p class="copyright" data-en="© 2024 Darus Sunnat Library." data-bn="© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি।">© ২০২৪ দারুচ্ছুন্নাত লাইব্রেরি।</p>
         </div>
     </footer>
 
     <div class="modal-backdrop" id="modal" onclick="closeModal(event)">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal()">&times;</button>
-            
             <div class="modal-body">
                 <div class="modal-image-col">
                     <img src="" alt="Book Cover" class="modal-cover" id="mImg">
@@ -108,10 +111,12 @@
                     <span class="modal-category" id="mCat">Category</span>
                     <h2 class="modal-title" id="mTitle">Book Title</h2>
                     <p class="modal-author" id="mAuth">Author Name</p>
-                    
                     <div class="modal-actions">
                         <a href="#" target="_blank" class="action-btn primary-btn" id="mRead">
                             <i class="fas fa-book-reader"></i> <span data-en="Read Now" data-bn="পড়ুন">পড়ুন</span>
+                        </a>
+                        <a href="#" target="_blank" class="action-btn comment-btn" id="mComment">
+                            <i class="fas fa-comment-dots"></i> <span data-en="Comment" data-bn="মন্তব্য করুন">মন্তব্য করুন</span>
                         </a>
                         <button class="action-btn secondary-btn" onclick="shareBook()">
                             <i class="fas fa-share-alt"></i> <span data-en="Share" data-bn="শেয়ার">শেয়ার</span>
