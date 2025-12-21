@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(); 
-    applyViewMode(); // Restore Grid/List view preference
+    applyViewMode(); 
 
     fetch(CONFIG.dbUrl)
         .then(res => res.json())
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderChips();
         })
         .catch(() => {
-            document.getElementById('app').innerHTML = `<div class="loading-state">Error loading library.</div>`;
+            document.getElementById('app').innerHTML = `<div class="loading-state">Error loading.</div>`;
         });
         
     window.addEventListener('scroll', () => {
@@ -18,8 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.scrollY > 300) btn.classList.add('show');
         else btn.classList.remove('show');
     });
+    
+    // ✅ SETUP HEADER BUTTON LINK
+    const navBtn = document.getElementById('navJoinBtn');
+    if(navBtn) navBtn.href = CONFIG.channelLink;
+    
+    const mobBtn = document.getElementById('mobJoinBtn');
+    if(mobBtn) mobBtn.href = CONFIG.channelLink;
 });
 
+// ... (Keep existing navigation functions setTab, onpopstate etc.) ...
 window.onpopstate = function(event) {
     if (document.querySelector('.modal-backdrop.active')) { closeModal(); return; }
     if (event.state) {
@@ -48,7 +56,7 @@ function setTab(tab, pushToHistory = true) {
     else if (tab === 'cat') renderFolders('category');
 }
 
-// --- VIEW TOGGLE LOGIC ---
+// ... (Keep existing toggleView, renderHomePage etc.) ...
 function toggleView() {
     viewMode = viewMode === 'grid' ? 'list' : 'grid';
     localStorage.setItem('viewMode', viewMode);
@@ -92,7 +100,6 @@ function generateCards(list, isHorizontal) {
         const img = b.image || 'https://via.placeholder.com/300x450?text=No+Cover';
         const isSaved = saved.includes(b.id) ? 'active' : '';
         const cardClass = isHorizontal ? 'book-card-horizontal' : 'book-card';
-        
         return `
         <div class="${cardClass}" onclick="openModal(${b.id})">
             <div class="save-badge ${isSaved}" onclick="toggleSave(event, ${b.id})"><i class="fas fa-bookmark"></i></div>
@@ -108,6 +115,7 @@ function renderGrid(list, title) {
     app.innerHTML = html;
 }
 
+// ... (Keep handleSearch, renderFolders, openFolder) ...
 function handleSearch() {
     const q = document.getElementById('search').value;
     clearTimeout(searchTimeout);
@@ -145,6 +153,7 @@ function openFolder(type, key, pushToHistory = true) {
     renderGrid(list, key);
 }
 
+// --- MODAL LINK LOGIC ---
 function openModal(id) {
     const b = db.find(x => x.id === id);
     if (!b) return;
@@ -154,7 +163,10 @@ function openModal(id) {
     document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
     document.getElementById('mCat').innerText = b.category;
     document.getElementById('mRead').href = b.link;
+    
+    // ✅ SET COMMENT LINK TO GROUP
     document.getElementById('mComment').href = CONFIG.groupLink; 
+    
     document.querySelector('.modal-backdrop').classList.add('active');
 }
 
