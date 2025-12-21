@@ -1,37 +1,13 @@
 :root {
-    /* --- COLOR SYSTEM --- */
-    --bg-main: #faf9f7;
+    --bg-main: #fdfdfd;
     --bg-card: #ffffff;
-    --bg-header: rgba(255, 255, 255, 0.95);
-    
-    --text-primary: #2e2e2e;
-    --text-body: #4a4a4a;
-    --text-muted: #6b6b6b;
-    --text-inverse: #ffffff;
-    
-    --accent: #145A48;        /* Deep Islamic Green */
-    --accent-hover: #0f4c3a;
-    --accent-light: #e8f5e9;
-    
-    --border-soft: #e6e4e1;
-    --border-focus: #145A48;
-    
-    /* --- SHADOWS --- */
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-    --shadow-md: 0 8px 20px rgba(0,0,0,0.06);
-    --shadow-lg: 0 12px 28px rgba(0,0,0,0.1);
-    
-    /* --- TYPOGRAPHY --- */
-    --font-serif: 'Merriweather', serif;
-    --font-sans: 'Inter', sans-serif;
+    --text-primary: #1a1a1a;
+    --text-muted: #666666;
+    --accent: #145A48;        /* Islamic Green */
+    --accent-light: #E8F5E9;
+    --border-soft: #e0e0e0;
     --font-bengali: 'Hind Siliguri', sans-serif;
-    
-    /* --- SPACING --- */
-    --container-width: 1200px;
-    --header-height: 70px;
-    --radius-sm: 8px;
-    --radius-md: 14px;
-    --radius-pill: 999px;
+    --font-serif: 'Merriweather', serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -39,23 +15,28 @@
 body {
     font-family: var(--font-bengali);
     background-color: var(--bg-main);
-    /* THE REQUESTED GRADIENT BACKGROUND */
-    background-image: 
-        radial-gradient(circle at bottom left, rgba(20, 90, 72, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at bottom right, rgba(197, 160, 89, 0.15) 0%, transparent 40%);
-    background-attachment: fixed;
     color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
     min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 80px;
+
+    /* --- BACKGROUND DESIGN --- */
+    /* 1. Subtle Pattern */
+    background-image: 
+        radial-gradient(#145A48 0.5px, transparent 0.5px), 
+        /* 2. Bottom Corner Gradients */
+        radial-gradient(circle at 0% 100%, rgba(20, 90, 72, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(197, 160, 89, 0.2) 0%, transparent 50%);
+    
+    background-size: 20px 20px, 100% 100%, 100% 100%;
+    background-attachment: fixed;
 }
 
-[lang="en"] body { font-family: var(--font-sans); }
-
-h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; color: var(--text-primary); }
-p, span, a, button, input { font-family: inherit; }
-
-a { text-decoration: none; color: inherit; transition: 0.2s ease; }
-button { border: none; background: none; cursor: pointer; font-family: inherit; }
-ul { list-style: none; }
 img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { border: none; background: none; cursor: pointer; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }

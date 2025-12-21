@@ -4,23 +4,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(); 
-    applyViewMode(); 
-
+    
     fetch(CONFIG.dbUrl)
         .then(res => res.json())
         .then(data => {
             db = data.sort((a, b) => b.id - a.id);
-            
-            // Initial History State
-            if (!history.state) {
-                history.replaceState({ page: 'home' }, '', '');
-            }
-            
-            setTab('home', false); 
+            setTab('home', false);
             renderChips();
         })
         .catch(() => {
-            document.getElementById('app').innerHTML = `<div class="loading-state">Error loading library. Please refresh.</div>`;
+            document.getElementById('app').innerHTML = `<div class="loading-state">Error loading library.</div>`;
         });
         
     window.addEventListener('scroll', () => {
@@ -30,113 +23,109 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- BACK BUTTON LOGIC ---
 window.onpopstate = function(event) {
-    if (document.getElementById('modal').classList.contains('active')) {
+    if (document.querySelector('.modal-backdrop.active')) {
         closeModal();
         return;
     }
-    
     if (event.state) {
-        if (event.state.page === 'folder') {
-            openFolder(event.state.type, event.state.key, false);
-        } else if (event.state.page === 'home' || event.state.page === 'save') {
-            setTab(event.state.page, false);
-        }
+        if (event.state.page === 'folder') openFolder(event.state.type, event.state.key, false);
+        else setTab(event.state.page, false);
     } else {
         setTab('home', false);
     }
 };
 
-// --- NAVIGATION ---
 function setTab(tab, pushToHistory = true) {
     currentTab = tab;
-    CONFIG.displayLimit = 24;
+    CONFIG.displayLimit = 30;
     window.scrollTo(0, 0);
     
-    if (pushToHistory) {
-        history.pushState({ page: tab }, '', '');
-    }
-    
-    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+    if (pushToHistory) history.pushState({ page: tab }, '', '');
     
     const hero = document.getElementById('heroSection');
     if (tab === 'home') hero.style.display = 'block';
     else hero.style.display = 'none';
 
     if (tab === 'home') {
-        renderBooks(db.slice(0, CONFIG.displayLimit));
+        renderHomePage();
     } else if (tab === 'save') {
-        renderBooks(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত বই'));
+        renderGrid(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত'));
     } else if (tab === 'az') renderFolders('az');
     else if (tab === 'auth') renderFolders('author');
     else if (tab === 'cat') renderFolders('category');
 }
 
-// --- VIEW TOGGLE ---
-function toggleView() {
-    viewMode = viewMode === 'grid' ? 'list' : 'grid';
-    localStorage.setItem('viewMode', viewMode);
-    applyViewMode();
-}
-
-function applyViewMode() {
-    const icon = document.getElementById('viewIcon');
-    if (viewMode === 'list') {
-        if(icon) icon.className = 'fas fa-th-large';
-    } else {
-        if(icon) icon.className = 'fas fa-list';
-    }
-    if (document.querySelector('.book-grid')) {
-        const grid = document.querySelector('.book-grid');
-        if (viewMode === 'list') grid.classList.add('list-view');
-        else grid.classList.remove('list-view');
-    }
-}
-
-// --- RENDERERS ---
-function renderBooks(list, title = '') {
+// --- HOME PAGE (SHELF + GRID) ---
+function renderHomePage() {
     const app = document.getElementById('app');
     
-    if (list.length === 0) {
-        app.innerHTML = `<div class="loading-state">${getText('noBooks', 'কোনো বই পাওয়া যায়নি।')}</div>`;
-        return;
-    }
+    // 1. Featured (Random 10)
+    const featured = [...db].sort(() => 0.5 - Math.random()).slice(0, 10);
+    // 2. Recent (Grid)
+    const recent = db.slice(0, CONFIG.displayLimit);
 
-    let html = title ? `<h3 class="section-title" style="margin-bottom:24px; font-family:var(--font-serif); font-size:1.5rem;">${title}</h3>` : '';
-    const viewClass = viewMode === 'list' ? 'list-view' : '';
-    html += `<div class="book-grid ${viewClass}">`;
+    let html = `
+        <div class="section-header">
+            <h3>🔥 ${getText('featured', 'জনপ্রিয় কিতাব')}</h3>
+        </div>
+        <div class="horizontal-shelf">
+            ${generateCards(featured, true)}
+        </div>
+
+        <div class="section-header">
+            <h3>📚 ${getText('recent', 'নতুন সংযোজন')}</h3>
+        </div>
+        <div class="book-grid">
+            ${generateCards(recent, false)}
+        </div>
+        
+        <button onclick="loadMore()" class="load-more">${getText('loadMore', 'আরও দেখুন')}</button>
+    `;
     
-    list.forEach(b => {
+    app.innerHTML = html;
+}
+
+// Helper
+function generateCards(list, isHorizontal) {
+    if (!list.length) return `<div style="padding:10px;">${getText('noBooks', 'বই নেই')}</div>`;
+    
+    return list.map(b => {
         const img = b.image || 'https://via.placeholder.com/300x450?text=No+Cover';
         const isSaved = saved.includes(b.id) ? 'active' : '';
+        const cardClass = isHorizontal ? 'book-card-horizontal' : 'book-card';
         
-        html += `
-        <div class="book-card" onclick="openModal(${b.id})">
+        return `
+        <div class="${cardClass}" onclick="openModal(${b.id})">
             <div class="save-badge ${isSaved}" onclick="toggleSave(event, ${b.id})">
                 <i class="fas fa-bookmark"></i>
             </div>
             <div class="card-image-wrap">
-                <img src="${img}" class="card-image" loading="lazy" alt="${b.title}">
+                <img src="${img}" class="card-image" loading="lazy">
             </div>
             <div class="card-meta">
-                <h3 class="card-title">${b.title}</h3>
-                <p class="card-author">${b.author || getText('unknown', 'অজ্ঞাত')}</p>
-                <span class="card-category">${b.category || getText('general', 'সাধারণ')}</span>
+                <div class="card-title">${b.title}</div>
+                <div class="card-author">${b.author || getText('unknown', 'অজ্ঞাত')}</div>
             </div>
         </div>`;
-    });
-    
-    html += '</div>';
-    
-    if (currentTab === 'home' && list.length < db.length && !document.getElementById('search').value) {
-        html += `<div style="text-align:center; margin-top:40px;">
-            <button onclick="loadMore()" class="action-btn secondary-btn" style="margin:0 auto;">
-                ${getText('loadMore', 'আরও দেখুন')}
-            </button>
-        </div>`;
-    }
+    }).join('');
+}
+
+function renderGrid(list, title) {
+    const app = document.getElementById('app');
+    let html = `<h3 class="section-title">${title}</h3><div class="book-grid">${generateCards(list, false)}</div>`;
     app.innerHTML = html;
+}
+
+function handleSearch() {
+    const q = document.getElementById('search').value;
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        if (!q) { setTab('home', false); return; }
+        const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
+        const results = fuse.search(q).map(r => r.item);
+        renderGrid(results, `${getText('results', 'ফলাফল')}: "${q}"`);
+    }, 300);
 }
 
 function renderFolders(type) {
@@ -147,155 +136,78 @@ function renderFolders(type) {
         if (!groups[key]) groups[key] = 0;
         groups[key]++;
     });
-    
     const keys = Object.keys(groups).sort();
-    let html = `<div class="book-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">`;
-    
+    let html = `<div class="folder-grid">`;
     keys.forEach(k => {
-        let icon = 'fas fa-folder';
-        if (type === 'auth') icon = 'fas fa-user-edit';
-        if (type === 'cat') icon = 'fas fa-layer-group';
-        
         html += `
         <div class="folder-item" onclick="openFolder('${type}', '${k}')">
-            <div class="folder-icon"><i class="${icon}"></i></div>
+            <div class="folder-icon"><i class="fas fa-folder"></i></div>
             <div class="folder-name">${k}</div>
             <div class="folder-count">${groups[k]} ${getText('booksCount', 'টি বই')}</div>
         </div>`;
     });
-    
     html += '</div>';
     document.getElementById('app').innerHTML = html;
 }
 
 function openFolder(type, key, pushToHistory = true) {
-    if (pushToHistory) {
-        history.pushState({ page: 'folder', type: type, key: key }, '', '');
-    }
-    
+    if (pushToHistory) history.pushState({ page: 'folder', type: type, key: key }, '', '');
     let list = db.filter(b => {
         if (type === 'az') return b.title.charAt(0).toUpperCase() === key;
         return b[type] === key;
     });
-    renderBooks(list, `${key}`);
-    window.scrollTo(0,0);
+    renderGrid(list, key);
 }
 
-// --- SEARCH & CHIPS ---
-function handleSearch() {
-    const q = document.getElementById('search').value;
-    clearTimeout(searchTimeout);
-    
-    searchTimeout = setTimeout(() => {
-        if (!q) {
-            if (currentTab === 'home') renderBooks(db.slice(0, CONFIG.displayLimit));
-            return;
-        }
-        
-        const fuse = new Fuse(db, { keys: ['title', 'author', 'category'], threshold: 0.3 });
-        const results = fuse.search(q).map(r => r.item);
-        renderBooks(results, `${getText('results', 'অনুসন্ধান ফলাফল')}: "${q}"`);
-    }, 300);
+function openModal(id) {
+    const b = db.find(x => x.id === id);
+    if (!b) return;
+    history.pushState({ modal: true, id: id }, '', '');
+    document.getElementById('mImg').src = b.image || '';
+    document.getElementById('mTitle').innerText = b.title;
+    document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
+    document.getElementById('mCat').innerText = b.category;
+    document.getElementById('mRead').href = b.link;
+    // ✅ CORRECT LINK IS PULLED FROM CONFIG
+    document.getElementById('mComment').href = CONFIG.groupLink; 
+    document.querySelector('.modal-backdrop').classList.add('active');
+}
+
+function closeModal() {
+    document.querySelector('.modal-backdrop').classList.remove('active');
+    if (history.state && history.state.modal) history.back();
 }
 
 function renderChips() {
     const categories = [...new Set(db.map(b => b.category))].filter(Boolean).slice(0, 8);
     const container = document.getElementById('chipContainer');
-    let html = `<button class="chip active" onclick="setTab('home')">All</button>`;
-    
-    categories.forEach(c => {
-        html += `<button class="chip" onclick="openFolder('category', '${c}')">${c}</button>`;
-    });
+    let html = `<button class="chip" onclick="setTab('home')">All</button>`;
+    categories.forEach(c => html += `<button class="chip" onclick="openFolder('category', '${c}')">${c}</button>`);
     container.innerHTML = html;
 }
 
-// --- MODAL ---
-function openModal(id) {
-    const b = db.find(x => x.id === id);
-    if (!b) return;
-    
-    history.pushState({ modal: true, id: id }, '', '');
-
-    document.getElementById('mImg').src = b.image || '';
-    document.getElementById('mTitle').innerText = b.title;
-    document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
-    document.getElementById('mCat').innerText = b.category;
-    
-    // READ BUTTON
-    document.getElementById('mRead').href = b.link;
-
-    // 🔥 COMMENT BUTTON (Group Link) 🔥
-    const commentBtn = document.getElementById('mComment');
-    if (commentBtn) {
-        commentBtn.href = CONFIG.groupLink;
-    }
-    
-    document.querySelector('.modal-backdrop').classList.add('active');
-}
-
-function closeModal(e) {
-    if (!e || e.target.classList.contains('modal-backdrop') || e.target.classList.contains('modal-close')) {
-        document.querySelector('.modal-backdrop').classList.remove('active');
-        if (history.state && history.state.modal) {
-            history.back();
-        }
-    }
-}
-
-// --- UTILITIES ---
 function toggleSave(e, id) {
     e.stopPropagation();
     if (saved.includes(id)) saved = saved.filter(x => x !== id);
     else saved.push(id);
     localStorage.setItem('saved', JSON.stringify(saved));
-    
-    if (currentTab === 'save') {
-        renderBooks(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত বই'));
-    } else {
-        e.target.classList.toggle('active');
-    }
+    if (currentTab === 'save') renderGrid(db.filter(b => saved.includes(b.id)), getText('saved', 'সংরক্ষিত'));
+    else e.target.classList.toggle('active');
 }
 
-function shareBook() {
-    const msg = document.getElementById('toast');
-    msg.classList.add('show');
-    setTimeout(() => msg.classList.remove('show'), 3000);
-}
-
-function openRandom() {
-    if (db.length > 0) {
-        const randomId = db[Math.floor(Math.random() * db.length)].id;
-        openModal(randomId);
-    }
-}
-
-function loadMore() {
-    CONFIG.displayLimit += 24;
-    renderBooks(db.slice(0, CONFIG.displayLimit));
-}
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
+function loadMore() { CONFIG.displayLimit += 30; renderHomePage(); }
 function toggleLanguage() {
     currentLang = currentLang === 'bn' ? 'en' : 'bn';
     localStorage.setItem('lang', currentLang);
     location.reload(); 
 }
-
 function applyLanguage() {
     document.documentElement.lang = currentLang;
-    document.querySelectorAll('[data-en]').forEach(el => {
-        el.innerText = el.getAttribute(`data-${currentLang}`);
-    });
-    const searchInput = document.getElementById('search');
-    if (searchInput) {
-        searchInput.placeholder = getText('searchPlaceholder', 'বই, লেখক বা বিষয় খুঁজুন...');
-    }
+    document.querySelectorAll('[data-en]').forEach(el => el.innerText = el.getAttribute(`data-${currentLang}`));
+    const s = document.getElementById('search');
+    if(s) s.placeholder = getText('searchPlaceholder', '...');
 }
-
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('active');
-}
+function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+function shareBook() { document.getElementById('toast').classList.add('show'); setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3000); }
+function openRandom() { if(db.length) openModal(db[Math.floor(Math.random()*db.length)].id); }
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
