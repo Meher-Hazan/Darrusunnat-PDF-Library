@@ -1,14 +1,19 @@
 @media (min-width: 769px) {
     .mobile-menu-btn, .mobile-menu-overlay { display: none; }
     
-    /* Grid Columns */
-    .book-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-    
-    /* Folder Grid */
-    .folder-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    /* PC GRID: Adaptive but smaller cards */
+    .book-grid { 
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Smaller min-width (was 200) */
+        gap: 20px;
+    }
+
+    /* FOLDER GRID */
+    .folder-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
 }
 
-@media (min-width: 1025px) {
-    .book-grid { grid-template-columns: repeat(4, 1fr); }
-    .hero-title { font-size: 2.5rem; }
+@media (min-width: 1200px) {
+    /* Large Screens: 6 books per row */
+    .book-grid { grid-template-columns: repeat(6, 1fr); }
+    .hero-title { font-size: 2.2rem; }
 }

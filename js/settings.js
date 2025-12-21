@@ -5,24 +5,25 @@
 const CONFIG = {
     dbUrl: 'books_data.json?t=' + Date.now(), 
     displayLimit: 24,
-    groupLink: 'https://t.me/SobBoiErPdf' // Change this to your actual chat group link
+    // 🔥 UPDATED LINK TO GROUP 🔥
+    groupLink: 'https://t.me/Darussunnat_Library' 
 };
 
 let db = [];
 let saved = JSON.parse(localStorage.getItem('saved')) || [];
 let currentLang = localStorage.getItem('lang') || 'bn';
 let currentTab = 'home';
-let viewMode = localStorage.getItem('viewMode') || 'grid'; // New state
+let viewMode = localStorage.getItem('viewMode') || 'grid';
 let searchTimeout;
 
 const TRANSLATIONS = {
     en: {
         home: "Home",
-        az: "A-Z Index",
+        az: "A-Z",
         authors: "Authors",
         subjects: "Subjects",
-        saved: "Saved Books",
-        searchPlaceholder: "Search books, authors...",
+        saved: "Saved",
+        searchPlaceholder: "Search...",
         readNow: "Read Now",
         share: "Share",
         comment: "Comment",
@@ -32,17 +33,17 @@ const TRANSLATIONS = {
         loadMore: "Load More",
         others: "Others",
         booksCount: "Books",
-        results: "Search Results",
-        viewGrid: "Grid View",
-        viewList: "List View",
-        random: "Random Book"
+        results: "Results",
+        viewGrid: "Grid",
+        viewList: "List",
+        random: "Random"
     },
     bn: {
         home: "হোম",
         az: "বর্ণানুক্রমিক",
         authors: "লেখক",
         subjects: "বিষয়",
-        saved: "সংরক্ষিত বই",
+        saved: "সংরক্ষিত",
         searchPlaceholder: "বই, লেখক বা বিষয় খুঁজুন...",
         readNow: "পড়ুন",
         share: "শেয়ার",
@@ -53,10 +54,10 @@ const TRANSLATIONS = {
         loadMore: "আরও দেখুন",
         others: "অন্যান্য",
         booksCount: "টি বই",
-        results: "অনুসন্ধান ফলাফল",
-        viewGrid: "গ্রিড ভিউ",
-        viewList: "লিস্ট ভিউ",
-        random: "র‍্যান্ডম বই"
+        results: "ফলাফল",
+        viewGrid: "গ্রিড",
+        viewList: "লিস্ট",
+        random: "র‍্যান্ডম"
     }
 };
 

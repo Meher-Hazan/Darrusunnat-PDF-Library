@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(); 
-    applyViewMode(); // Set initial Grid/List
+    applyViewMode(); 
 
     fetch(CONFIG.dbUrl)
         .then(res => res.json())
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 history.replaceState({ page: 'home' }, '', '');
             }
             
-            setTab('home', false); // Don't push history on initial load
+            setTab('home', false); 
             renderChips();
         })
         .catch(() => {
@@ -30,16 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- BACK BUTTON LOGIC (Fixed) ---
+// --- BACK BUTTON LOGIC ---
 window.onpopstate = function(event) {
-    // If modal is open, just close it and stay on page
     if (document.getElementById('modal').classList.contains('active')) {
-        document.getElementById('modal').classList.remove('active');
-        document.querySelector('.modal-backdrop').classList.remove('active');
+        closeModal();
         return;
     }
     
-    // If we have state, restore it
     if (event.state) {
         if (event.state.page === 'folder') {
             openFolder(event.state.type, event.state.key, false);
@@ -57,7 +54,6 @@ function setTab(tab, pushToHistory = true) {
     CONFIG.displayLimit = 24;
     window.scrollTo(0, 0);
     
-    // Update History
     if (pushToHistory) {
         history.pushState({ page: tab }, '', '');
     }
@@ -91,7 +87,6 @@ function applyViewMode() {
     } else {
         if(icon) icon.className = 'fas fa-list';
     }
-    // Re-render current view if active
     if (document.querySelector('.book-grid')) {
         const grid = document.querySelector('.book-grid');
         if (viewMode === 'list') grid.classList.add('list-view');
@@ -109,7 +104,6 @@ function renderBooks(list, title = '') {
     }
 
     let html = title ? `<h3 class="section-title" style="margin-bottom:24px; font-family:var(--font-serif); font-size:1.5rem;">${title}</h3>` : '';
-    // Apply View Mode Class
     const viewClass = viewMode === 'list' ? 'list-view' : '';
     html += `<div class="book-grid ${viewClass}">`;
     
@@ -220,24 +214,28 @@ function openModal(id) {
     const b = db.find(x => x.id === id);
     if (!b) return;
     
-    // Push Modal State to history so Back Button closes it
     history.pushState({ modal: true, id: id }, '', '');
 
     document.getElementById('mImg').src = b.image || '';
     document.getElementById('mTitle').innerText = b.title;
     document.getElementById('mAuth').innerText = b.author || getText('unknown', 'অজ্ঞাত');
     document.getElementById('mCat').innerText = b.category;
+    
+    // READ BUTTON
     document.getElementById('mRead').href = b.link;
-    // Set Comment Link (Group Link)
-    document.getElementById('mComment').href = CONFIG.groupLink;
+
+    // 🔥 COMMENT BUTTON (Group Link) 🔥
+    const commentBtn = document.getElementById('mComment');
+    if (commentBtn) {
+        commentBtn.href = CONFIG.groupLink;
+    }
     
     document.querySelector('.modal-backdrop').classList.add('active');
 }
 
 function closeModal(e) {
-    if (!e || e.target === document.getElementById('modal') || e.target.classList.contains('modal-close')) {
+    if (!e || e.target.classList.contains('modal-backdrop') || e.target.classList.contains('modal-close')) {
         document.querySelector('.modal-backdrop').classList.remove('active');
-        // Go back in history to remove the modal state
         if (history.state && history.state.modal) {
             history.back();
         }
