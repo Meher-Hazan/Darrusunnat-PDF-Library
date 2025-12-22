@@ -1,29 +1,46 @@
+
 :root {
-    /* WOODEN PALETTE */
-    --wood-dark: #3E2723;
-    --wood-light: #5D4037;
-    --shelf-edge: #281815;
-    --gold: #FFD700;
-    --paper: #F5F5DC;
+    /* --- ROYAL ISLAMIC THEME --- */
+    --primary: #145A48;       
+    --primary-light: #1E7E66;
+    --gold: #FFD700;          
+    --gold-dim: #D4AC0D;      
     
-    /* TEXTURE URLs */
-    --bg-wood: url('https://images.unsplash.com/photo-1596005554384-d293674c91d7?q=80&w=1920&auto=format&fit=crop');
+    /* Backgrounds */
+    --bg-body: #0D2620;       
+    --bg-nav: rgba(10, 35, 30, 0.95); 
+    --bg-card: rgba(20, 50, 40, 0.7); 
     
-    /* FONTS */
+    /* Text */
+    --text-white: #ffffff;
+    --text-main: #f0f0f0;
+    --text-mute: #cccccc;
+    
+    /* UI Elements */
+    --glass-input: rgba(255, 255, 255, 0.15);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+
+    /* Animation Gradients */
+    --anim-color-1: #0D2620;
+    --anim-color-2: #143830;
+
+    /* Fonts */
     --font-main: 'Hind Siliguri', sans-serif;
-    --font-serif: 'Merriweather', serif;
+    --font-serif: 'Amiri', serif;
 }
 
-body {
-    background-color: var(--wood-dark);
-    background-image: var(--bg-wood);
-    background-size: cover;
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+body { 
+    margin: 0; font-family: var(--font-main);
+    background-color: var(--bg-body);
+    background-image: radial-gradient(circle at top, #1a4d40 0%, #0D2620 100%);
     background-attachment: fixed;
-    color: #fff; /* White text on dark wood */
-    font-family: var(--font-main);
+    color: var(--text-white); 
+    padding-bottom: 120px; 
+    min-height: 100vh;
 }
 
-/* Scrollbar styling for chrome */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--wood-dark); }
-::-webkit-scrollbar-thumb { background: var(--wood-light); border: 1px solid var(--gold); border-radius: 5px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; font-family: inherit; background: none; }

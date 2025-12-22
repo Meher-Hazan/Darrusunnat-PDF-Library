@@ -1,29 +1,67 @@
-@media (max-width: 768px) {
-    .pc-nav { display: none; } /* Hide PC menu */
+/* --- MOBILE & TABLET STYLES (< 1024px) --- */
+@media (max-width: 1023px) {
+    body { padding-bottom: 120px; }
+    .pc-sidebar { display: none; }
     
-    .hero { padding: 30px 15px; border-bottom-width: 10px; }
-    .hero h2 { font-size: 1.5rem; }
-    
-    /* 🔥 MOBILE SHELF GRID 🔥 */
-    .grid {
-        grid-template-columns: 1fr 1fr 1fr !important; /* STRICT 3 COLS */
-        column-gap: 8px;
-        row-gap: 40px; /* Shelf height */
-        padding: 0 5px;
-        background-size: 100% 190px; /* Adjust shelf line height */
-    }
+    .grid { display: grid; gap: 15px; }
+    .list-view { display: flex; flex-direction: column; gap: 10px; }
 
-    .book:hover { transform: none; } /* Disable hover on touch */
-    
-    .cover-wrap {
-        box-shadow: -2px 0 5px rgba(0,0,0,0.4), 0 5px 5px rgba(0,0,0,0.4);
+    /* Header */
+    .top-nav {
+        background: var(--bg-nav); position: sticky; top: 0; z-index: 1000;
+        padding: 10px 15px; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid var(--border-color); backdrop-filter: blur(20px);
+        box-shadow: 0 5px 20px var(--shadow-color); display: flex;
     }
+    
+    .nav-left { display: flex; align-items: center; gap: 10px; }
+    .brand { font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold); font-weight: 800; white-space: nowrap; }
+    
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    
+    .header-icon { 
+        color: var(--text-mute); font-size: 1.2rem; padding: 8px; 
+        cursor: pointer; border-radius: 50%; background: var(--glass-input); 
+    }
+    
+    /* MOBILE JOIN BUTTON (Fixed Visibility) */
+    .join-btn-mob {
+        background: linear-gradient(135deg, var(--gold), #F39C12);
+        color: #000; padding: 6px 12px; border-radius: 50px;
+        font-weight: 800; font-size: 0.75rem; text-decoration: none;
+        display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    
+    .clock-widget { text-align: right; line-height: 1; margin-left: 5px; }
+    .clock-time { color: var(--gold); font-weight: bold; font-size: 0.85rem; font-family: var(--font-serif); }
+    
+    /* Bottom Nav */
+    .bot-nav {
+        position: fixed; bottom: 0; left: 0; width: 100%;
+        background: var(--bg-nav); border-top: 1px solid var(--border-color);
+        justify-content: space-around; padding: 12px 0; z-index: 2000;
+        display: flex; box-shadow: 0 -10px 30px var(--shadow-color);
+    }
+    .nav-item { 
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: none; border: none; color: #666; font-size: 0.7rem; gap: 4px; cursor: pointer;
+    }
+    .nav-item.active { color: var(--gold); transform: translateY(-3px); }
+}
 
-    .book-title {
-        font-size: 0.65rem; line-height: 1.2;
-        margin-top: 6px; color: #ccc;
-    }
-    
-    /* Mobile Menu */
-    .mob-menu-btn { display: block; font-size: 1.5rem; color: var(--gold); }
+/* Very Small Screens (Hide Join Text, Keep Icon) */
+@media (max-width: 360px) {
+    .join-text { display: none; }
+    .join-btn-mob { padding: 6px; }
+    .brand { font-size: 1rem; }
+}
+
+@media (max-width: 599px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .container { padding: 10px 10px 100px 10px; }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .container { padding: 20px 20px 120px 20px; }
 }
