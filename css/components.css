@@ -1,0 +1,73 @@
+/* THE BOOKSHELF GRID */
+.grid {
+    display: grid;
+    /* PC: Fits as many as possible (6-8 per row) */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    
+    /* SHELF EFFECT */
+    row-gap: 60px; /* Space for the wood plank */
+    column-gap: 30px;
+    
+    /* Draw the shelf line below each row */
+    background-image: linear-gradient(to bottom, transparent 96%, #4E342E 96%, #281815 100%);
+    background-size: 100% 360px; /* Adjust based on book height */
+    padding-bottom: 20px;
+}
+
+/* THE BOOK */
+.book {
+    cursor: pointer; position: relative;
+    transition: transform 0.2s;
+    transform-origin: bottom center;
+}
+/* Hover: Pull book slightly out */
+.book:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
+
+.cover-wrap {
+    width: 100%; aspect-ratio: 2/3;
+    position: relative;
+    border-radius: 3px 6px 6px 3px; /* Spine curve */
+    box-shadow: 
+        -5px 0 10px rgba(0,0,0,0.5), /* Side shadow */
+        0 10px 10px rgba(0,0,0,0.5); /* Bottom shadow (standing) */
+    background: #444; /* Placeholder */
+}
+.cover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px 6px 6px 3px; }
+
+/* Book Spine Highlight */
+.cover-wrap::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+    background: linear-gradient(to right, rgba(255,255,255,0.3), transparent);
+    z-index: 2;
+}
+
+.book-title {
+    margin-top: 10px; font-size: 0.85rem; text-align: center;
+    color: #ddd; font-weight: 600; text-shadow: 0 1px 3px #000;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    height: 2.6em;
+}
+
+/* MODAL (Popup) */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000;
+    display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+}
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+    background: #F5F5DC; /* Paper color */
+    color: #333;
+    width: 90%; max-width: 400px; padding: 30px;
+    border-radius: 5px; text-align: center;
+    box-shadow: 0 20px 50px #000;
+    border: 5px solid var(--wood-light);
+    position: relative;
+}
+.close-btn { position: absolute; top: 10px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #555; }
+.btn {
+    display: block; width: 100%; padding: 12px; margin-top: 10px;
+    border-radius: 4px; font-weight: bold; text-decoration: none; text-align: center;
+}
+.btn-gold { background: var(--wood-dark); color: var(--gold); }
+.btn-green { background: #145A48; color: #fff; }

@@ -1,50 +1,29 @@
 :root {
-    --bg-main: #f8f9fa;
-    --bg-card: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-muted: #666666;
-    --accent: #145A48;        
-    --accent-light: #E8F5E9;
-    --border-soft: #e0e0e0;
-    --font-bengali: 'Hind Siliguri', sans-serif;
+    /* WOODEN PALETTE */
+    --wood-dark: #3E2723;
+    --wood-light: #5D4037;
+    --shelf-edge: #281815;
+    --gold: #FFD700;
+    --paper: #F5F5DC;
+    
+    /* TEXTURE URLs */
+    --bg-wood: url('https://images.unsplash.com/photo-1596005554384-d293674c91d7?q=80&w=1920&auto=format&fit=crop');
+    
+    /* FONTS */
+    --font-main: 'Hind Siliguri', sans-serif;
     --font-serif: 'Merriweather', serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 body {
-    font-family: var(--font-bengali);
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding-bottom: 80px;
-
-    /* --- PREMIUM ISLAMIC GEOMETRY BACKGROUND --- */
-    background-image: 
-        linear-gradient(30deg, #145A48 12%, transparent 12.5%, transparent 87%, #145A48 87.5%, #145A48),
-        linear-gradient(150deg, #145A48 12%, transparent 12.5%, transparent 87%, #145A48 87.5%, #145A48),
-        linear-gradient(30deg, #145A48 12%, transparent 12.5%, transparent 87%, #145A48 87.5%, #145A48),
-        linear-gradient(150deg, #145A48 12%, transparent 12.5%, transparent 87%, #145A48 87.5%, #145A48),
-        linear-gradient(60deg, rgba(197, 160, 89, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(197, 160, 89, 0.1) 75%, rgba(197, 160, 89, 0.1)),
-        linear-gradient(60deg, rgba(197, 160, 89, 0.1) 25%, transparent 25.5%, transparent 75%, rgba(197, 160, 89, 0.1) 75%, rgba(197, 160, 89, 0.1));
-    
-    background-size: 40px 70px;
-    background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
-    background-color: #fcfcfc; /* Base color */
-    opacity: 1; 
-    
-    /* Make pattern very subtle */
-    background-blend-mode: multiply;
+    background-color: var(--wood-dark);
+    background-image: var(--bg-wood);
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff; /* White text on dark wood */
+    font-family: var(--font-main);
 }
 
-/* Ensure pattern is subtle */
-body::before {
-    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.94); /* Whiten it out significantly */
-    z-index: -1;
-}
-
-img { max-width: 100%; display: block; }
-a { text-decoration: none; color: inherit; }
-button { border: none; background: none; cursor: pointer; }
+/* Scrollbar styling for chrome */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--wood-dark); }
+::-webkit-scrollbar-thumb { background: var(--wood-light); border: 1px solid var(--gold); border-radius: 5px; }
